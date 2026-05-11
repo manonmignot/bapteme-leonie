@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le baptême et premier anniversaire de Léonie · 6 juin 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    
+    <style>
+        /* Variables */
+        :root {
+            --ivory: #EFEEEC;
+            --rose: #C3A2A5;
+            --rose-light: #D4B4B7;
+            --taupe: #7C6755;
+            --sand: #C8BDAE;
+            --sand-light: #DDD3C9;
+            --vanilla: #F9F1C9;
+            --white: #FFFFFF;
+            --off-white: #FAF9F7;
+            --text-dark: #3A3A3A;
+            --text-light: #8A8A8A;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Lato', sans-serif;
+            background: var(--off-white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        /* Scène enveloppe */
+        #envelope-scene {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #FAF9F7 0%, #F5F3F0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+        
+        #envelope-scene.hiding {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .instruction {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease 0.5s both;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .envelope-container {
+            position: relative;
+            width: min(90vw, 600px);
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .envelope-container:hover {
+            transform: translateY(-8px);
+        }
+        
+        .envelope-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 1s ease;
+            filter: drop-shadow(0 8px 32px rgba(0,0,0,0.12));
+        }
+        
+        .envelope-image.active {
+            opacity: 1;
+        }
+        
+        /* Site principal */
+        #main-site {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        
+        #main-site.visible {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* Navigation */
+        .main-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(250,249,247,0.97);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(195,162,165,0.15);
+            z-index: 1000;
+        }
+        
+        .nav-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            font-size: 0.8125rem;
+            font-weight: 400;
+            color: var(--text-light);
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--rose);
+        }
+        
+        .nav-separator {
+            color: var(--sand);
+            opacity: 0.5;
+        }
+        
+        /* Oies images */
+        .goose-image {
+            display: block;
+            margin: 0 auto;
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.03));
+        }
+        
+        .goose-image-small {
+            max-width: 120px;
+            margin: 2rem auto;
+        }
+        
+        /* Décorations florales */
+        .floral-divider {
+            max-width: 300px;
+            margin: 1.5rem auto;
+            text-align: center;
+        }
+        
+        .floral-svg {
+            width: 100%;
+            height: auto;
+            opacity: 0.6;
+        }
+        
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem 3rem;
+            background: linear-gradient(to bottom, #FAF9F7 0%, var(--ivory) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-container {
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-eyebrow {
+            font-size: 0.8125rem;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 300;
+            color: var(--taupe);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--rose);
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-divider {
+            width: 100px;
+            height: 1px;
+            background: var(--rose);
+            margin: 2rem auto;
+            opacity: 0.4;
+        }
+        
+        .hero-details {
+            margin-bottom: 3rem;
+        }
+        
+        .hero-date,
+        .hero-year,
+        .hero-location,
+        .hero-region {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.125rem;
+            font-weight: 300;
+            margin: 0.5rem 0;
+        }
+        
+        .hero-year,
+        .hero-region {
+            font-style: italic;
+            color: var(--text-light);
+        }
+        
+        /* Petits ornements autour du hero */
+        .hero-ornament {
+            position: absolute;
+            opacity: 0.15;
+        }
+        
+        .hero-ornament-left {
+            left: 5%;
+            top: 30%;
+            width: 60px;
+        }
+        
+        .hero-ornament-right {
+            right: 5%;
+            top: 30%;
+            width: 60px;
+        }
+        
+        /* Sections */
+        .section {
+            padding: 3rem 2rem;
+            position: relative;
+        }
+        
+        .section-alt {
+            background: var(--sand-light);
+        }
+        
+        /* Vraies arches (rectangle + demi-cercle) */
+        .arch-decoration {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            z-index: 0;
+        }
+        
+        .arch-top {
+            top: -60px;
+        }
+        
+        .arch-bottom {
+            bottom: -60px;
+        }
+        
+        .arch-shape {
+            width: 100%;
+            height: 140px;
+            background: var(--ivory);
+            opacity: 0.4;
+            border-radius: 140px 140px 0 0;
+        }
+        
+        .arch-shape-reverse {
+            background: var(--sand-light);
+            border-radius: 0 0 140px 140px;
+        }
+        
+        /* Arches ton sur ton */
+        .section-alt .arch-shape {
+            background: var(--rose-light);
+            opacity: 0.25;
+        }
+        
+        .container-narrow {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 300;
+            color: var(--taupe);
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            font-size: 0.9375rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        
+        /* Photos section avec arche */
+        .photo-stats {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--rose);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+        
+        /* Carte upload avec vraie arche */
+        .upload-card {
+            background: var(--white);
+            border: none;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: visible;
+            box-shadow: 0 2px 16px rgba(124,103,85,0.06);
+        }
+        
+        /* Vraie arche au-dessus de la carte */
+        .upload-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 80px;
+            background: var(--rose-light);
+            border-radius: 100px 100px 0 0;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .upload-icon {
+            color: var(--rose);
+            margin-bottom: 1.5rem;
+        }
+        
+        .upload-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--taupe);
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-description {
+            font-size: 0.9375rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+        
+        .btn-upload {
+            font-family: 'Lato', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--taupe);
+            background: var(--vanilla);
+            border: none;
+            padding: 0.75rem 2rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            box-shadow: 0 2px 8px rgba(195,162,165,0.15);
+        }
+        
+        .btn-upload:hover {
+            background: var(--rose);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(195,162,165,0.25);
+        }
+        
+        .upload-footnote {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 1.5rem;
+        }
+        
+        .upload-confirmation {
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .confirmation-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--rose);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .confirmation-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--taupe);
+            margin-bottom: 0.5rem;
+        }
+        
+        .confirmation-text {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+        
+        .btn-text {
+            font-size: 0.875rem;
+            color: var(--rose);
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .gallery-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .gallery-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: var(--ivory);
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            position: relative;
+        }
+        
+        /* Petite arche déco sur les photos */
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 35px;
+            background: var(--rose-light);
+            border-radius: 30px 30px 0 0;
+            opacity: 0.2;
+            z-index: 1;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* Remerciements avec arche */
+        .thanks-card {
+            background: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 2px 16px rgba(124,103,85,0.06);
+            margin-top: 3rem;
+        }
+        
+        /* Grande arche au-dessus */
+        .thanks-card::before {
+            content: '';
+            position: absolute;
+            top: -70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 120px;
+            background: var(--vanilla);
+            border-radius: 150px 150px 0 0;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .thanks-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+        
+        .thanks-signature {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.125rem;
+            font-style: italic;
+            color: var(--rose);
+        }
+        
+        /* Coins décoratifs */
+        .thanks-card::before,
+        .thanks-card::after {
+            content: '✿';
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--rose);
+            opacity: 0.3;
+        }
+        
+        .thanks-card::before {
+            top: 2rem;
+            left: 2rem;
+        }
+        
+        .thanks-card::after {
+            top: 2rem;
+            right: 2rem;
+        }
+        
+        /* Infos avec cartes arrondies */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .info-card {
+            background: var(--white);
+            padding: 2rem;
+            text-align: center;
+            border-radius: 100px 100px 8px 8px;
+            box-shadow: 0 2px 12px rgba(124,103,85,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(124,103,85,0.1);
+        }
+        
+        .info-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+        
+        .info-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.125rem;
+            color: var(--taupe);
+            margin-bottom: 1rem;
+        }
+        
+        .info-text {
+            font-size: 0.9375rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-detail {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+        
+        /* Map avec arche */
+        .map-wrapper {
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 2rem;
+            box-shadow: 0 2px 16px rgba(124,103,85,0.08);
+            position: relative;
+        }
+        
+        /* Arche au-dessus de la map */
+        .map-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: 90px;
+            background: var(--rose-light);
+            border-radius: 125px 125px 0 0;
+            opacity: 0.25;
+            z-index: -1;
+        }
+        
+        .map-wrapper iframe {
+            width: 100%;
+            filter: grayscale(0.2) opacity(0.95);
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 3rem 2rem;
+            background: linear-gradient(to bottom, var(--off-white) 0%, var(--sand-light) 100%);
+            text-align: center;
+            position: relative;
+        }
+        
+        /* Grande arche en haut du footer */
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 350px;
+            height: 140px;
+            background: var(--ivory);
+            border-radius: 175px 175px 0 0;
+            opacity: 0.4;
+        }
+        
+        .footer-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--taupe);
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-date {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-heart {
+            font-size: 1.25rem;
+            color: var(--rose);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-separator { display: none; }
+            .hero-title { font-size: 2.5rem; }
+            .section { padding: 2rem 1.5rem; }
+            .goose-image { max-width: 140px; }
+            .goose-image-small { max-width: 100px; margin: 1.5rem auto; }
+            
+            /* Arches plus petites sur mobile */
+            .arch-decoration {
+                width: 200px;
+            }
+            
+            .arch-shape {
+                height: 100px;
+                border-radius: 100px 100px 0 0;
+            }
+            
+            .upload-card::before,
+            .thanks-card::before,
+            .map-wrapper::before,
+            .footer::before {
+                width: 180px;
+                height: 60px;
+                border-radius: 90px 90px 0 0;
+            }
+            
+            .info-card::before {
+                width: 60px;
+                height: 35px;
+                border-radius: 30px 30px 0 0;
+            }
+            
+            .gallery-item::before {
+                width: 50px;
+                height: 30px;
+                border-radius: 25px 25px 0 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- ENVELOPPE -->
+    <div id="envelope-scene">
+        <p class="instruction">Cliquez sur l'enveloppe</p>
+        <div class="envelope-container" onclick="openEnvelope()">
+            <img src="enveloppe-fermee.png" class="envelope-image active" id="envelope-closed">
+            <img src="enveloppe-ouverte.png" class="envelope-image" id="envelope-opened">
+        </div>
+    </div>
+
+    <!-- SITE -->
+    <div id="main-site">
+        
+        <!-- NAVIGATION -->
+        <nav class="main-nav">
+            <div class="nav-content">
+                <a href="#accueil" class="nav-link active">Accueil</a>
+                <span class="nav-separator">·</span>
+                <a href="#photos" class="nav-link">Souvenirs</a>
+                <span class="nav-separator">·</span>
+                <a href="#merci" class="nav-link">Remerciements</a>
+                <span class="nav-separator">·</span>
+                <a href="#infos" class="nav-link">Informations</a>
+            </div>
+        </nav>
+
+        <!-- HERO -->
+        <section id="accueil" class="hero">
+            <!-- Ornements floraux -->
+            <svg class="hero-ornament hero-ornament-left floral-svg" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="30" cy="30" r="4" fill="#C3A2A5" opacity="0.6"/>
+                <circle cx="20" cy="25" r="3" fill="#F9F1C9" opacity="0.7"/>
+                <circle cx="40" cy="25" r="3" fill="#C8BDAE" opacity="0.5"/>
+                <circle cx="25" cy="38" r="2.5" fill="#C3A2A5" opacity="0.5"/>
+                <circle cx="35" cy="38" r="2.5" fill="#F9F1C9" opacity="0.6"/>
+                <path d="M30 20 Q28 15 30 10" stroke="#C8BDAE" stroke-width="1" opacity="0.4"/>
+                <path d="M30 40 Q32 45 30 50" stroke="#C8BDAE" stroke-width="1" opacity="0.4"/>
+            </svg>
+            <svg class="hero-ornament hero-ornament-right floral-svg" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="30" cy="30" r="4" fill="#C3A2A5" opacity="0.6"/>
+                <circle cx="20" cy="25" r="3" fill="#F9F1C9" opacity="0.7"/>
+                <circle cx="40" cy="25" r="3" fill="#C8BDAE" opacity="0.5"/>
+                <circle cx="25" cy="38" r="2.5" fill="#C3A2A5" opacity="0.5"/>
+                <circle cx="35" cy="38" r="2.5" fill="#F9F1C9" opacity="0.6"/>
+            </svg>
+            
+            <div class="hero-container">
+                <img src="oie-1.png" alt="Oie" class="goose-image">
+                
+                <p class="hero-eyebrow">Vous êtes invités à célébrer</p>
+                <h1 class="hero-title">Le baptême de Léonie</h1>
+                <p class="hero-subtitle">& son premier anniversaire</p>
+                
+                <div class="hero-divider"></div>
+                
+                <div class="hero-details">
+                    <p class="hero-date">Vendredi six juin</p>
+                    <p class="hero-year">Deux mille vingt-six</p>
+                    <p class="hero-location">Salle polyvalente de Meillon</p>
+                    <p class="hero-region">Pyrénées-Atlantiques</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider floral -->
+        <div class="floral-divider">
+            <svg class="floral-svg" viewBox="0 0 300 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 20 Q60 15 150 20 T290 20" stroke="#C3A2A5" stroke-width="1" opacity="0.3"/>
+                <circle cx="70" cy="18" r="3" fill="#F9F1C9" opacity="0.6"/>
+                <circle cx="90" cy="18" r="2.5" fill="#C3A2A5" opacity="0.5"/>
+                <circle cx="150" cy="15" r="4" fill="#C3A2A5" opacity="0.7"/>
+                <circle cx="210" cy="18" r="3" fill="#F9F1C9" opacity="0.6"/>
+                <circle cx="230" cy="18" r="2.5" fill="#C8BDAE" opacity="0.5"/>
+                <path d="M150 10 L148 5 L152 5 Z" fill="#C3A2A5" opacity="0.4"/>
+            </svg>
+        </div>
+
+        <!-- Oie dans arche décorative -->
+        <div class="arch-decoration arch-top">
+            <div class="arch-shape"></div>
+        </div>
+        <img src="oie-2.png" alt="Oie" class="goose-image goose-image-small">
+
+        <!-- PHOTOS -->
+        <section id="photos" class="section section-alt">
+            
+            <div class="container-narrow">
+                <div class="section-header">
+                    <h2 class="section-title">Vos photographies</h2>
+                    <p class="section-subtitle">Immortalisez cette journée spéciale et partagez vos plus beaux souvenirs avec nous. 
+                    Chaque photo capturera un instant précieux du baptême et du premier anniversaire de Léonie.</p>
+                </div>
+
+                <div class="photo-stats">
+                    <span class="stat-number" id="photo-count">—</span>
+                    <span class="stat-label">photographie<span id="plural">s</span> partagée<span id="plural2">s</span></span>
+                </div>
+
+                <div class="upload-card" id="upload-card">
+                    <svg class="upload-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <h3 class="upload-heading">Ajouter vos images</h3>
+                    <p class="upload-description">Sélectionnez vos plus belles photographies</p>
+                    <button id="upload-btn" class="btn-upload" onclick="openCloudinaryWidget()">Parcourir</button>
+                    <p class="upload-footnote">Format JPG ou PNG · Maximum 10 Mo</p>
+                </div>
+
+                <div class="upload-confirmation hidden" id="upload-confirmation">
+                    <div class="confirmation-icon">✓</div>
+                    <h3 class="confirmation-heading">Merci !</h3>
+                    <p class="confirmation-text">Vos photographies ont été reçues avec bonheur</p>
+                    <button class="btn-text" onclick="uploadMore()">Ajouter d'autres images</button>
+                </div>
+
+                <div class="gallery-container">
+                    <div class="gallery-grid" id="gallery-grid">
+                        <div class="gallery-empty">Les photographies de cette belle journée apparaîtront ici</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider floral -->
+        <div class="floral-divider">
+            <svg class="floral-svg" viewBox="0 0 300 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="20" r="2" fill="#F9F1C9" opacity="0.6"/>
+                <circle cx="100" cy="18" r="3" fill="#C3A2A5" opacity="0.5"/>
+                <circle cx="150" cy="20" r="4" fill="#C3A2A5" opacity="0.6"/>
+                <circle cx="200" cy="18" r="3" fill="#F9F1C9" opacity="0.5"/>
+                <circle cx="250" cy="20" r="2" fill="#C8BDAE" opacity="0.5"/>
+                <path d="M10 20 L290 20" stroke="#C3A2A5" stroke-width="0.5" opacity="0.2" stroke-dasharray="5 5"/>
+            </svg>
+        </div>
+
+        <!-- Oie décorative -->
+        <img src="oie-3.png" alt="Oie" class="goose-image goose-image-small">
+
+        <!-- REMERCIEMENTS -->
+        <section id="merci" class="section">
+            <div class="container-narrow">
+                <div class="section-header">
+                    <h2 class="section-title">Merci</h2>
+                    <p class="section-subtitle">Un mot du cœur</p>
+                </div>
+
+                <div class="thanks-card">
+                    <p class="thanks-text">
+                        Votre présence en ce jour si spécial illumine nos cœurs. Merci d'être là pour célébrer 
+                        le baptême et le premier anniversaire de notre petite Léonie. Chacun de vous compte 
+                        énormément pour nous, et nous sommes infiniment reconnaissants de pouvoir partager 
+                        ces moments précieux en votre compagnie.
+                    </p>
+                    <p class="thanks-text">
+                        Ces premiers pas dans la vie, marqués par le sacrement du baptême et cette première 
+                        année remplie de découvertes, n'auraient pas la même saveur sans vous. Merci pour 
+                        votre amour, votre soutien et tous ces sourires qui égayent notre quotidien.
+                    </p>
+                    <p class="thanks-signature">Avec toute notre affection ♡</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider floral -->
+        <div class="floral-divider">
+            <svg class="floral-svg" viewBox="0 0 300 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 20 Q60 18 150 20 T290 20" stroke="#C3A2A5" stroke-width="1" opacity="0.3"/>
+                <circle cx="80" cy="17" r="2.5" fill="#F9F1C9" opacity="0.6"/>
+                <circle cx="150" cy="15" r="4" fill="#C3A2A5" opacity="0.7"/>
+                <circle cx="220" cy="17" r="2.5" fill="#C8BDAE" opacity="0.5"/>
+            </svg>
+        </div>
+
+        <!-- Oie décorative -->
+        <img src="oie-4.png" alt="Oie" class="goose-image goose-image-small">
+
+        <!-- INFOS -->
+        <section id="infos" class="section section-alt">
+            
+            <div class="container-narrow">
+                <div class="section-header">
+                    <h2 class="section-title">Informations pratiques</h2>
+                    <p class="section-subtitle">Tout ce qu'il faut savoir pour profiter pleinement de cette belle journée</p>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-icon">📍</div>
+                        <h3 class="info-heading">Lieu</h3>
+                        <p class="info-text">Salle polyvalente de Meillon</p>
+                        <p class="info-detail">64510 Pyrénées-Atlantiques</p>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">🕐</div>
+                        <h3 class="info-heading">Horaire</h3>
+                        <p class="info-text">Vendredi 6 juin 2026</p>
+                        <p class="info-detail">À partir de 14h00</p>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">🅿️</div>
+                        <h3 class="info-heading">Stationnement</h3>
+                        <p class="info-text">Parking gratuit</p>
+                        <p class="info-detail">À proximité immédiate</p>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">👔</div>
+                        <h3 class="info-heading">Tenue</h3>
+                        <p class="info-text">Tenue de cérémonie</p>
+                        <p class="info-detail">Élégante et confortable</p>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">☀️</div>
+                        <h3 class="info-heading">Météo</h3>
+                        <p class="info-text">Climat de montagne</p>
+                        <p class="info-detail">Prévoir une petite laine</p>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">✉️</div>
+                        <h3 class="info-heading">Contact</h3>
+                        <p class="info-text">Pour toute question</p>
+                        <p class="info-detail">maanon1307@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="map-wrapper">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2922.5!2d-0.15!3d43.08!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDPCsDA0JzQ4LjAiTiAwwrAwOScwMC4wIlc!5e0!3m2!1sfr!2sfr!4v1234567890" 
+                        width="100%" 
+                        height="400" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <img src="oie-3.png" alt="Oie" class="goose-image goose-image-small">
+            
+            <div class="floral-divider">
+                <svg class="floral-svg" viewBox="0 0 200 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 10 Q60 8 100 10 T190 10" stroke="#C3A2A5" stroke-width="0.8" opacity="0.4"/>
+                    <circle cx="50" cy="10" r="2" fill="#F9F1C9" opacity="0.5"/>
+                    <circle cx="100" cy="8" r="3" fill="#C3A2A5" opacity="0.6"/>
+                    <circle cx="150" cy="10" r="2" fill="#C8BDAE" opacity="0.5"/>
+                </svg>
+            </div>
+            
+            <p class="footer-text">Le baptême & premier anniversaire de Léonie</p>
+            <p class="footer-date">6 juin 2026</p>
+            <div class="footer-heart">♡</div>
+        </footer>
+
+    </div>
+
+    <script>
+        /* CLOUDINARY */
+        const CLOUDINARY_CONFIG = {
+            cloudName: 'VOTRE_CLOUD_NAME',
+            uploadPreset: 'bapteme-leonie'
+        };
+        
+        let photoCount = 0;
+        let cloudinaryWidget = null;
+        
+        /* ENVELOPPE */
+        function openEnvelope() {
+            const closed = document.getElementById('envelope-closed');
+            const opened = document.getElementById('envelope-opened');
+            const scene = document.getElementById('envelope-scene');
+            const mainSite = document.getElementById('main-site');
+            
+            closed.classList.remove('active');
+            opened.classList.add('active');
+            
+            setTimeout(() => {
+                scene.classList.add('hiding');
+                setTimeout(() => {
+                    scene.style.display = 'none';
+                    mainSite.style.display = 'block';
+                    document.body.style.overflow = 'auto';
+                    setTimeout(() => {
+                        mainSite.classList.add('visible');
+                        initCloudinary();
+                    }, 100);
+                }, 1000);
+            }, 2000);
+        }
+        
+        /* CLOUDINARY */
+        function initCloudinary() {
+            if (typeof cloudinary === 'undefined') return;
+            
+            cloudinaryWidget = cloudinary.createUploadWidget({
+                cloudName: CLOUDINARY_CONFIG.cloudName,
+                uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
+                folder: 'bapteme-leonie-2026',
+                sources: ['local', 'camera'],
+                multiple: true,
+                maxFiles: 20,
+                maxFileSize: 10000000,
+                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'heic', 'webp'],
+                theme: 'minimal',
+                language: 'fr'
+            }, (error, result) => {
+                if (!error && result && result.event === 'success') {
+                    photoCount++;
+                    updatePhotoCount();
+                    addPhotoToGallery(result.info.secure_url, result.info.thumbnail_url);
+                }
+                if (!error && result && result.event === 'close' && photoCount > 0) {
+                    showUploadSuccess();
+                }
+            });
+        }
+        
+        function openCloudinaryWidget() {
+            if (cloudinaryWidget) {
+                cloudinaryWidget.open();
+            } else {
+                alert('Configuration Cloudinary requise');
+            }
+        }
+        
+        function updatePhotoCount() {
+            document.getElementById('photo-count').textContent = photoCount;
+            document.getElementById('plural').style.display = photoCount <= 1 ? 'none' : 'inline';
+            document.getElementById('plural2').style.display = photoCount <= 1 ? 'none' : 'inline';
+        }
+        
+        function addPhotoToGallery(url, thumb) {
+            const grid = document.getElementById('gallery-grid');
+            const empty = grid.querySelector('.gallery-empty');
+            if (empty) empty.remove();
+            
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.innerHTML = `<img src="${thumb || url}" alt="Photo" loading="lazy">`;
+            grid.appendChild(item);
+        }
+        
+        function showUploadSuccess() {
+            document.getElementById('upload-card').classList.add('hidden');
+            document.getElementById('upload-confirmation').classList.remove('hidden');
+        }
+        
+        function uploadMore() {
+            document.getElementById('upload-confirmation').classList.add('hidden');
+            document.getElementById('upload-card').classList.remove('hidden');
+            if (cloudinaryWidget) cloudinaryWidget.open();
+        }
+        
+        console.log('✅ Baptême & 1er anniversaire Léonie - Site prêt !');
+    </script>
+</body>
+</html>
