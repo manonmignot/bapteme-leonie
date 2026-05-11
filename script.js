@@ -2,8 +2,8 @@
    Configuration Cloudinary
    ======================================== */
 const CLOUDINARY_CONFIG = {
-    cloudName: 'dteqjqarz', 
-    uploadPreset: 'bapteme-leonie', // À REMPLACER
+    cloudName: 'VOTRE_CLOUD_NAME', // À REMPLACER
+    uploadPreset: 'VOTRE_UPLOAD_PRESET', // À REMPLACER
     folder: 'bapteme-leonie-2026',
     maxFiles: 20,
     maxFileSize: 10000000, // 10 Mo
@@ -77,26 +77,59 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* ========================================
-   Animation de l'enveloppe
+   Animation de l'enveloppe réaliste
    ======================================== */
 function initEnvelopeAnimation() {
-    const discoverBtn = document.getElementById('discover-btn');
+    const envelopeRealistic = document.getElementById('envelope-realistic');
     const envelopeContainer = document.getElementById('envelope-animation');
     const mainContent = document.getElementById('main-content');
+    const invitationCard = document.getElementById('invitation-card');
 
-    discoverBtn.addEventListener('click', function() {
-        envelopeContainer.classList.add('hiding');
-        
-        setTimeout(() => {
-            envelopeContainer.style.display = 'none';
-            mainContent.classList.remove('hidden');
+    let isOpened = false;
+
+    // Clic sur l'enveloppe pour l'ouvrir
+    envelopeRealistic.addEventListener('click', function() {
+        if (!isOpened) {
+            // Ouvrir l'enveloppe
+            envelopeRealistic.classList.add('opened');
+            isOpened = true;
+
+            // Afficher le faire-part (vérifier si image perso ou fallback)
+            const invitationImage = document.getElementById('invitation-image');
+            const invitationFallback = document.getElementById('invitation-fallback');
             
+            // Si l'image est chargée avec succès, on masque le fallback
+            if (invitationImage && invitationImage.complete && invitationImage.naturalHeight !== 0) {
+                invitationFallback.style.display = 'none';
+                invitationImage.style.display = 'block';
+            }
+
+            // Après 2 secondes, transition vers le site
             setTimeout(() => {
-                mainContent.classList.add('visible');
-                triggerConfetti();
-            }, 100);
-        }, 800);
+                envelopeContainer.classList.add('hiding');
+                
+                setTimeout(() => {
+                    envelopeContainer.style.display = 'none';
+                    mainContent.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        mainContent.classList.add('visible');
+                        triggerConfetti();
+                    }, 100);
+                }, 1000);
+            }, 2500);
+        }
     });
+
+    // Gestion du cas où l'image personnalisée ne charge pas
+    const invitationImage = document.getElementById('invitation-image');
+    if (invitationImage) {
+        invitationImage.addEventListener('error', function() {
+            // Si l'image ne charge pas, on affiche le fallback
+            this.style.display = 'none';
+            document.getElementById('invitation-fallback').style.display = 'block';
+        });
+    }
 }
 
 /* ========================================

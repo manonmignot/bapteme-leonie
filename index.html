@@ -8,24 +8,41 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="envelope-realistic.css">
     <!-- Cloudinary Upload Widget -->
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 </head>
 <body>
-    <!-- Animation d'enveloppe au chargement -->
+    <!-- Animation d'enveloppe au chargement - Version réaliste -->
     <div id="envelope-animation" class="envelope-container">
-        <div class="envelope">
-            <div class="envelope-flap"></div>
-            <div class="envelope-body"></div>
-            <div class="invitation-card">
-                <div class="invitation-content">
-                    <p class="invitation-subtitle">Le baptême de</p>
-                    <h1 class="invitation-title">LÉONIE</h1>
-                    <p class="invitation-date">6 juin 2026</p>
+        <p class="envelope-instruction">Cliquez sur l'enveloppe</p>
+        <div class="envelope-realistic" id="envelope-realistic">
+            <div class="envelope-back"></div>
+            <div class="envelope-flap-realistic"></div>
+            <div class="envelope-front"></div>
+            <div class="wax-seal">
+                <div class="wax-seal-inner">L</div>
+            </div>
+            
+            <!-- Faire-part qui sort de l'enveloppe -->
+            <div class="invitation-card-realistic" id="invitation-card">
+                <div class="invitation-paper">
+                    <div class="paper-texture"></div>
+                    <div class="invitation-content-realistic">
+                        <!-- Vous remplacerez cette image par votre photo de faire-part -->
+                        <img src="faire-part-leonie.jpg" alt="Faire-part de Léonie" class="invitation-image" id="invitation-image">
+                        <!-- Si vous n'avez pas encore la photo, on affiche du texte élégant -->
+                        <div class="invitation-text-fallback" id="invitation-fallback">
+                            <p class="invitation-line-small">Le baptême de</p>
+                            <h1 class="invitation-name">LÉONIE</h1>
+                            <div class="invitation-divider"></div>
+                            <p class="invitation-date-elegant">Vendredi 6 juin 2026</p>
+                            <p class="invitation-location-elegant">Salle polyvalente de Meillon</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <button id="discover-btn" class="discover-button">Découvrir</button>
     </div>
 
     <!-- Contenu principal du site -->
@@ -78,8 +95,8 @@
         <section id="photos" class="section photos-section">
             <div class="container">
                 <div class="section-header reveal">
-                    <h2 class="section-title">Partagez vos photos</h2>
-                    <p class="section-subtitle">Immortalisez ce moment magique et partagez vos plus beaux souvenirs</p>
+                    <h2 class="section-title">Vos souvenirs</h2>
+                    <p class="section-subtitle">Partagez vos plus beaux moments de cette journée mémorable</p>
                 </div>
                 
                 <div class="upload-card reveal">
@@ -134,7 +151,7 @@
             <div class="container">
                 <div class="section-header reveal">
                     <h2 class="section-title">Livre d'or</h2>
-                    <p class="section-subtitle">Laissez un message d'amour pour Léonie</p>
+                    <p class="section-subtitle">Laissez quelques mots pour Léonie</p>
                 </div>
 
                 <div class="guestbook-card reveal">
@@ -200,7 +217,7 @@
                         <div class="info-icon">📍</div>
                         <h3 class="info-title">Lieu</h3>
                         <p class="info-text">Salle polyvalente de Meillon</p>
-                        <p class="info-detail">74210 Meillon, France</p>
+                        <p class="info-detail">64510 Meillon, Pyrénées-Atlantiques</p>
                     </div>
 
                     <div class="info-card reveal">
@@ -228,7 +245,7 @@
                 <!-- Carte Google Maps -->
                 <div class="map-container reveal">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2770.8!2d6.09!3d45.92!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDXCsDU1JzEyLjAiTiA2wrAwNScyNC4wIkU!5e0!3m2!1sfr!2sfr!4v1234567890" 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2922.5!2d-0.15!3d43.08!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDPCsDA0JzQ4LjAiTiAwwrAwOScwMC4wIlc!5e0!3m2!1sfr!2sfr!4v1234567890" 
                         width="100%" 
                         height="400" 
                         style="border:0; border-radius: 16px;" 
