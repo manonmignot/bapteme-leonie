@@ -765,7 +765,7 @@
         <p class="instruction">Ouvrez-moi !</p>
         <div class="envelope-container" onclick="openEnvelope()">
             <img src="enveloppe-fermee.png" class="envelope-image active" id="envelope-closed" alt="">
-            <img src="enveloppe-ouverte.png" class="envelope-image" id="envelope-opened" alt="">
+            <img src="" class="envelope-image" id="envelope-opened" alt="">
             <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150'%3E%3Crect x='20' y='0' width='60' height='150' fill='%23FAF9F7' rx='2'/%3E%3Cpath d='M20 0 L40 15 L60 5 L80 15 L80 0 Z' fill='%23CFA2A5' opacity='0.3'/%3E%3C/svg%3E"
                  class="paper-gif" id="paper-gif" alt="">
         </div>
@@ -1033,7 +1033,10 @@
         function openEnvelope() {
             document.getElementById('envelope-closed').classList.remove('active');
             document.getElementById('paper-gif').classList.add('visible');
-            setTimeout(() => document.getElementById('envelope-opened').classList.add('active'), 500);
+            // Injecter le src ici pour que le GIF reparte depuis la frame 1 au clic
+            const opened = document.getElementById('envelope-opened');
+            opened.src = 'enveloppe-ouverte.gif';
+            setTimeout(() => opened.classList.add('active'), 500);
             setTimeout(() => {
                 document.getElementById('envelope-scene').classList.add('hiding');
                 setTimeout(() => {
