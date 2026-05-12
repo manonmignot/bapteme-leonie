@@ -930,12 +930,12 @@
         // FIREBASE CONFIG - À REMPLACER
         const firebaseConfig = {
             apiKey: "AIzaSyCaEPjJL8wprvfp9ZQVCmtXzz97sehNQwk",
-            authDomain: "bapteme-leonie.firebaseapp.com",
-            projectId: "bapteme-leonie",
-            storageBucket: "bapteme-leonie.firebasestorage.app",
-            messagingSenderId: "342345057224",
-            appId: "1:342345057224:web:e038e03e5d6a410f9436fd",
-            measurementId: "G-VKXNM4ZHL2"
+  authDomain: "bapteme-leonie.firebaseapp.com",
+  projectId: "bapteme-leonie",
+  storageBucket: "bapteme-leonie.firebasestorage.app",
+  messagingSenderId: "342345057224",
+  appId: "1:342345057224:web:e038e03e5d6a410f9436fd",
+  measurementId: "G-VKXNM4ZHL2"
         };
         
         // CLOUDINARY CONFIG
@@ -977,16 +977,40 @@
         
         /* ===== INITIALISATION ===== */
         function initApp() {
-            // Vérifier configuration
-            if (firebaseConfig.apiKey === 'VOTRE_API_KEY') {
+            // Vérifier configuration Firebase
+            console.log('🔍 Vérification Firebase...');
+            console.log('apiKey:', firebaseConfig.apiKey);
+            console.log('projectId:', firebaseConfig.projectId);
+            
+            if (firebaseConfig.apiKey === 'VOTRE_API_KEY' || 
+                firebaseConfig.projectId === 'VOTRE_PROJECT_ID') {
                 console.error('⚠️ FIREBASE NON CONFIGURÉ - Voir GUIDE-FIREBASE-COMPLET.md');
                 alert('⚠️ Configuration Firebase requise\n\nVeuillez suivre le guide GUIDE-FIREBASE-COMPLET.md pour configurer Firebase.');
+            } else {
+                console.log('✅ Firebase semble configuré');
             }
+            
+            // Vérifier configuration Cloudinary
+            console.log('🔍 Vérification Cloudinary...');
+            console.log('cloudName:', CLOUDINARY_CONFIG.cloudName);
             
             if (CLOUDINARY_CONFIG.cloudName === 'VOTRE_CLOUD_NAME') {
                 console.error('⚠️ CLOUDINARY NON CONFIGURÉ');
                 alert('⚠️ Configuration Cloudinary requise\n\nLigne 860 du HTML : remplacez VOTRE_CLOUD_NAME par votre vrai Cloud Name.');
+            } else {
+                console.log('✅ Cloudinary semble configuré');
             }
+            
+            // Test de connexion Firebase
+            console.log('🔥 Test connexion Firebase...');
+            db.collection('photos').limit(1).get()
+                .then(() => {
+                    console.log('✅ Firebase connecté avec succès !');
+                })
+                .catch(err => {
+                    console.error('❌ Erreur connexion Firebase:', err.message);
+                    alert('❌ Erreur Firebase: ' + err.message + '\n\nVérifiez:\n1. Les règles Firestore sont publiques\n2. La config est correcte');
+                });
             
             initCloudinary();
             listenToPhotos();
