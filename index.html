@@ -597,11 +597,8 @@
         }
         
         .poll-results {
-            display: none;
-        }
-        
-        .poll-results.visible {
             display: block;
+            margin-top: 2rem;
         }
         
         .poll-bar-container {
@@ -932,13 +929,13 @@
         
         // FIREBASE CONFIG - À REMPLACER
         const firebaseConfig = {
-  		apiKey: "AIzaSyCaEPjJL8wprvfp9ZQVCmtXzz97sehNQwk",
-  		authDomain: "bapteme-leonie.firebaseapp.com",
- 		 projectId: "bapteme-leonie",
-  		storageBucket: "bapteme-leonie.firebasestorage.app",
- 		 messagingSenderId: "342345057224",
-  		appId: "1:342345057224:web:e038e03e5d6a410f9436fd",
- 		 measurementId: "G-VKXNM4ZHL2"
+            apiKey: "AIzaSyCaEPjJL8wprvfp9ZQVCmtXzz97sehNQwk",
+            authDomain: "bapteme-leonie.firebaseapp.com",
+            projectId: "bapteme-leonie",
+            storageBucket: "bapteme-leonie.firebasestorage.app",
+            messagingSenderId: "342345057224",
+            appId: "1:342345057224:web:e038e03e5d6a410f9436fd",
+            measurementId: "G-VKXNM4ZHL2"
         };
         
         // CLOUDINARY CONFIG
@@ -980,6 +977,17 @@
         
         /* ===== INITIALISATION ===== */
         function initApp() {
+            // Vérifier configuration
+            if (firebaseConfig.apiKey === 'VOTRE_API_KEY') {
+                console.error('⚠️ FIREBASE NON CONFIGURÉ - Voir GUIDE-FIREBASE-COMPLET.md');
+                alert('⚠️ Configuration Firebase requise\n\nVeuillez suivre le guide GUIDE-FIREBASE-COMPLET.md pour configurer Firebase.');
+            }
+            
+            if (CLOUDINARY_CONFIG.cloudName === 'VOTRE_CLOUD_NAME') {
+                console.error('⚠️ CLOUDINARY NON CONFIGURÉ');
+                alert('⚠️ Configuration Cloudinary requise\n\nLigne 860 du HTML : remplacez VOTRE_CLOUD_NAME par votre vrai Cloud Name.');
+            }
+            
             initCloudinary();
             listenToPhotos();
             listenToPoll();
@@ -1031,17 +1039,29 @@
         function openCloudinaryWidget() {
             if (cloudinaryWidget) {
                 cloudinaryWidget.open();
+            } else {
+                alert('❌ Widget Cloudinary non initialisé\n\nVérifiez votre configuration Cloudinary ligne 860.');
+                console.error('Widget Cloudinary non disponible. Vérifiez cloudName et uploadPreset.');
             }
         }
         
         function savePhotoToFirebase(url, thumb) {
+            if (!userName) {
+                userName = prompt('Votre prénom ?') || 'Anonyme';
+                localStorage.setItem('userName', userName);
+            }
+            
             db.collection('photos').add({
                 url: url,
                 thumbnail: thumb,
                 author: userName,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
+                console.log('✅ Photo sauvegardée sur Firebase');
                 createConfetti();
+            }).catch(err => {
+                console.error('❌ Erreur Firebase:', err);
+                alert('Erreur lors de la sauvegarde. Vérifiez votre configuration Firebase.');
             });
         }
         
@@ -1150,7 +1170,11 @@
                 votes: firebase.firestore.FieldValue.increment(1)
             }, { merge: true }).then(() => {
                 localStorage.setItem('voted', choice);
-                document.getElementById('poll-results').classList.add('visible');
+                console.log('✅ Vote enregistré:', choice);
+                // Les résultats s'afficheront automatiquement via listenToPoll
+            }).catch(err => {
+                console.error('❌ Erreur vote:', err);
+                alert('Erreur lors du vote. Vérifiez votre configuration Firebase.');
             });
         }
         
@@ -1171,8 +1195,9 @@
                 document.getElementById('papa-percent').textContent = papaPercent + '%';
                 document.getElementById('maman-percent').textContent = mamanPercent + '%';
                 
-                if (localStorage.getItem('voted')) {
-                    document.getElementById('poll-results').classList.add('visible');
+                // Afficher les résultats si au moins 1 vote existe
+                if (papa > 0 || maman > 0) {
+                    document.getElementById('poll-results').style.display = 'block';
                 }
             });
         }
