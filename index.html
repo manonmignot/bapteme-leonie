@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Le baptême et premier anniversaire de Léonie · 6 juin 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600&family=Lato:wght@300;400&family=Permanent+Marker&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
     
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -14,7 +16,7 @@
     <!-- Cloudinary -->
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
     
-    <!-- JSZip pour téléchargement -->
+    <!-- JSZip -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     
@@ -61,17 +63,22 @@
         #envelope-scene.hiding { opacity: 0; visibility: hidden; }
         
         .instruction {
-            font-size: 0.875rem;
-            color: var(--text-light);
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            color: var(--rose);
+            letter-spacing: 1px;
             margin-bottom: 3rem;
-            animation: fadeIn 1s ease 0.5s both;
+            animation: fadeIn 1s ease 0.5s both, pulse 2s ease-in-out infinite;
         }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .envelope-container {
@@ -95,6 +102,20 @@
         }
         
         .envelope-image.active { opacity: 1; }
+        
+        /* GIF papier qui sort */
+        .paper-gif {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+        }
+        
+        .paper-gif.visible { opacity: 1; }
         
         /* Site principal */
         #main-site {
@@ -138,15 +159,42 @@
             transition: color 0.2s;
         }
         
-        .nav-link:hover,
-        .nav-link.active { color: var(--rose); }
+        .nav-link:hover { color: var(--rose); }
+        .nav-separator { color: var(--sand); opacity: 0.5; }
         
-        .nav-separator {
-            color: var(--sand);
-            opacity: 0.5;
+        /* Slider photo */
+        .photo-slider {
+            width: 100%;
+            max-width: 1200px;
+            height: 60vh;
+            margin: 0 auto 2rem;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         
-        /* Oies */
+        .slider-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Hero */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem 3rem;
+            background: linear-gradient(to bottom, #FAF9F7 0%, var(--ivory) 100%);
+        }
+        
+        .hero-container {
+            max-width: 700px;
+            text-align: center;
+        }
+        
         .goose-image {
             display: block;
             margin: 0 auto 2rem;
@@ -159,45 +207,13 @@
             margin: 2rem auto;
         }
         
-        /* Hero */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 4rem 2rem 3rem;
-            background: linear-gradient(to bottom, #FAF9F7 0%, var(--ivory) 100%);
-        }
-        
-        .hero-container {
-            max-width: 600px;
-            text-align: center;
-        }
-        
-        .hero-eyebrow {
-            font-size: 0.8125rem;
-            color: var(--text-light);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-        
         .hero-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
             font-weight: 300;
             color: var(--taupe);
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-        
-        .hero-subtitle {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-weight: 300;
-            color: var(--rose);
-            font-style: italic;
             margin-bottom: 2rem;
+            line-height: 1.3;
         }
         
         .hero-divider {
@@ -208,17 +224,78 @@
             opacity: 0.4;
         }
         
-        .hero-details p {
+        /* Compte à rebours avec effet manuscrit */
+        .countdown-wrapper {
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .countdown-item {
+            text-align: center;
+        }
+        
+        .countdown-number {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.125rem;
+            font-size: 2.5rem;
             font-weight: 300;
-            margin: 0.5rem 0;
+            color: var(--rose);
+            display: block;
+        }
+        
+        .countdown-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+        
+        /* Overlay manuscrit "C'est aujourd'hui !" */
+        .today-overlay {
+            font-family: 'Caveat', cursive;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--rose);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-5deg);
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+            z-index: 10;
+            display: none;
+            white-space: nowrap;
+        }
+        
+        .today-overlay.visible {
+            display: block;
+            animation: bounce 0.6s ease-out;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
+            50% { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); }
+        }
+        
+        /* Doodle */
+        .doodle {
+            position: absolute;
+            top: -30px;
+            right: -40px;
+            width: 50px;
+            opacity: 0.7;
         }
         
         /* Sections */
         .section {
-            padding: 3rem 2rem;
-            position: relative;
+            padding: 4rem 2rem;
         }
         
         .section-alt {
@@ -226,10 +303,8 @@
         }
         
         .container-narrow {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
         }
         
         .section-header {
@@ -251,16 +326,11 @@
             line-height: 1.7;
         }
         
-        /* Compteur LIVE */
+        /* Galerie */
         .photo-stats {
             text-align: center;
             margin-bottom: 2rem;
             animation: pulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
         
         .stat-number {
@@ -290,9 +360,7 @@
             z-index: 9999;
         }
         
-        .name-modal.active {
-            display: flex;
-        }
+        .name-modal.active { display: flex; }
         
         .name-modal-content {
             background: var(--white);
@@ -301,20 +369,6 @@
             max-width: 400px;
             width: 90%;
             text-align: center;
-            position: relative;
-        }
-        
-        .name-modal-content::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 75px;
-            background: var(--rose-light);
-            border-radius: 75px 75px 0 0;
-            opacity: 0.3;
         }
         
         .name-modal h3 {
@@ -352,21 +406,7 @@
             text-align: center;
             margin-bottom: 2rem;
             box-shadow: 0 2px 16px rgba(124,103,85,0.06);
-            position: relative;
-        }
-        
-        .upload-card::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 80px;
-            background: var(--rose-light);
-            border-radius: 100px 100px 0 0;
-            opacity: 0.3;
-            z-index: -1;
+            border-radius: 8px;
         }
         
         .upload-icon {
@@ -378,7 +418,7 @@
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.5rem;
             color: var(--taupe);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
         
         .btn-upload {
@@ -407,7 +447,7 @@
             margin-top: 1rem;
         }
         
-        /* Galerie mosaïque floue */
+        /* Galerie */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -473,9 +513,7 @@
             z-index: 9998;
         }
         
-        .lightbox.active {
-            display: flex;
-        }
+        .lightbox.active { display: flex; }
         
         .lightbox-content {
             max-width: 90vw;
@@ -532,28 +570,42 @@
             color: white;
             font-size: 2rem;
             cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+        
+        /* Confettis */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: fall 3s linear;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
         
         /* Sondage */
+        .poll-intro {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.125rem;
+            font-style: italic;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+        
         .poll-card {
             background: var(--white);
             padding: 3rem 2rem;
             border-radius: 8px;
             box-shadow: 0 2px 16px rgba(124,103,85,0.06);
-            margin-bottom: 3rem;
-        }
-        
-        .poll-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            color: var(--taupe);
-            text-align: center;
-            margin-bottom: 2rem;
         }
         
         .poll-options {
@@ -582,10 +634,9 @@
             background: var(--rose-light);
         }
         
-        .poll-option img,
-        .poll-option svg {
-            width: 120px;
-            height: 120px;
+        .poll-option img {
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 1rem;
@@ -597,40 +648,47 @@
             color: var(--taupe);
         }
         
+        /* UNE seule jauge */
         .poll-results {
             display: block;
             margin-top: 2rem;
         }
         
-        .poll-bar-container {
-            margin-bottom: 1rem;
-        }
-        
-        .poll-bar-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.875rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-        
-        .poll-bar {
-            height: 30px;
-            background: var(--ivory);
-            border-radius: 15px;
+        .single-poll-bar {
+            position: relative;
+            height: 40px;
+            background: linear-gradient(90deg, #F9F1C9 0%, #C3A2A5 100%);
+            border-radius: 20px;
             overflow: hidden;
         }
         
-        .poll-bar-fill {
+        .poll-divider {
+            position: absolute;
+            top: 0;
             height: 100%;
-            background: linear-gradient(90deg, var(--rose) 0%, var(--rose-light) 100%);
-            transition: width 0.6s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 1rem;
-            color: white;
-            font-size: 0.75rem;
+            width: 3px;
+            background: white;
+            transition: left 0.6s ease;
+            z-index: 2;
+        }
+        
+        .poll-label-left,
+        .poll-label-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            z-index: 3;
+        }
+        
+        .poll-label-left {
+            left: 1rem;
+        }
+        
+        .poll-label-right {
+            right: 1rem;
         }
         
         /* Messages vocaux */
@@ -686,24 +744,6 @@
             background: #e74c3c;
         }
         
-        /* Confettis */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            animation: fall 3s linear;
-        }
-        
-        @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        
         /* Footer */
         .footer {
             padding: 3rem 2rem;
@@ -721,15 +761,12 @@
         
         /* Responsive */
         @media (max-width: 768px) {
-            .poll-options {
-                grid-template-columns: 1fr;
-            }
-            .lightbox-nav {
-                width: 40px;
-                height: 40px;
-            }
+            .nav-separator { display: none; }
+            .poll-options { grid-template-columns: 1fr; }
+            .lightbox-nav { width: 40px; height: 40px; }
             .lightbox-prev { left: 1rem; }
             .lightbox-next { right: 1rem; }
+            .today-overlay { font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -737,10 +774,12 @@
     
     <!-- ENVELOPPE -->
     <div id="envelope-scene">
-        <p class="instruction">Cliquez sur l'enveloppe</p>
+        <p class="instruction">Ouvrez-moi !</p>
         <div class="envelope-container" onclick="openEnvelope()">
             <img src="enveloppe-fermee.png" class="envelope-image active" id="envelope-closed">
             <img src="enveloppe-ouverte.png" class="envelope-image" id="envelope-opened">
+            <!-- GIF papier qui sort - vous pouvez le remplacer par un vrai GIF -->
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150'%3E%3Crect x='20' y='0' width='60' height='150' fill='%23FAF9F7' rx='2'/%3E%3Cpath d='M20 0 L40 15 L60 5 L80 15 L80 0 Z' fill='%23C3A2A5' opacity='0.3'/%3E%3C/svg%3E" class="paper-gif" id="paper-gif">
         </div>
     </div>
 
@@ -771,97 +810,54 @@
         <!-- NAVIGATION -->
         <nav class="main-nav">
             <div class="nav-content">
-                <a href="#accueil" class="nav-link active">Accueil</a>
-                <span class="nav-separator">·</span>
-                <a href="#sondage" class="nav-link">Sondage</a>
+                <a href="#accueil" class="nav-link">Accueil</a>
                 <span class="nav-separator">·</span>
                 <a href="#photos" class="nav-link">Souvenirs</a>
+                <span class="nav-separator">·</span>
+                <a href="#sondage" class="nav-link">Sondage</a>
                 <span class="nav-separator">·</span>
                 <a href="#messages" class="nav-link">Messages</a>
                 <span class="nav-separator">·</span>
                 <a href="#merci" class="nav-link">Remerciements</a>
-                <span class="nav-separator">·</span>
-                <a href="#infos" class="nav-link">Informations</a>
             </div>
         </nav>
 
-        <!-- HERO -->
+        <!-- HERO avec SLIDER PHOTO -->
         <section id="accueil" class="hero">
             <div class="hero-container">
+                <!-- Grand slider photo -->
+                <div class="photo-slider">
+                    <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?w=1200&h=800&fit=crop" alt="Léonie" class="slider-image" id="slider-image">
+                </div>
+                
                 <img src="oie-1.png" alt="Oie" class="goose-image">
-                <p class="hero-eyebrow">Vous êtes invités à célébrer</p>
-                <h1 class="hero-title">Le baptême de Léonie</h1>
-                <p class="hero-subtitle">& son premier anniversaire</p>
+                
+                <h1 class="hero-title">Bienvenue au baptême<br>et premier anniversaire de Léonie</h1>
+                
                 <div class="hero-divider"></div>
-                <div class="hero-details">
-                    <p>Vendredi six juin</p>
-                    <p style="font-style:italic;color:var(--text-light)">Deux mille vingt-six</p>
-                    <p>Salle polyvalente de Meillon</p>
-                    <p style="font-style:italic;color:var(--text-light)">Pyrénées-Atlantiques</p>
+                
+                <!-- Compte à rebours avec overlay manuscrit -->
+                <div class="countdown-wrapper">
+                    <div id="countdown" class="countdown"></div>
+                    <div class="today-overlay" id="today-overlay">
+                        C'est aujourd'hui !
+                        <svg class="doodle" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 25 Q25 10 40 25 Q25 40 10 25" stroke="#C3A2A5" stroke-width="2" fill="none"/>
+                            <circle cx="25" cy="25" r="3" fill="#F9B233"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </section>
 
         <img src="oie-2.png" class="goose-image goose-image-small">
 
-        <!-- SONDAGE -->
-        <section id="sondage" class="section">
-            <div class="container-narrow">
-                <div class="section-header">
-                    <h2 class="section-title">À qui ressemble Léonie ?</h2>
-                    <p class="section-subtitle">Votez pour papa ou maman !</p>
-                </div>
-
-                <div class="poll-card">
-                    <div class="poll-options">
-                        <div class="poll-option" onclick="vote('papa')">
-                            <svg width="120" height="120" viewBox="0 0 120 120" style="border-radius:50%">
-                                <circle cx="60" cy="60" r="60" fill="#C3A2A5"/>
-                                <text x="60" y="70" text-anchor="middle" font-size="24" fill="white" font-family="Cormorant Garamond">Papa</text>
-                            </svg>
-                            <p>Papa</p>
-                        </div>
-                        <div class="poll-option" onclick="vote('maman')">
-                            <svg width="120" height="120" viewBox="0 0 120 120" style="border-radius:50%">
-                                <circle cx="60" cy="60" r="60" fill="#F9F1C9"/>
-                                <text x="60" y="70" text-anchor="middle" font-size="24" fill="#7C6755" font-family="Cormorant Garamond">Maman</text>
-                            </svg>
-                            <p>Maman</p>
-                        </div>
-                    </div>
-
-                    <div class="poll-results" id="poll-results">
-                        <div class="poll-bar-container">
-                            <div class="poll-bar-label">
-                                <span>Papa</span>
-                                <span id="papa-percent">0%</span>
-                            </div>
-                            <div class="poll-bar">
-                                <div class="poll-bar-fill" id="papa-bar" style="width:0%"></div>
-                            </div>
-                        </div>
-                        <div class="poll-bar-container">
-                            <div class="poll-bar-label">
-                                <span>Maman</span>
-                                <span id="maman-percent">0%</span>
-                            </div>
-                            <div class="poll-bar">
-                                <div class="poll-bar-fill" id="maman-bar" style="width:0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <img src="oie-3.png" class="goose-image goose-image-small">
-
-        <!-- PHOTOS -->
+        <!-- GALERIE DES SOUVENIRS -->
         <section id="photos" class="section section-alt">
             <div class="container-narrow">
                 <div class="section-header">
-                    <h2 class="section-title">Vos photographies</h2>
-                    <p class="section-subtitle">Partagez les moments précieux de cette journée</p>
+                    <h2 class="section-title">Galerie des souvenirs</h2>
+                    <p class="section-subtitle">Partagez les moments précieux de cette journée spéciale</p>
                 </div>
 
                 <div class="photo-stats">
@@ -885,10 +881,46 @@
             </div>
         </section>
 
+        <img src="oie-3.png" class="goose-image goose-image-small">
+
+        <!-- SONDAGE -->
+        <section id="sondage" class="section">
+            <div class="container-narrow">
+                <div class="section-header">
+                    <h2 class="section-title">À qui ressemble Léonie ?</h2>
+                    <p class="poll-intro">
+                        La question qui fait débat depuis 12 mois, où tout le monde rajoute son avis...<br>
+                        Alors, à qui ressemble-t-elle le plus ?
+                    </p>
+                </div>
+
+                <div class="poll-card">
+                    <div class="poll-options">
+                        <div class="poll-option" onclick="vote('papa')">
+                            <img src="https://via.placeholder.com/150/C3A2A5/FFFFFF?text=Papa" alt="Papa bébé">
+                            <p>Papa</p>
+                        </div>
+                        <div class="poll-option" onclick="vote('maman')">
+                            <img src="https://via.placeholder.com/150/F9F1C9/7C6755?text=Maman" alt="Maman bébé">
+                            <p>Maman</p>
+                        </div>
+                    </div>
+
+                    <div class="poll-results" id="poll-results">
+                        <div class="single-poll-bar">
+                            <div class="poll-divider" id="poll-divider" style="left:50%"></div>
+                            <span class="poll-label-left" id="papa-label">Papa 50%</span>
+                            <span class="poll-label-right" id="maman-label">Maman 50%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <img src="oie-4.png" class="goose-image goose-image-small">
 
         <!-- MESSAGES VOCAUX -->
-        <section id="messages" class="section">
+        <section id="messages" class="section section-alt">
             <div class="container-narrow">
                 <div class="section-header">
                     <h2 class="section-title">Messages du cœur</h2>
@@ -906,7 +938,7 @@
         <img src="oie-2.png" class="goose-image goose-image-small">
 
         <!-- REMERCIEMENTS -->
-        <section id="merci" class="section section-alt">
+        <section id="merci" class="section">
             <div class="container-narrow">
                 <div class="section-header">
                     <h2 class="section-title">Merci</h2>
@@ -932,9 +964,7 @@
     </div>
 
     <script>
-        /* ===== CONFIGURATION ===== */
-        
-        // FIREBASE CONFIG - À REMPLACER
+        /* CONFIGURATION - À REMPLACER PAR VOS VRAIES VALEURS */
         const firebaseConfig = {
             apiKey: "AIzaSyCaEPjJL8wprvfp9ZQVCmtXzz97sehNQwk",
   authDomain: "bapteme-leonie.firebaseapp.com",
@@ -942,9 +972,9 @@
   storageBucket: "bapteme-leonie.firebasestorage.app",
   messagingSenderId: "342345057224",
   appId: "1:342345057224:web:e038e03e5d6a410f9436fd",
+
         };
         
-        // CLOUDINARY CONFIG
         const CLOUDINARY_CONFIG = {
             cloudName: 'dteqjqarz',
             uploadPreset: 'bapteme-leonie'
@@ -962,10 +992,14 @@
         let currentPhotos = [];
         let currentLightboxIndex = 0;
         
-        /* ===== ENVELOPPE ===== */
+        /* ENVELOPPE */
         function openEnvelope() {
             document.getElementById('envelope-closed').classList.remove('active');
-            document.getElementById('envelope-opened').classList.add('active');
+            document.getElementById('paper-gif').classList.add('visible');
+            
+            setTimeout(() => {
+                document.getElementById('envelope-opened').classList.add('active');
+            }, 500);
             
             setTimeout(() => {
                 document.getElementById('envelope-scene').classList.add('hiding');
@@ -978,80 +1012,60 @@
                         initApp();
                     }, 100);
                 }, 1000);
-            }, 2000);
+            }, 2500);
         }
         
-        /* ===== INITIALISATION ===== */
+        /* INITIALISATION */
         function initApp() {
-            // Vérifier configuration Firebase
-            console.log('🔍 Vérification Firebase...');
-            console.log('apiKey:', firebaseConfig.apiKey);
-            console.log('projectId:', firebaseConfig.projectId);
-            
-            if (firebaseConfig.apiKey === 'VOTRE_API_KEY' || 
-                firebaseConfig.projectId === 'VOTRE_PROJECT_ID') {
-                console.error('⚠️ FIREBASE NON CONFIGURÉ - Voir GUIDE-FIREBASE-COMPLET.md');
-                alert('⚠️ Configuration Firebase requise\n\nVeuillez suivre le guide GUIDE-FIREBASE-COMPLET.md pour configurer Firebase.');
-            } else {
-                console.log('✅ Firebase semble configuré');
-            }
-            
-            // Vérifier configuration Cloudinary
-            console.log('🔍 Vérification Cloudinary...');
-            console.log('cloudName:', CLOUDINARY_CONFIG.cloudName);
-            
-            if (CLOUDINARY_CONFIG.cloudName === 'VOTRE_CLOUD_NAME') {
-                console.error('⚠️ CLOUDINARY NON CONFIGURÉ');
-                alert('⚠️ Configuration Cloudinary requise\n\nLigne 860 du HTML : remplacez VOTRE_CLOUD_NAME par votre vrai Cloud Name.');
-            } else {
-                console.log('✅ Cloudinary semble configuré');
-            }
-            
-            // Test de connexion Firebase
-            console.log('🔥 Test connexion Firebase...');
-            db.collection('photos').limit(1).get()
-                .then(() => {
-                    console.log('✅ Firebase Firestore connecté avec succès !');
-                })
-                .catch(err => {
-                    console.error('❌ Erreur connexion Firebase:', err.message);
-                    alert('❌ Erreur Firebase: ' + err.message + '\n\nVérifiez:\n1. Les règles Firestore sont publiques\n2. La config est correcte');
-                });
-            
-            // Test Storage (optionnel)
-            try {
-                storage.ref().child('test').getDownloadURL()
-                    .then(() => console.log('✅ Firebase Storage disponible'))
-                    .catch(() => {
-                        console.warn('⚠️ Firebase Storage non disponible - Messages vocaux désactivés');
-                        // Cacher le bouton d'enregistrement
-                        const recordBtn = document.getElementById('record-btn');
-                        if (recordBtn) {
-                            recordBtn.style.display = 'none';
-                        }
-                        // Afficher un message
-                        const msgSection = document.getElementById('messages');
-                        if (msgSection) {
-                            const notice = document.createElement('p');
-                            notice.style.textAlign = 'center';
-                            notice.style.color = 'var(--text-light)';
-                            notice.style.fontStyle = 'italic';
-                            notice.textContent = 'Les messages vocaux seront disponibles prochainement';
-                            msgSection.querySelector('.container-narrow').insertBefore(notice, document.getElementById('voice-messages'));
-                        }
-                    });
-            } catch(e) {
-                console.warn('⚠️ Storage non initialisé - Messages vocaux désactivés');
-            }
-            
             initCloudinary();
+            initCountdown();
             listenToPhotos();
             listenToPoll();
             listenToVoiceMessages();
             setupIntersectionObserver();
         }
         
-        /* ===== MODAL PRÉNOM ===== */
+        /* COMPTE À REBOURS */
+        function initCountdown() {
+            const el = document.getElementById('countdown');
+            const eventDate = new Date('2026-06-06T14:00:00').getTime();
+            
+            function update() {
+                const now = new Date().getTime();
+                const distance = eventDate - now;
+                
+                // Si c'est le jour J
+                if (distance < 0 || Math.abs(distance) < 86400000) { // Moins de 24h
+                    el.innerHTML = '';
+                    document.getElementById('today-overlay').classList.add('visible');
+                    return;
+                }
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                
+                el.innerHTML = `
+                    <div class="countdown-item">
+                        <span class="countdown-number">${days}</span>
+                        <span class="countdown-label">Jours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number">${hours}</span>
+                        <span class="countdown-label">Heures</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number">${minutes}</span>
+                        <span class="countdown-label">Minutes</span>
+                    </div>
+                `;
+            }
+            
+            update();
+            setInterval(update, 60000);
+        }
+        
+        /* MODAL PRÉNOM */
         function startUpload() {
             if (!userName) {
                 document.getElementById('name-modal').classList.add('active');
@@ -1070,7 +1084,7 @@
             }
         }
         
-        /* ===== CLOUDINARY ===== */
+        /* CLOUDINARY */
         function initCloudinary() {
             if (typeof cloudinary === 'undefined') return;
             
@@ -1095,33 +1109,21 @@
         function openCloudinaryWidget() {
             if (cloudinaryWidget) {
                 cloudinaryWidget.open();
-            } else {
-                alert('❌ Widget Cloudinary non initialisé\n\nVérifiez votre configuration Cloudinary ligne 860.');
-                console.error('Widget Cloudinary non disponible. Vérifiez cloudName et uploadPreset.');
             }
         }
         
         function savePhotoToFirebase(url, thumb) {
-            if (!userName) {
-                userName = prompt('Votre prénom ?') || 'Anonyme';
-                localStorage.setItem('userName', userName);
-            }
-            
             db.collection('photos').add({
                 url: url,
                 thumbnail: thumb,
                 author: userName,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                console.log('✅ Photo sauvegardée sur Firebase');
                 createConfetti();
-            }).catch(err => {
-                console.error('❌ Erreur Firebase:', err);
-                alert('Erreur lors de la sauvegarde. Vérifiez votre configuration Firebase.');
             });
         }
         
-        /* ===== GALERIE TEMPS RÉEL ===== */
+        /* GALERIE */
         function listenToPhotos() {
             db.collection('photos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
                 currentPhotos = [];
@@ -1135,7 +1137,7 @@
                     const item = document.createElement('div');
                     item.className = 'gallery-item';
                     item.innerHTML = `
-                        <img src="${data.thumbnail || data.url}" alt="Photo" data-full="${data.url}">
+                        <img src="${data.thumbnail || data.url}" alt="Photo">
                         <div class="photo-author">📸 ${data.author}</div>
                     `;
                     item.onclick = () => openLightbox(currentPhotos.indexOf(data));
@@ -1152,7 +1154,7 @@
             document.getElementById('plural2').style.display = count <= 1 ? 'none' : 'inline';
         }
         
-        /* ===== MOSAÏQUE FLOUE QUI SE DÉVOILE ===== */
+        /* DÉVOILEMENT PROGRESSIF */
         function setupIntersectionObserver() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -1162,15 +1164,14 @@
                 });
             }, { threshold: 0.1 });
             
-            // Observer sera appliqué à chaque nouvelle photo
-            const observeGallery = setInterval(() => {
+            setInterval(() => {
                 document.querySelectorAll('.gallery-item:not(.revealed)').forEach(item => {
                     observer.observe(item);
                 });
             }, 1000);
         }
         
-        /* ===== LIGHTBOX ===== */
+        /* LIGHTBOX */
         function openLightbox(index) {
             currentLightboxIndex = index;
             showLightboxImage();
@@ -1192,10 +1193,10 @@
             document.getElementById('lightbox').classList.remove('active');
         }
         
-        /* ===== TÉLÉCHARGEMENT ZIP ===== */
+        /* TÉLÉCHARGEMENT ZIP */
         async function downloadAllPhotos() {
             if (currentPhotos.length === 0) {
-                alert('Aucune photo à télécharger pour le moment !');
+                alert('Aucune photo à télécharger !');
                 return;
             }
             
@@ -1214,7 +1215,7 @@
             });
         }
         
-        /* ===== SONDAGE ===== */
+        /* SONDAGE - UNE SEULE JAUGE */
         function vote(choice) {
             const voted = localStorage.getItem('voted');
             if (voted) {
@@ -1226,11 +1227,6 @@
                 votes: firebase.firestore.FieldValue.increment(1)
             }, { merge: true }).then(() => {
                 localStorage.setItem('voted', choice);
-                console.log('✅ Vote enregistré:', choice);
-                // Les résultats s'afficheront automatiquement via listenToPoll
-            }).catch(err => {
-                console.error('❌ Erreur vote:', err);
-                alert('Erreur lors du vote. Vérifiez votre configuration Firebase.');
             });
         }
         
@@ -1244,28 +1240,17 @@
                 
                 const total = papa + maman || 1;
                 const papaPercent = Math.round((papa / total) * 100);
-                const mamanPercent = Math.round((maman / total) * 100);
+                const mamanPercent = 100 - papaPercent;
                 
-                document.getElementById('papa-bar').style.width = papaPercent + '%';
-                document.getElementById('maman-bar').style.width = mamanPercent + '%';
-                document.getElementById('papa-percent').textContent = papaPercent + '%';
-                document.getElementById('maman-percent').textContent = mamanPercent + '%';
-                
-                // Afficher les résultats si au moins 1 vote existe
-                if (papa > 0 || maman > 0) {
-                    document.getElementById('poll-results').style.display = 'block';
-                }
+                // Déplacer le diviseur
+                document.getElementById('poll-divider').style.left = papaPercent + '%';
+                document.getElementById('papa-label').textContent = `Papa ${papaPercent}%`;
+                document.getElementById('maman-label').textContent = `Maman ${mamanPercent}%`;
             });
         }
         
-        /* ===== MESSAGES VOCAUX ===== */
+        /* MESSAGES VOCAUX */
         async function toggleRecording() {
-            // Vérifier que Storage est disponible
-            if (typeof storage === 'undefined') {
-                alert('Les messages vocaux ne sont pas disponibles pour le moment.');
-                return;
-            }
-            
             const btn = document.getElementById('record-btn');
             
             if (!mediaRecorder || mediaRecorder.state === 'inactive') {
@@ -1293,8 +1278,7 @@
                         }
                     }, 20000);
                 } catch(err) {
-                    console.error('Erreur accès micro:', err);
-                    alert('Impossible d\'accéder au microphone. Vérifiez les autorisations.');
+                    alert('Impossible d\'accéder au microphone');
                 }
             } else {
                 mediaRecorder.stop();
@@ -1304,12 +1288,6 @@
         }
         
         async function uploadVoiceMessage(blob) {
-            // Vérifier que Storage est disponible
-            if (typeof storage === 'undefined') {
-                console.error('Storage non disponible');
-                return;
-            }
-            
             if (!userName) {
                 userName = prompt('Votre prénom ?') || 'Anonyme';
                 localStorage.setItem('userName', userName);
@@ -1328,19 +1306,14 @@
                     duration: 20,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                
-                console.log('✅ Message vocal enregistré');
             } catch(err) {
-                console.error('❌ Erreur upload vocal:', err);
-                alert('Erreur lors de l\'enregistrement. Réessayez plus tard.');
+                console.error('Erreur upload vocal:', err);
             }
         }
         
         function listenToVoiceMessages() {
             db.collection('voice-messages').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
                 const container = document.getElementById('voice-messages');
-                if (!container) return;
-                
                 container.innerHTML = '';
                 
                 snapshot.forEach((doc) => {
@@ -1360,22 +1333,15 @@
                     item.onclick = () => playVoice(data.url);
                     container.appendChild(item);
                 });
-            }, err => {
-                console.warn('Messages vocaux non disponibles:', err.message);
             });
         }
         
         function playVoice(url) {
-            try {
-                const audio = new Audio(url);
-                audio.play();
-            } catch(err) {
-                console.error('Erreur lecture audio:', err);
-                alert('Impossible de lire le message.');
-            }
+            const audio = new Audio(url);
+            audio.play();
         }
         
-        /* ===== CONFETTIS ===== */
+        /* CONFETTIS */
         function createConfetti() {
             const colors = ['#C3A2A5', '#F9F1C9', '#C8BDAE', '#D4B4B7', '#EFEEEC'];
             
@@ -1394,7 +1360,7 @@
             }
         }
         
-        console.log('🦢 Site Baptême Léonie - Version ULTIME avec Firebase !');
+        console.log('🦢 Site Baptême Léonie - Version FINALE !');
     </script>
 </body>
 </html>
