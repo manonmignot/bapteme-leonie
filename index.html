@@ -582,7 +582,8 @@
             background: var(--rose-light);
         }
         
-        .poll-option img {
+        .poll-option img,
+        .poll-option svg {
             width: 120px;
             height: 120px;
             border-radius: 50%;
@@ -814,11 +815,17 @@
                 <div class="poll-card">
                     <div class="poll-options">
                         <div class="poll-option" onclick="vote('papa')">
-                            <img src="https://via.placeholder.com/120/C3A2A5/FFFFFF?text=Papa" alt="Papa">
+                            <svg width="120" height="120" viewBox="0 0 120 120" style="border-radius:50%">
+                                <circle cx="60" cy="60" r="60" fill="#C3A2A5"/>
+                                <text x="60" y="70" text-anchor="middle" font-size="24" fill="white" font-family="Cormorant Garamond">Papa</text>
+                            </svg>
                             <p>Papa</p>
                         </div>
                         <div class="poll-option" onclick="vote('maman')">
-                            <img src="https://via.placeholder.com/120/F9F1C9/7C6755?text=Maman" alt="Maman">
+                            <svg width="120" height="120" viewBox="0 0 120 120" style="border-radius:50%">
+                                <circle cx="60" cy="60" r="60" fill="#F9F1C9"/>
+                                <text x="60" y="70" text-anchor="middle" font-size="24" fill="#7C6755" font-family="Cormorant Garamond">Maman</text>
+                            </svg>
                             <p>Maman</p>
                         </div>
                     </div>
@@ -935,7 +942,6 @@
   storageBucket: "bapteme-leonie.firebasestorage.app",
   messagingSenderId: "342345057224",
   appId: "1:342345057224:web:e038e03e5d6a410f9436fd",
-  measurementId: "G-VKXNM4ZHL2"
         };
         
         // CLOUDINARY CONFIG
@@ -1005,12 +1011,38 @@
             console.log('🔥 Test connexion Firebase...');
             db.collection('photos').limit(1).get()
                 .then(() => {
-                    console.log('✅ Firebase connecté avec succès !');
+                    console.log('✅ Firebase Firestore connecté avec succès !');
                 })
                 .catch(err => {
                     console.error('❌ Erreur connexion Firebase:', err.message);
                     alert('❌ Erreur Firebase: ' + err.message + '\n\nVérifiez:\n1. Les règles Firestore sont publiques\n2. La config est correcte');
                 });
+            
+            // Test Storage (optionnel)
+            try {
+                storage.ref().child('test').getDownloadURL()
+                    .then(() => console.log('✅ Firebase Storage disponible'))
+                    .catch(() => {
+                        console.warn('⚠️ Firebase Storage non disponible - Messages vocaux désactivés');
+                        // Cacher le bouton d'enregistrement
+                        const recordBtn = document.getElementById('record-btn');
+                        if (recordBtn) {
+                            recordBtn.style.display = 'none';
+                        }
+                        // Afficher un message
+                        const msgSection = document.getElementById('messages');
+                        if (msgSection) {
+                            const notice = document.createElement('p');
+                            notice.style.textAlign = 'center';
+                            notice.style.color = 'var(--text-light)';
+                            notice.style.fontStyle = 'italic';
+                            notice.textContent = 'Les messages vocaux seront disponibles prochainement';
+                            msgSection.querySelector('.container-narrow').insertBefore(notice, document.getElementById('voice-messages'));
+                        }
+                    });
+            } catch(e) {
+                console.warn('⚠️ Storage non initialisé - Messages vocaux désactivés');
+            }
             
             initCloudinary();
             listenToPhotos();
@@ -1228,31 +1260,42 @@
         
         /* ===== MESSAGES VOCAUX ===== */
         async function toggleRecording() {
+            // Vérifier que Storage est disponible
+            if (typeof storage === 'undefined') {
+                alert('Les messages vocaux ne sont pas disponibles pour le moment.');
+                return;
+            }
+            
             const btn = document.getElementById('record-btn');
             
             if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                
-                mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
-                mediaRecorder.onstop = async () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    await uploadVoiceMessage(audioBlob);
-                    stream.getTracks().forEach(track => track.stop());
-                };
-                
-                mediaRecorder.start();
-                btn.classList.add('recording');
-                btn.textContent = '⏹ Arrêter (20s)';
-                
-                setTimeout(() => {
-                    if (mediaRecorder.state === 'recording') {
-                        mediaRecorder.stop();
-                        btn.classList.remove('recording');
-                        btn.textContent = '🎤 Enregistrer un message (20s)';
-                    }
-                }, 20000);
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    
+                    mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        await uploadVoiceMessage(audioBlob);
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+                    
+                    mediaRecorder.start();
+                    btn.classList.add('recording');
+                    btn.textContent = '⏹ Arrêter (20s)';
+                    
+                    setTimeout(() => {
+                        if (mediaRecorder.state === 'recording') {
+                            mediaRecorder.stop();
+                            btn.classList.remove('recording');
+                            btn.textContent = '🎤 Enregistrer un message (20s)';
+                        }
+                    }, 20000);
+                } catch(err) {
+                    console.error('Erreur accès micro:', err);
+                    alert('Impossible d\'accéder au microphone. Vérifiez les autorisations.');
+                }
             } else {
                 mediaRecorder.stop();
                 btn.classList.remove('recording');
@@ -1261,28 +1304,43 @@
         }
         
         async function uploadVoiceMessage(blob) {
+            // Vérifier que Storage est disponible
+            if (typeof storage === 'undefined') {
+                console.error('Storage non disponible');
+                return;
+            }
+            
             if (!userName) {
                 userName = prompt('Votre prénom ?') || 'Anonyme';
                 localStorage.setItem('userName', userName);
             }
             
-            const filename = `voice-${Date.now()}.webm`;
-            const storageRef = storage.ref().child(`voice-messages/${filename}`);
-            
-            await storageRef.put(blob);
-            const url = await storageRef.getDownloadURL();
-            
-            await db.collection('voice-messages').add({
-                url: url,
-                author: userName,
-                duration: 20,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
+            try {
+                const filename = `voice-${Date.now()}.webm`;
+                const storageRef = storage.ref().child(`voice-messages/${filename}`);
+                
+                await storageRef.put(blob);
+                const url = await storageRef.getDownloadURL();
+                
+                await db.collection('voice-messages').add({
+                    url: url,
+                    author: userName,
+                    duration: 20,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                console.log('✅ Message vocal enregistré');
+            } catch(err) {
+                console.error('❌ Erreur upload vocal:', err);
+                alert('Erreur lors de l\'enregistrement. Réessayez plus tard.');
+            }
         }
         
         function listenToVoiceMessages() {
             db.collection('voice-messages').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
                 const container = document.getElementById('voice-messages');
+                if (!container) return;
+                
                 container.innerHTML = '';
                 
                 snapshot.forEach((doc) => {
@@ -1302,12 +1360,19 @@
                     item.onclick = () => playVoice(data.url);
                     container.appendChild(item);
                 });
+            }, err => {
+                console.warn('Messages vocaux non disponibles:', err.message);
             });
         }
         
         function playVoice(url) {
-            const audio = new Audio(url);
-            audio.play();
+            try {
+                const audio = new Audio(url);
+                audio.play();
+            } catch(err) {
+                console.error('Erreur lecture audio:', err);
+                alert('Impossible de lire le message.');
+            }
         }
         
         /* ===== CONFETTIS ===== */
