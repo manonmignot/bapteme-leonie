@@ -4,22 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Le baptême et premier anniversaire de Léonie · 6 juin 2026</title>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600&family=Lato:wght@300;400&family=Permanent+Marker&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Firebase -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600&family=Lato:wght@300;400&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-    
-    <!-- Cloudinary -->
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
-    
-    <!-- JSZip -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    
+
     <style>
         :root {
             --ivory: #EFEEEC;
@@ -34,23 +28,21 @@
             --text-dark: #3A3A3A;
             --text-light: #8A8A8A;
         }
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body {
             font-family: 'Lato', sans-serif;
             background: var(--off-white);
             color: var(--text-dark);
             overflow-x: hidden;
         }
-        
-        /* Enveloppe */
+
+        /* ── Enveloppe ── */
         #envelope-scene {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background: linear-gradient(135deg, #FAF9F7 0%, #F5F3F0 100%);
             display: flex;
             flex-direction: column;
@@ -59,9 +51,9 @@
             z-index: 10000;
             transition: opacity 1s ease, visibility 1s ease;
         }
-        
+
         #envelope-scene.hiding { opacity: 0; visibility: hidden; }
-        
+
         .instruction {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.75rem;
@@ -70,17 +62,16 @@
             margin-bottom: 3rem;
             animation: fadeIn 1s ease 0.5s both, pulse 2s ease-in-out infinite;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50%       { transform: scale(1.05); }
         }
-        
+
         .envelope-container {
             position: relative;
             width: min(90vw, 600px);
@@ -88,48 +79,34 @@
             cursor: pointer;
             transition: transform 0.3s ease;
         }
-        
         .envelope-container:hover { transform: translateY(-8px); }
-        
+
         .envelope-image {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             object-fit: contain;
             opacity: 0;
             transition: opacity 1s ease;
             filter: drop-shadow(0 8px 32px rgba(0,0,0,0.12));
         }
-        
         .envelope-image.active { opacity: 1; }
-        
-        /* GIF papier qui sort */
+
         .paper-gif {
             position: absolute;
-            top: 20%;
-            left: 50%;
+            top: 20%; left: 50%;
             transform: translateX(-50%);
             width: 60%;
             opacity: 0;
             transition: opacity 0.5s ease;
             z-index: 10;
         }
-        
         .paper-gif.visible { opacity: 1; }
-        
-        /* Site principal */
-        #main-site {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-        }
-        
-        #main-site.visible {
-            display: block;
-            opacity: 1;
-        }
-        
-        /* Navigation */
+
+        /* ── Site principal ── */
+        #main-site { display: none; opacity: 0; transition: opacity 0.8s ease; }
+        #main-site.visible { display: block; opacity: 1; }
+
+        /* ── Navigation ── */
         .main-nav {
             position: sticky;
             top: 0;
@@ -138,18 +115,15 @@
             border-bottom: 1px solid rgba(195,162,165,0.15);
             z-index: 1000;
         }
-        
         .nav-content {
             max-width: 900px;
             margin: 0 auto;
-            padding: 1.5rem 1rem;
+            padding: 1.25rem 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
+            gap: 1.25rem;
         }
-        
         .nav-link {
             font-size: 0.8125rem;
             color: var(--text-light);
@@ -157,30 +131,13 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             transition: color 0.2s;
+            white-space: nowrap;
+            touch-action: manipulation;
         }
-        
-        .nav-link:hover { color: var(--rose); }
+        .nav-link:hover, .nav-link:active { color: var(--rose); }
         .nav-separator { color: var(--sand); opacity: 0.5; }
-        
-        /* Slider photo */
-        .photo-slider {
-            width: 100%;
-            max-width: 1200px;
-            height: 60vh;
-            margin: 0 auto 2rem;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        
-        .slider-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        /* Hero */
+
+        /* ── Hero ── */
         .hero {
             min-height: 90vh;
             display: flex;
@@ -189,47 +146,46 @@
             padding: 4rem 2rem 3rem;
             background: linear-gradient(to bottom, #FAF9F7 0%, var(--ivory) 100%);
         }
-        
         .hero-container {
             max-width: 700px;
             text-align: center;
+            width: 100%;
         }
-        
+        .hero-photo {
+            width: 100%;
+            max-width: 600px;
+            height: 340px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 0 auto 2rem;
+            display: block;
+            box-shadow: 0 8px 32px rgba(124,103,85,0.15);
+        }
         .goose-image {
             display: block;
             margin: 0 auto 2rem;
             max-width: 180px;
             filter: drop-shadow(0 2px 8px rgba(0,0,0,0.03));
         }
-        
-        .goose-image-small {
-            max-width: 120px;
-            margin: 2rem auto;
-        }
-        
+        .goose-image-small { max-width: 120px; margin: 2rem auto; }
+
         .hero-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 300;
             color: var(--taupe);
             margin-bottom: 2rem;
             line-height: 1.3;
         }
-        
         .hero-divider {
-            width: 100px;
-            height: 1px;
+            width: 100px; height: 1px;
             background: var(--rose);
             margin: 2rem auto;
             opacity: 0.4;
         }
-        
-        /* Compte à rebours avec effet manuscrit */
-        .countdown-wrapper {
-            position: relative;
-            margin: 2rem 0;
-        }
-        
+
+        /* ── Countdown ── */
+        .countdown-wrapper { position: relative; margin: 2rem 0; }
         .countdown {
             display: flex;
             justify-content: center;
@@ -237,11 +193,7 @@
             flex-wrap: wrap;
             margin-bottom: 1rem;
         }
-        
-        .countdown-item {
-            text-align: center;
-        }
-        
+        .countdown-item { text-align: center; }
         .countdown-number {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.5rem;
@@ -249,7 +201,6 @@
             color: var(--rose);
             display: block;
         }
-        
         .countdown-label {
             font-size: 0.75rem;
             color: var(--text-light);
@@ -257,61 +208,31 @@
             text-transform: uppercase;
             margin-top: 0.5rem;
         }
-        
-        /* Overlay manuscrit "C'est aujourd'hui !" */
         .today-overlay {
             font-family: 'Caveat', cursive;
             font-size: 3.5rem;
             font-weight: 700;
             color: var(--rose);
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%) rotate(-5deg);
             text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
             z-index: 10;
             display: none;
             white-space: nowrap;
         }
-        
-        .today-overlay.visible {
-            display: block;
-            animation: bounce 0.6s ease-out;
-        }
-        
+        .today-overlay.visible { display: block; animation: bounce 0.6s ease-out; }
         @keyframes bounce {
             0%, 100% { transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
-            50% { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); }
+            50%       { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); }
         }
-        
-        /* Doodle */
-        .doodle {
-            position: absolute;
-            top: -30px;
-            right: -40px;
-            width: 50px;
-            opacity: 0.7;
-        }
-        
-        /* Sections */
-        .section {
-            padding: 4rem 2rem;
-        }
-        
-        .section-alt {
-            background: var(--sand-light);
-        }
-        
-        .container-narrow {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
+        .doodle { position: absolute; top: -30px; right: -40px; width: 50px; opacity: 0.7; }
+
+        /* ── Sections ── */
+        .section { padding: 4rem 2rem; }
+        .section-alt { background: var(--sand-light); }
+        .container-narrow { max-width: 800px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 3rem; }
         .section-title {
             font-family: 'Cormorant Garamond', serif;
             font-size: clamp(2rem, 4vw, 2.5rem);
@@ -319,20 +240,14 @@
             color: var(--taupe);
             margin-bottom: 1rem;
         }
-        
         .section-subtitle {
             font-size: 0.9375rem;
             color: var(--text-light);
             line-height: 1.7;
         }
-        
-        /* Galerie */
-        .photo-stats {
-            text-align: center;
-            margin-bottom: 2rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
+
+        /* ── Stats ── */
+        .photo-stats { text-align: center; margin-bottom: 2rem; }
         .stat-number {
             font-family: 'Cormorant Garamond', serif;
             font-size: 3rem;
@@ -340,28 +255,20 @@
             color: var(--rose);
             display: block;
         }
-        
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-light);
-        }
-        
-        /* Modal prénom */
+        .stat-label { font-size: 0.875rem; color: var(--text-light); }
+
+        /* ── Modal prénom ── */
         .name-modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.6);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 9999;
         }
-        
         .name-modal.active { display: flex; }
-        
         .name-modal-content {
             background: var(--white);
             padding: 3rem 2rem;
@@ -370,36 +277,70 @@
             width: 90%;
             text-align: center;
         }
-        
         .name-modal h3 {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.5rem;
             color: var(--taupe);
             margin-bottom: 1rem;
         }
-        
         .name-modal p {
             font-size: 0.9375rem;
             color: var(--text-light);
             margin-bottom: 2rem;
         }
-        
         .name-input {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.875rem 1rem;
             font-size: 1rem;
             border: 1px solid var(--sand);
             border-radius: 50px;
             margin-bottom: 1.5rem;
             text-align: center;
+            -webkit-appearance: none;
+            font-family: 'Lato', sans-serif;
         }
-        
-        .name-input:focus {
-            outline: none;
-            border-color: var(--rose);
+        .name-input:focus { outline: none; border-color: var(--rose); }
+
+        /* ── Boutons ── */
+        .btn-primary {
+            font-size: 1rem;
+            color: var(--white);
+            background: var(--rose);
+            border: none;
+            padding: 1rem 2.5rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 50px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 14px rgba(195,162,165,0.4);
+            touch-action: manipulation;
+            font-family: 'Lato', sans-serif;
+            display: inline-block;
         }
-        
-        /* Upload card */
+        .btn-primary:hover, .btn-primary:active {
+            background: var(--taupe);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(124,103,85,0.3);
+        }
+        .btn-secondary {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            background: transparent;
+            border: 1px solid var(--sand);
+            padding: 0.75rem 2rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 50px;
+            transition: all 0.3s;
+            touch-action: manipulation;
+            font-family: 'Lato', sans-serif;
+            display: inline-block;
+        }
+        .btn-secondary:hover, .btn-secondary:active { background: var(--ivory); }
+
+        /* ── Upload card ── */
         .upload-card {
             background: var(--white);
             padding: 3rem 2rem;
@@ -408,189 +349,197 @@
             box-shadow: 0 2px 16px rgba(124,103,85,0.06);
             border-radius: 8px;
         }
-        
-        .upload-icon {
-            color: var(--rose);
-            margin-bottom: 1.5rem;
-        }
-        
+        .upload-icon { color: var(--rose); margin-bottom: 1.5rem; }
         .upload-heading {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.5rem;
             color: var(--taupe);
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
-        
-        .btn-upload {
+        .upload-sub {
             font-size: 0.875rem;
-            color: var(--taupe);
-            background: var(--vanilla);
-            border: none;
-            padding: 0.75rem 2rem;
-            cursor: pointer;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            border-radius: 50px;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(195,162,165,0.15);
+            color: var(--text-light);
+            margin-bottom: 1.75rem;
         }
-        
-        .btn-upload:hover {
-            background: var(--rose);
-            color: var(--white);
-            transform: translateY(-2px);
+        .upload-actions { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+
+        /* ── Upload overlay ── */
+        .upload-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.55);
+            z-index: 9997;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
         }
-        
-        .btn-download-all {
-            background: var(--sand);
-            color: var(--white);
-            margin-top: 1rem;
+        .upload-overlay.active { display: flex; }
+        .upload-spinner {
+            width: 48px; height: 48px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: var(--rose);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
-        
-        /* Galerie */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .upload-overlay p {
+            color: white;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+        }
+
+        /* ── Galerie ── */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
         }
-        
         .gallery-item {
             aspect-ratio: 1;
             overflow: hidden;
             background: var(--ivory);
             border-radius: 8px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
             position: relative;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+        .gallery-item:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
         .gallery-item img {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             object-fit: cover;
             filter: blur(8px);
             transition: filter 0.6s ease, transform 0.3s ease;
         }
-        
-        .gallery-item.revealed img {
-            filter: blur(0);
-        }
-        
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-        
+        .gallery-item.revealed img { filter: blur(0); }
+        .gallery-item:hover img { transform: scale(1.05); }
         .photo-author {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.6));
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.65));
             color: white;
-            padding: 1.5rem 1rem 0.75rem;
-            font-size: 0.875rem;
+            padding: 1.5rem 0.75rem 0.625rem;
+            font-size: 0.8125rem;
             text-align: center;
             opacity: 0;
             transition: opacity 0.3s;
         }
-        
-        .gallery-item:hover .photo-author {
-            opacity: 1;
+        .gallery-item:hover .photo-author,
+        .gallery-item:active .photo-author { opacity: 1; }
+        .video-badge {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 44px; height: 44px;
+            background: rgba(255,255,255,0.88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
-        
-        /* Lightbox */
+        .gallery-empty {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.125rem;
+            font-style: italic;
+            grid-column: 1 / -1;
+        }
+
+        /* ── Lightbox ── */
         .lightbox {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.95);
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.96);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 9998;
         }
-        
         .lightbox.active { display: flex; }
-        
         .lightbox-content {
             max-width: 90vw;
             max-height: 90vh;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .lightbox-image {
-            max-width: 100%;
-            max-height: 90vh;
+        .lightbox-img, .lightbox-video {
+            max-width: 90vw;
+            max-height: 85vh;
             object-fit: contain;
             border-radius: 8px;
         }
-        
         .lightbox-author {
             position: absolute;
-            bottom: -40px;
+            bottom: -36px;
             left: 50%;
             transform: translateX(-50%);
-            color: white;
+            color: rgba(255,255,255,0.75);
             font-size: 0.9375rem;
             white-space: nowrap;
         }
-        
         .lightbox-nav {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: var(--rose);
+            background: rgba(195,162,165,0.8);
             color: white;
             border: none;
-            width: 50px;
-            height: 50px;
+            width: 48px; height: 48px;
             border-radius: 50%;
             font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
         }
-        
-        .lightbox-nav:hover {
-            background: var(--taupe);
-            transform: translateY(-50%) scale(1.1);
-        }
-        
-        .lightbox-prev { left: 2rem; }
-        .lightbox-next { right: 2rem; }
-        
+        .lightbox-nav:hover { background: var(--taupe); transform: translateY(-50%) scale(1.1); }
+        .lightbox-prev { left: 1rem; }
+        .lightbox-next { right: 1rem; }
         .lightbox-close {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            background: none;
+            position: fixed;
+            top: 1.25rem; right: 1.25rem;
+            background: rgba(255,255,255,0.15);
             border: none;
             color: white;
-            font-size: 2rem;
+            font-size: 1.5rem;
             cursor: pointer;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            transition: background 0.2s;
         }
-        
-        /* Confettis */
+        .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+
+        /* ── Confettis ── */
         .confetti {
             position: fixed;
-            width: 10px;
-            height: 10px;
+            width: 10px; height: 10px;
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             animation: fall 3s linear;
         }
-        
         @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
+            to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
-        
-        /* Sondage */
+
+        /* ── Sondage ── */
         .poll-intro {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.125rem;
@@ -600,21 +549,18 @@
             margin-bottom: 2rem;
             line-height: 1.8;
         }
-        
         .poll-card {
             background: var(--white);
             padding: 3rem 2rem;
             border-radius: 8px;
             box-shadow: 0 2px 16px rgba(124,103,85,0.06);
         }
-        
         .poll-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 2rem;
             margin-bottom: 2rem;
         }
-        
         .poll-option {
             text-align: center;
             cursor: pointer;
@@ -622,58 +568,38 @@
             border: 2px solid transparent;
             border-radius: 8px;
             transition: all 0.3s;
+            touch-action: manipulation;
         }
-        
-        .poll-option:hover {
-            border-color: var(--rose);
-            background: var(--ivory);
-        }
-        
-        .poll-option.voted {
-            border-color: var(--rose);
-            background: var(--rose-light);
-        }
-        
+        .poll-option:hover  { border-color: var(--rose); background: var(--ivory); }
+        .poll-option.voted  { border-color: var(--rose); background: rgba(195,162,165,0.12); }
         .poll-option img {
-            width: 150px;
-            height: 150px;
+            width: 120px; height: 120px;
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 1rem;
         }
-        
         .poll-option p {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.125rem;
             color: var(--taupe);
         }
-        
-        /* UNE seule jauge */
-        .poll-results {
-            display: block;
-            margin-top: 2rem;
-        }
-        
+        .poll-results { display: block; margin-top: 2rem; }
         .single-poll-bar {
             position: relative;
-            height: 40px;
+            height: 44px;
             background: linear-gradient(90deg, #F9F1C9 0%, #C3A2A5 100%);
-            border-radius: 20px;
+            border-radius: 22px;
             overflow: hidden;
         }
-        
         .poll-divider {
             position: absolute;
-            top: 0;
-            height: 100%;
+            top: 0; height: 100%;
             width: 3px;
             background: white;
             transition: left 0.6s ease;
             z-index: 2;
         }
-        
-        .poll-label-left,
-        .poll-label-right {
+        .poll-label-left, .poll-label-right {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
@@ -682,49 +608,40 @@
             color: var(--text-dark);
             z-index: 3;
         }
-        
-        .poll-label-left {
-            left: 1rem;
+        .poll-label-left  { left: 1rem; }
+        .poll-label-right { right: 1rem; }
+        .poll-total {
+            text-align: center;
+            margin-top: 0.875rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
         }
-        
-        .poll-label-right {
-            right: 1rem;
-        }
-        
-        /* Messages vocaux */
+
+        /* ── Messages vocaux ── */
         .voice-messages {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             gap: 1.5rem;
             margin-top: 2rem;
         }
-        
         .voice-message {
             text-align: center;
             cursor: pointer;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+            touch-action: manipulation;
         }
-        
+        .voice-message:hover, .voice-message:active { background: var(--ivory); }
+        .voice-message.playing { background: rgba(195,162,165,0.2); }
         .gramophone {
-            width: 80px;
-            height: 80px;
+            width: 70px; height: 70px;
             margin: 0 auto 0.5rem;
             transition: transform 0.3s;
         }
-        
-        .gramophone:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
-        
-        .voice-author {
-            font-size: 0.875rem;
-            color: var(--text-dark);
-        }
-        
-        .voice-duration {
-            font-size: 0.75rem;
-            color: var(--text-light);
-        }
-        
+        .voice-message:hover .gramophone { transform: scale(1.1) rotate(5deg); }
+        .voice-author { font-size: 0.875rem; color: var(--text-dark); }
+        .voice-duration { font-size: 0.75rem; color: var(--text-light); margin-top: 0.25rem; }
         .record-button {
             background: var(--rose);
             color: white;
@@ -732,54 +649,93 @@
             padding: 1rem 2rem;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 0.875rem;
+            font-size: 0.9375rem;
             letter-spacing: 1px;
             text-transform: uppercase;
-            margin: 2rem auto;
+            margin: 0 auto 1rem;
             display: block;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 4px 12px rgba(195,162,165,0.3);
+            touch-action: manipulation;
+            transition: background 0.2s;
+            font-family: 'Lato', sans-serif;
         }
-        
-        .record-button.recording {
-            animation: pulse 1s ease-in-out infinite;
-            background: #e74c3c;
+        .record-button.recording { animation: pulse 1s ease-in-out infinite; background: #c0392b; }
+        .record-timer {
+            text-align: center;
+            color: var(--rose);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: none;
         }
-        
-        /* Footer */
+        .voice-empty {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-style: italic;
+            grid-column: 1 / -1;
+        }
+
+        /* ── Footer ── */
         .footer {
             padding: 3rem 2rem;
             background: linear-gradient(to bottom, var(--off-white) 0%, var(--sand-light) 100%);
             text-align: center;
         }
-        
         .footer-text {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1rem;
             color: var(--taupe);
         }
-        
-        .hidden { display: none !important; }
-        
-        /* Responsive */
+
+        /* ── Responsive ── */
         @media (max-width: 768px) {
+            .nav-content {
+                overflow-x: auto;
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                padding: 1rem;
+                gap: 1.25rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .nav-content::-webkit-scrollbar { display: none; }
             .nav-separator { display: none; }
-            .poll-options { grid-template-columns: 1fr; }
-            .lightbox-nav { width: 40px; height: 40px; }
-            .lightbox-prev { left: 1rem; }
-            .lightbox-next { right: 1rem; }
-            .today-overlay { font-size: 2.5rem; }
+
+            .hero { padding: 2rem 1.25rem; }
+            .hero-photo { height: 220px; }
+
+            .section { padding: 3rem 1.25rem; }
+            .upload-card { padding: 2rem 1.25rem; }
+            .poll-card  { padding: 2rem 1.25rem; }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.625rem;
+            }
+
+            .lightbox-nav { width: 40px; height: 40px; font-size: 1.25rem; }
+            .lightbox-prev { left: 0.5rem; }
+            .lightbox-next { right: 0.5rem; }
+
+            .today-overlay { font-size: 2.25rem; }
+
+            .poll-option img { width: 90px; height: 90px; }
+            .poll-options { gap: 1rem; }
         }
     </style>
 </head>
 <body>
-    
+
     <!-- ENVELOPPE -->
     <div id="envelope-scene">
         <p class="instruction">Ouvrez-moi !</p>
         <div class="envelope-container" onclick="openEnvelope()">
-            <img src="enveloppe-fermee.png" class="envelope-image active" id="envelope-closed">
-            <img src="enveloppe-ouverte.png" class="envelope-image" id="envelope-opened">
-            <!-- GIF papier qui sort - vous pouvez le remplacer par un vrai GIF -->
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150'%3E%3Crect x='20' y='0' width='60' height='150' fill='%23FAF9F7' rx='2'/%3E%3Cpath d='M20 0 L40 15 L60 5 L80 15 L80 0 Z' fill='%23C3A2A5' opacity='0.3'/%3E%3C/svg%3E" class="paper-gif" id="paper-gif">
+            <img src="enveloppe-fermee.png" class="envelope-image active" id="envelope-closed" alt="">
+            <img src="enveloppe-ouverte.png" class="envelope-image" id="envelope-opened" alt="">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150'%3E%3Crect x='20' y='0' width='60' height='150' fill='%23FAF9F7' rx='2'/%3E%3Cpath d='M20 0 L40 15 L60 5 L80 15 L80 0 Z' fill='%23C3A2A5' opacity='0.3'/%3E%3C/svg%3E" class="paper-gif" id="paper-gif" alt="">
         </div>
     </div>
 
@@ -788,15 +744,16 @@
         <div class="name-modal-content">
             <h3>Avant de partager...</h3>
             <p>Quel est votre prénom ?</p>
-            <input type="text" id="user-name" class="name-input" placeholder="Votre prénom">
-            <button class="btn-upload" onclick="saveName()">Continuer</button>
+            <input type="text" id="user-name" class="name-input" placeholder="Votre prénom" autocomplete="given-name">
+            <button class="btn-primary" onclick="saveName()">Continuer</button>
         </div>
     </div>
 
     <!-- LIGHTBOX -->
-    <div class="lightbox" id="lightbox">
-        <div class="lightbox-content">
-            <img src="" id="lightbox-img" class="lightbox-image">
+    <div class="lightbox" id="lightbox" onclick="handleLightboxClick(event)">
+        <div class="lightbox-content" id="lightbox-content">
+            <img src="" id="lightbox-img" class="lightbox-img" alt="">
+            <video id="lightbox-video" class="lightbox-video" controls playsinline style="display:none"></video>
             <div class="lightbox-author" id="lightbox-author"></div>
         </div>
         <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">‹</button>
@@ -804,10 +761,15 @@
         <button class="lightbox-close" onclick="closeLightbox()">×</button>
     </div>
 
+    <!-- OVERLAY CHARGEMENT -->
+    <div class="upload-overlay" id="upload-overlay">
+        <div class="upload-spinner"></div>
+        <p id="overlay-msg">Envoi en cours...</p>
+    </div>
+
     <!-- SITE -->
     <div id="main-site">
-        
-        <!-- NAVIGATION -->
+
         <nav class="main-nav">
             <div class="nav-content">
                 <a href="#accueil" class="nav-link">Accueil</a>
@@ -822,21 +784,18 @@
             </div>
         </nav>
 
-        <!-- HERO avec SLIDER PHOTO -->
+        <!-- HERO -->
         <section id="accueil" class="hero">
             <div class="hero-container">
-                <!-- Grand slider photo -->
-                <div class="photo-slider">
-                    <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?w=1200&h=800&fit=crop" alt="Léonie" class="slider-image" id="slider-image">
-                </div>
-                
-                <img src="oie-1.png" alt="Oie" class="goose-image">
-                
+                <!-- Renommez votre photo "leonie-hero.jpg" dans votre repo GitHub -->
+                <img src="leonie-hero.jpg" alt="Léonie" class="hero-photo">
+
+                <img src="oie-1.png" alt="" class="goose-image">
+
                 <h1 class="hero-title">Bienvenue au baptême<br>et premier anniversaire de Léonie</h1>
-                
+
                 <div class="hero-divider"></div>
-                
-                <!-- Compte à rebours avec overlay manuscrit -->
+
                 <div class="countdown-wrapper">
                     <div id="countdown" class="countdown"></div>
                     <div class="today-overlay" id="today-overlay">
@@ -850,19 +809,19 @@
             </div>
         </section>
 
-        <img src="oie-2.png" class="goose-image goose-image-small">
+        <img src="oie-2.png" class="goose-image goose-image-small" alt="">
 
-        <!-- GALERIE DES SOUVENIRS -->
+        <!-- GALERIE -->
         <section id="photos" class="section section-alt">
             <div class="container-narrow">
                 <div class="section-header">
                     <h2 class="section-title">Galerie des souvenirs</h2>
-                    <p class="section-subtitle">Partagez les moments précieux de cette journée spéciale</p>
+                    <p class="section-subtitle">Photos et vidéos de cette journée spéciale</p>
                 </div>
 
                 <div class="photo-stats">
                     <span class="stat-number" id="photo-count">0</span>
-                    <span class="stat-label">souvenir<span id="plural">s</span> partagé<span id="plural2">s</span></span>
+                    <span class="stat-label" id="photo-label">souvenir partagé</span>
                 </div>
 
                 <div class="upload-card">
@@ -871,17 +830,21 @@
                         <polyline points="17 8 12 3 7 8"></polyline>
                         <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
-                    <h3 class="upload-heading">Ajouter vos images</h3>
-                    <button class="btn-upload" onclick="startUpload()">Parcourir</button>
-                    <br><br>
-                    <button class="btn-upload btn-download-all" onclick="downloadAllPhotos()">📥 Télécharger toutes les photos (ZIP)</button>
+                    <h3 class="upload-heading">Partagez vos photos & vidéos</h3>
+                    <p class="upload-sub">Photos · Vidéos · Jusqu'à 100 Mo par fichier</p>
+                    <div class="upload-actions">
+                        <button class="btn-primary" onclick="startUpload()">📷 Ajouter mes souvenirs</button>
+                        <button class="btn-secondary" onclick="downloadAllPhotos()">📥 Tout télécharger</button>
+                    </div>
                 </div>
 
-                <div class="gallery-grid" id="gallery-grid"></div>
+                <div class="gallery-grid" id="gallery-grid">
+                    <p class="gallery-empty">Soyez le premier à partager un souvenir ✨</p>
+                </div>
             </div>
         </section>
 
-        <img src="oie-3.png" class="goose-image goose-image-small">
+        <img src="oie-3.png" class="goose-image goose-image-small" alt="">
 
         <!-- SONDAGE -->
         <section id="sondage" class="section">
@@ -889,35 +852,38 @@
                 <div class="section-header">
                     <h2 class="section-title">À qui ressemble Léonie ?</h2>
                     <p class="poll-intro">
-                        La question qui fait débat depuis 12 mois, où tout le monde rajoute son avis...<br>
+                        La question qui fait débat depuis 12 mois...<br>
                         Alors, à qui ressemble-t-elle le plus ?
                     </p>
                 </div>
-
                 <div class="poll-card">
                     <div class="poll-options">
-                        <div class="poll-option" onclick="vote('papa')">
-                            <img src="https://via.placeholder.com/150/C3A2A5/FFFFFF?text=Papa" alt="Papa bébé">
+                        <div class="poll-option" id="option-papa" onclick="vote('papa')">
+                            <!-- Ajoutez papa-bebe.jpg dans votre repo -->
+                            <img src="papa-bebe.jpg" alt="Papa bébé"
+                                 onerror="this.src='https://via.placeholder.com/120/C3A2A5/FFFFFF?text=Papa'">
                             <p>Papa</p>
                         </div>
-                        <div class="poll-option" onclick="vote('maman')">
-                            <img src="https://via.placeholder.com/150/F9F1C9/7C6755?text=Maman" alt="Maman bébé">
+                        <div class="poll-option" id="option-maman" onclick="vote('maman')">
+                            <!-- Ajoutez maman-bebe.jpg dans votre repo -->
+                            <img src="maman-bebe.jpg" alt="Maman bébé"
+                                 onerror="this.src='https://via.placeholder.com/120/F9F1C9/7C6755?text=Maman'">
                             <p>Maman</p>
                         </div>
                     </div>
-
-                    <div class="poll-results" id="poll-results">
+                    <div class="poll-results">
                         <div class="single-poll-bar">
                             <div class="poll-divider" id="poll-divider" style="left:50%"></div>
-                            <span class="poll-label-left" id="papa-label">Papa 50%</span>
+                            <span class="poll-label-left"  id="papa-label">Papa 50%</span>
                             <span class="poll-label-right" id="maman-label">Maman 50%</span>
                         </div>
+                        <p class="poll-total" id="poll-total">0 vote</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <img src="oie-4.png" class="goose-image goose-image-small">
+        <img src="oie-4.png" class="goose-image goose-image-small" alt="">
 
         <!-- MESSAGES VOCAUX -->
         <section id="messages" class="section section-alt">
@@ -930,12 +896,15 @@
                 <button class="record-button" id="record-btn" onclick="toggleRecording()">
                     🎤 Enregistrer un message (20s)
                 </button>
+                <div class="record-timer" id="record-timer"></div>
 
-                <div class="voice-messages" id="voice-messages"></div>
+                <div class="voice-messages" id="voice-messages">
+                    <p class="voice-empty">Aucun message pour l'instant</p>
+                </div>
             </div>
         </section>
 
-        <img src="oie-2.png" class="goose-image goose-image-small">
+        <img src="oie-2.png" class="goose-image goose-image-small" alt="">
 
         <!-- REMERCIEMENTS -->
         <section id="merci" class="section">
@@ -945,7 +914,7 @@
                 </div>
                 <div style="background:white;padding:3rem 2rem;border-radius:8px;text-align:center">
                     <p style="font-family:'Cormorant Garamond',serif;font-size:1.125rem;line-height:1.8;margin-bottom:1.5rem">
-                        Votre présence illumine nos cœurs. Merci d'être là pour célébrer 
+                        Votre présence illumine nos cœurs. Merci d'être là pour célébrer
                         le baptême et le premier anniversaire de notre petite Léonie.
                     </p>
                     <p style="font-family:'Cormorant Garamond',serif;font-size:1.125rem;font-style:italic;color:var(--rose)">
@@ -955,52 +924,43 @@
             </div>
         </section>
 
-        <!-- FOOTER -->
         <footer class="footer">
-            <img src="oie-3.png" class="goose-image goose-image-small">
+            <img src="oie-3.png" class="goose-image goose-image-small" alt="">
             <p class="footer-text">Le baptême & premier anniversaire de Léonie · 6 juin 2026</p>
         </footer>
 
     </div>
 
     <script>
-        /* CONFIGURATION - À REMPLACER PAR VOS VRAIES VALEURS */
         const firebaseConfig = {
             apiKey: "AIzaSyCaEPjJL8wprvfp9ZQVCmtXzz97sehNQwk",
-  authDomain: "bapteme-leonie.firebaseapp.com",
-  projectId: "bapteme-leonie",
-  storageBucket: "bapteme-leonie.firebasestorage.app",
-  messagingSenderId: "342345057224",
-  appId: "1:342345057224:web:e038e03e5d6a410f9436fd",
+            authDomain: "bapteme-leonie.firebaseapp.com",
+            projectId: "bapteme-leonie",
+            storageBucket: "bapteme-leonie.firebasestorage.app",
+            messagingSenderId: "342345057224",
+            appId: "1:342345057224:web:e038e03e5d6a410f9436fd"
+        };
+        const CLOUDINARY_CONFIG = { cloudName: 'dteqjqarz', uploadPreset: 'bapteme-leonie' };
 
-        };
-        
-        const CLOUDINARY_CONFIG = {
-            cloudName: 'dteqjqarz',
-            uploadPreset: 'bapteme-leonie'
-        };
-        
-        // Initialisation Firebase
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const db      = firebase.firestore();
         const storage = firebase.storage();
-        
-        let userName = localStorage.getItem('userName') || '';
-        let cloudinaryWidget = null;
-        let mediaRecorder;
-        let audioChunks = [];
-        let currentPhotos = [];
+
+        let userName            = localStorage.getItem('userName') || '';
+        let cloudinaryWidget    = null;
+        let mediaRecorder       = null;
+        let audioChunks         = [];
+        let recordingStartTime  = 0;
+        let recordTimerInterval = null;
+        let currentMedia        = [];
         let currentLightboxIndex = 0;
-        
-        /* ENVELOPPE */
+        let touchStartX         = 0;
+
+        /* ─── ENVELOPPE ─── */
         function openEnvelope() {
             document.getElementById('envelope-closed').classList.remove('active');
             document.getElementById('paper-gif').classList.add('visible');
-            
-            setTimeout(() => {
-                document.getElementById('envelope-opened').classList.add('active');
-            }, 500);
-            
+            setTimeout(() => document.getElementById('envelope-opened').classList.add('active'), 500);
             setTimeout(() => {
                 document.getElementById('envelope-scene').classList.add('hiding');
                 setTimeout(() => {
@@ -1014,309 +974,353 @@
                 }, 1000);
             }, 2500);
         }
-        
-        /* INITIALISATION */
+
+        /* ─── INIT ─── */
         function initApp() {
             initCloudinary();
             initCountdown();
-            listenToPhotos();
+            listenToMedia();
             listenToPoll();
             listenToVoiceMessages();
             setupIntersectionObserver();
+            setupKeyboard();
+            setupTouchSwipe();
+            restoreVoteState();
         }
-        
-        /* COMPTE À REBOURS */
+
+        /* ─── COUNTDOWN ─── */
         function initCountdown() {
-            const el = document.getElementById('countdown');
+            const el        = document.getElementById('countdown');
             const eventDate = new Date('2026-06-06T14:00:00').getTime();
-            
             function update() {
-                const now = new Date().getTime();
-                const distance = eventDate - now;
-                
-                // Si c'est le jour J
-                if (distance < 0 || Math.abs(distance) < 86400000) { // Moins de 24h
+                const distance = eventDate - Date.now();
+                if (distance < 86400000) {
                     el.innerHTML = '';
                     document.getElementById('today-overlay').classList.add('visible');
                     return;
                 }
-                
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                
+                const d = Math.floor(distance / 86400000);
+                const h = Math.floor((distance % 86400000) / 3600000);
+                const m = Math.floor((distance % 3600000) / 60000);
                 el.innerHTML = `
-                    <div class="countdown-item">
-                        <span class="countdown-number">${days}</span>
-                        <span class="countdown-label">Jours</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span class="countdown-number">${hours}</span>
-                        <span class="countdown-label">Heures</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span class="countdown-number">${minutes}</span>
-                        <span class="countdown-label">Minutes</span>
-                    </div>
-                `;
+                    <div class="countdown-item"><span class="countdown-number">${d}</span><span class="countdown-label">Jours</span></div>
+                    <div class="countdown-item"><span class="countdown-number">${h}</span><span class="countdown-label">Heures</span></div>
+                    <div class="countdown-item"><span class="countdown-number">${m}</span><span class="countdown-label">Minutes</span></div>`;
             }
-            
             update();
             setInterval(update, 60000);
         }
-        
-        /* MODAL PRÉNOM */
+
+        /* ─── MODAL PRÉNOM ─── */
         function startUpload() {
             if (!userName) {
                 document.getElementById('name-modal').classList.add('active');
+                setTimeout(() => document.getElementById('user-name').focus(), 100);
             } else {
                 openCloudinaryWidget();
             }
         }
-        
         function saveName() {
-            const input = document.getElementById('user-name').value.trim();
-            if (input) {
-                userName = input;
-                localStorage.setItem('userName', userName);
-                document.getElementById('name-modal').classList.remove('active');
-                openCloudinaryWidget();
-            }
+            const v = document.getElementById('user-name').value.trim();
+            if (!v) return;
+            userName = v;
+            localStorage.setItem('userName', userName);
+            document.getElementById('name-modal').classList.remove('active');
+            openCloudinaryWidget();
         }
-        
-        /* CLOUDINARY */
+        document.getElementById('user-name').addEventListener('keydown', e => {
+            if (e.key === 'Enter') saveName();
+        });
+
+        /* ─── CLOUDINARY ─── */
         function initCloudinary() {
             if (typeof cloudinary === 'undefined') return;
-            
             cloudinaryWidget = cloudinary.createUploadWidget({
-                cloudName: CLOUDINARY_CONFIG.cloudName,
-                uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
-                folder: 'bapteme-leonie-2026',
-                sources: ['local', 'camera'],
-                multiple: true,
-                maxFiles: 20,
-                maxFileSize: 10000000,
-                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'heic', 'webp'],
-                theme: 'minimal',
-                language: 'fr'
+                cloudName:            CLOUDINARY_CONFIG.cloudName,
+                uploadPreset:         CLOUDINARY_CONFIG.uploadPreset,
+                folder:               'bapteme-leonie-2026',
+                sources:              ['local', 'camera'],
+                multiple:             true,
+                maxFiles:             20,
+                maxFileSize:          100000000,
+                clientAllowedFormats: ['jpg','jpeg','png','heic','webp','mp4','mov','avi'],
+                theme:                'minimal',
+                language:             'fr'
             }, (error, result) => {
-                if (!error && result && result.event === 'success') {
-                    savePhotoToFirebase(result.info.secure_url, result.info.thumbnail_url);
+                if (error) { console.error('Cloudinary:', error); return; }
+                if (result.event === 'upload-added')  showOverlay(true);
+                if (result.event === 'queues-end')    showOverlay(false);
+                if (result.event === 'success') {
+                    const isVideo = result.info.resource_type === 'video';
+                    saveMediaToFirebase(result.info.secure_url, result.info.thumbnail_url, isVideo);
                 }
             });
         }
-        
-        function openCloudinaryWidget() {
-            if (cloudinaryWidget) {
-                cloudinaryWidget.open();
-            }
+        function openCloudinaryWidget() { if (cloudinaryWidget) cloudinaryWidget.open(); }
+        function showOverlay(show, msg) {
+            document.getElementById('upload-overlay').classList.toggle('active', show);
+            if (msg) document.getElementById('overlay-msg').textContent = msg;
+            else     document.getElementById('overlay-msg').textContent = 'Envoi en cours...';
         }
-        
-        function savePhotoToFirebase(url, thumb) {
+        function saveMediaToFirebase(url, thumb, isVideo) {
             db.collection('photos').add({
-                url: url,
-                thumbnail: thumb,
+                url, thumbnail: thumb || url,
                 author: userName,
+                isVideo: !!isVideo,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                createConfetti();
-            });
+            }).then(() => { if (!isVideo) createConfetti(); });
         }
-        
-        /* GALERIE */
-        function listenToPhotos() {
-            db.collection('photos').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-                currentPhotos = [];
+
+        /* ─── GALERIE ─── */
+        function listenToMedia() {
+            db.collection('photos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                currentMedia = [];
                 const grid = document.getElementById('gallery-grid');
                 grid.innerHTML = '';
-                
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    currentPhotos.push(data);
-                    
+
+                if (snapshot.empty) {
+                    grid.innerHTML = '<p class="gallery-empty">Soyez le premier à partager un souvenir ✨</p>';
+                    updateMediaCount(0);
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data  = doc.data();
+                    const index = currentMedia.length;
+                    currentMedia.push(data);
+
                     const item = document.createElement('div');
                     item.className = 'gallery-item';
-                    item.innerHTML = `
-                        <img src="${data.thumbnail || data.url}" alt="Photo">
-                        <div class="photo-author">📸 ${data.author}</div>
-                    `;
-                    item.onclick = () => openLightbox(currentPhotos.indexOf(data));
+
+                    const thumbSrc = data.thumbnail || data.url;
+                    if (data.isVideo) {
+                        item.innerHTML = `
+                            <img src="${thumbSrc}" alt="Vidéo de ${data.author}" loading="lazy">
+                            <div class="video-badge">▶</div>
+                            <div class="photo-author">🎥 ${data.author}</div>`;
+                    } else {
+                        item.innerHTML = `
+                            <img src="${thumbSrc}" alt="Photo de ${data.author}" loading="lazy">
+                            <div class="photo-author">📸 ${data.author}</div>`;
+                    }
+
+                    item.onclick = () => openLightbox(index);
                     grid.appendChild(item);
                 });
-                
-                updatePhotoCount(snapshot.size);
+
+                updateMediaCount(snapshot.size);
             });
         }
-        
-        function updatePhotoCount(count) {
-            document.getElementById('photo-count').textContent = count;
-            document.getElementById('plural').style.display = count <= 1 ? 'none' : 'inline';
-            document.getElementById('plural2').style.display = count <= 1 ? 'none' : 'inline';
+        function updateMediaCount(n) {
+            document.getElementById('photo-count').textContent = n;
+            document.getElementById('photo-label').textContent =
+                n <= 1 ? 'souvenir partagé' : 'souvenirs partagés';
         }
-        
-        /* DÉVOILEMENT PROGRESSIF */
+
+        /* ─── INTERSECTION OBSERVER ─── */
         function setupIntersectionObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                    }
-                });
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('revealed'); });
             }, { threshold: 0.1 });
-            
             setInterval(() => {
-                document.querySelectorAll('.gallery-item:not(.revealed)').forEach(item => {
-                    observer.observe(item);
-                });
+                document.querySelectorAll('.gallery-item:not(.revealed)').forEach(el => observer.observe(el));
             }, 1000);
         }
-        
-        /* LIGHTBOX */
+
+        /* ─── LIGHTBOX ─── */
         function openLightbox(index) {
             currentLightboxIndex = index;
-            showLightboxImage();
+            showLightboxMedia();
             document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-        
-        function showLightboxImage() {
-            const photo = currentPhotos[currentLightboxIndex];
-            document.getElementById('lightbox-img').src = photo.url;
-            document.getElementById('lightbox-author').textContent = `📸 ${photo.author}`;
+        function showLightboxMedia() {
+            const media = currentMedia[currentLightboxIndex];
+            if (!media) return;
+            const img   = document.getElementById('lightbox-img');
+            const video = document.getElementById('lightbox-video');
+            video.pause(); video.src = '';
+            if (media.isVideo) {
+                img.style.display   = 'none';
+                video.style.display = 'block';
+                video.src = media.url;
+                video.play().catch(() => {});
+            } else {
+                video.style.display = 'none';
+                img.style.display   = 'block';
+                img.src = media.url;
+            }
+            document.getElementById('lightbox-author').textContent =
+                `${media.isVideo ? '🎥' : '📸'} ${media.author}`;
         }
-        
-        function navigateLightbox(direction) {
-            currentLightboxIndex = (currentLightboxIndex + direction + currentPhotos.length) % currentPhotos.length;
-            showLightboxImage();
+        function navigateLightbox(dir) {
+            if (!currentMedia.length) return;
+            document.getElementById('lightbox-video').pause();
+            currentLightboxIndex = (currentLightboxIndex + dir + currentMedia.length) % currentMedia.length;
+            showLightboxMedia();
         }
-        
         function closeLightbox() {
             document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+            const v = document.getElementById('lightbox-video');
+            v.pause(); v.src = '';
         }
-        
-        /* TÉLÉCHARGEMENT ZIP */
-        async function downloadAllPhotos() {
-            if (currentPhotos.length === 0) {
-                alert('Aucune photo à télécharger !');
-                return;
-            }
-            
-            const zip = new JSZip();
-            const folder = zip.folder('bapteme-leonie-photos');
-            
-            for (let i = 0; i < currentPhotos.length; i++) {
-                const photo = currentPhotos[i];
-                const response = await fetch(photo.url);
-                const blob = await response.blob();
-                folder.file(`photo-${i + 1}-${photo.author}.jpg`, blob);
-            }
-            
-            zip.generateAsync({type: 'blob'}).then(content => {
-                saveAs(content, 'bapteme-leonie-photos.zip');
+        function handleLightboxClick(e) {
+            if (e.target === document.getElementById('lightbox')) closeLightbox();
+        }
+        function setupKeyboard() {
+            document.addEventListener('keydown', e => {
+                if (!document.getElementById('lightbox').classList.contains('active')) return;
+                if (e.key === 'Escape')     closeLightbox();
+                if (e.key === 'ArrowLeft')  navigateLightbox(-1);
+                if (e.key === 'ArrowRight') navigateLightbox(1);
             });
         }
-        
-        /* SONDAGE - UNE SEULE JAUGE */
+        function setupTouchSwipe() {
+            const lb = document.getElementById('lightbox');
+            lb.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+            lb.addEventListener('touchend',   e => {
+                const diff = touchStartX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) navigateLightbox(diff > 0 ? 1 : -1);
+            });
+        }
+
+        /* ─── TÉLÉCHARGEMENT ZIP ─── */
+        async function downloadAllPhotos() {
+            if (!currentMedia.length) { alert('Aucun souvenir à télécharger !'); return; }
+            showOverlay(true, 'Préparation du téléchargement...');
+            const zip    = new JSZip();
+            const folder = zip.folder('bapteme-leonie');
+            for (let i = 0; i < currentMedia.length; i++) {
+                const item = currentMedia[i];
+                try {
+                    const blob = await fetch(item.url).then(r => r.blob());
+                    const ext  = item.isVideo ? 'mp4' : 'jpg';
+                    folder.file(`${item.isVideo ? 'video' : 'photo'}-${i+1}-${item.author}.${ext}`, blob);
+                } catch(e) { console.warn('Skip:', item.url); }
+            }
+            zip.generateAsync({ type: 'blob' }).then(content => {
+                saveAs(content, 'bapteme-leonie.zip');
+                showOverlay(false);
+            });
+        }
+
+        /* ─── SONDAGE ─── */
+        function restoreVoteState() {
+            const voted = localStorage.getItem('voted');
+            if (voted) {
+                const el = document.getElementById(`option-${voted}`);
+                if (el) el.classList.add('voted');
+            }
+        }
         function vote(choice) {
             const voted = localStorage.getItem('voted');
             if (voted) {
-                alert('Vous avez déjà voté !');
+                alert('Vous avez déjà voté pour ' + (voted === 'papa' ? 'Papa' : 'Maman') + ' !');
                 return;
             }
-            
-            db.collection('poll').doc(choice).set({
-                votes: firebase.firestore.FieldValue.increment(1)
-            }, { merge: true }).then(() => {
+            db.collection('poll').doc(choice).set(
+                { votes: firebase.firestore.FieldValue.increment(1) }, { merge: true }
+            ).then(() => {
                 localStorage.setItem('voted', choice);
+                document.getElementById(`option-${choice}`).classList.add('voted');
             });
         }
-        
         function listenToPoll() {
-            db.collection('poll').onSnapshot((snapshot) => {
+            db.collection('poll').onSnapshot(snapshot => {
                 let papa = 0, maman = 0;
                 snapshot.forEach(doc => {
-                    if (doc.id === 'papa') papa = doc.data().votes || 0;
+                    if (doc.id === 'papa')  papa  = doc.data().votes || 0;
                     if (doc.id === 'maman') maman = doc.data().votes || 0;
                 });
-                
-                const total = papa + maman || 1;
-                const papaPercent = Math.round((papa / total) * 100);
-                const mamanPercent = 100 - papaPercent;
-                
-                // Déplacer le diviseur
+                const total      = papa + maman;
+                const papaPercent = total > 0 ? Math.round((papa / total) * 100) : 50;
                 document.getElementById('poll-divider').style.left = papaPercent + '%';
-                document.getElementById('papa-label').textContent = `Papa ${papaPercent}%`;
-                document.getElementById('maman-label').textContent = `Maman ${mamanPercent}%`;
+                document.getElementById('papa-label').textContent  = `Papa ${papaPercent}%`;
+                document.getElementById('maman-label').textContent = `Maman ${100 - papaPercent}%`;
+                document.getElementById('poll-total').textContent  = `${total} vote${total > 1 ? 's' : ''}`;
             });
         }
-        
-        /* MESSAGES VOCAUX */
+
+        /* ─── MESSAGES VOCAUX ─── */
+        function getSupportedMimeType() {
+            for (const t of ['audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus']) {
+                if (MediaRecorder.isTypeSupported(t)) return t;
+            }
+            return '';
+        }
         async function toggleRecording() {
-            const btn = document.getElementById('record-btn');
-            
+            const btn     = document.getElementById('record-btn');
+            const timerEl = document.getElementById('record-timer');
             if (!mediaRecorder || mediaRecorder.state === 'inactive') {
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
-                    
-                    mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+                    const stream   = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    const mimeType = getSupportedMimeType();
+                    mediaRecorder  = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+                    audioChunks    = [];
+                    recordingStartTime = Date.now();
+                    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
                     mediaRecorder.onstop = async () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        await uploadVoiceMessage(audioBlob);
-                        stream.getTracks().forEach(track => track.stop());
+                        const duration  = Math.round((Date.now() - recordingStartTime) / 1000);
+                        const audioBlob = new Blob(audioChunks, { type: mimeType || 'audio/webm' });
+                        await uploadVoiceMessage(audioBlob, duration);
+                        stream.getTracks().forEach(t => t.stop());
                     };
-                    
                     mediaRecorder.start();
                     btn.classList.add('recording');
-                    btn.textContent = '⏹ Arrêter (20s)';
-                    
-                    setTimeout(() => {
-                        if (mediaRecorder.state === 'recording') {
-                            mediaRecorder.stop();
-                            btn.classList.remove('recording');
-                            btn.textContent = '🎤 Enregistrer un message (20s)';
-                        }
-                    }, 20000);
+                    btn.textContent = '⏹ Arrêter';
+                    let elapsed = 0;
+                    timerEl.style.display = 'block';
+                    timerEl.textContent   = '0s / 20s';
+                    recordTimerInterval = setInterval(() => {
+                        elapsed++;
+                        timerEl.textContent = `${elapsed}s / 20s`;
+                        if (elapsed >= 20) stopRecording();
+                    }, 1000);
                 } catch(err) {
-                    alert('Impossible d\'accéder au microphone');
+                    alert('Impossible d\'accéder au microphone. Vérifiez les autorisations de votre navigateur.');
                 }
             } else {
-                mediaRecorder.stop();
-                btn.classList.remove('recording');
-                btn.textContent = '🎤 Enregistrer un message (20s)';
+                stopRecording();
             }
         }
-        
-        async function uploadVoiceMessage(blob) {
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+            clearInterval(recordTimerInterval);
+            document.getElementById('record-btn').classList.remove('recording');
+            document.getElementById('record-btn').textContent = '🎤 Enregistrer un message (20s)';
+            document.getElementById('record-timer').style.display = 'none';
+        }
+        async function uploadVoiceMessage(blob, duration) {
             if (!userName) {
-                userName = prompt('Votre prénom ?') || 'Anonyme';
+                const name = prompt('Votre prénom ?');
+                userName   = (name && name.trim()) || 'Anonyme';
                 localStorage.setItem('userName', userName);
             }
-            
             try {
-                const filename = `voice-${Date.now()}.webm`;
-                const storageRef = storage.ref().child(`voice-messages/${filename}`);
-                
-                await storageRef.put(blob);
-                const url = await storageRef.getDownloadURL();
-                
+                const ext      = blob.type.includes('mp4') ? 'mp4' : blob.type.includes('ogg') ? 'ogg' : 'webm';
+                const ref      = storage.ref().child(`voice-messages/voice-${Date.now()}.${ext}`);
+                await ref.put(blob);
+                const url = await ref.getDownloadURL();
                 await db.collection('voice-messages').add({
-                    url: url,
-                    author: userName,
-                    duration: 20,
+                    url, author: userName, duration,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch(err) {
-                console.error('Erreur upload vocal:', err);
+                console.error('Upload vocal:', err);
+                alert('Erreur lors de l\'envoi du message. Réessayez.');
             }
         }
-        
         function listenToVoiceMessages() {
-            db.collection('voice-messages').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+            db.collection('voice-messages').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                 const container = document.getElementById('voice-messages');
                 container.innerHTML = '';
-                
-                snapshot.forEach((doc) => {
+                if (snapshot.empty) {
+                    container.innerHTML = '<p class="voice-empty">Aucun message pour l\'instant</p>';
+                    return;
+                }
+                let currentAudioEl = null;
+                snapshot.forEach(doc => {
                     const data = doc.data();
                     const item = document.createElement('div');
                     item.className = 'voice-message';
@@ -1328,39 +1332,41 @@
                             <circle cx="70" cy="50" r="5" fill="#C3A2A5"/>
                         </svg>
                         <p class="voice-author">🎤 ${data.author}</p>
-                        <p class="voice-duration">${data.duration}s</p>
-                    `;
-                    item.onclick = () => playVoice(data.url);
+                        <p class="voice-duration">${data.duration}s</p>`;
+                    item.onclick = () => {
+                        if (currentAudioEl && !currentAudioEl.paused) {
+                            currentAudioEl.pause();
+                            document.querySelectorAll('.voice-message.playing').forEach(el => el.classList.remove('playing'));
+                            if (item.dataset.playing === 'true') { item.dataset.playing = 'false'; return; }
+                        }
+                        currentAudioEl = new Audio(data.url);
+                        document.querySelectorAll('.voice-message.playing').forEach(el => { el.classList.remove('playing'); el.dataset.playing = 'false'; });
+                        item.classList.add('playing');
+                        item.dataset.playing = 'true';
+                        currentAudioEl.play();
+                        currentAudioEl.onended = () => { item.classList.remove('playing'); item.dataset.playing = 'false'; };
+                    };
                     container.appendChild(item);
                 });
             });
         }
-        
-        function playVoice(url) {
-            const audio = new Audio(url);
-            audio.play();
-        }
-        
-        /* CONFETTIS */
+
+        /* ─── CONFETTIS ─── */
         function createConfetti() {
-            const colors = ['#C3A2A5', '#F9F1C9', '#C8BDAE', '#D4B4B7', '#EFEEEC'];
-            
+            const colors = ['#C3A2A5','#F9F1C9','#C8BDAE','#D4B4B7','#EFEEEC'];
             for (let i = 0; i < 50; i++) {
                 setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.animationDelay = Math.random() * 2 + 's';
-                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                    document.body.appendChild(confetti);
-                    
-                    setTimeout(() => confetti.remove(), 5000);
+                    const c = document.createElement('div');
+                    c.className = 'confetti';
+                    c.style.left              = Math.random() * 100 + 'vw';
+                    c.style.background        = colors[Math.floor(Math.random() * colors.length)];
+                    c.style.animationDelay    = Math.random() * 2 + 's';
+                    c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(c);
+                    setTimeout(() => c.remove(), 5000);
                 }, i * 30);
             }
         }
-        
-        console.log('🦢 Site Baptême Léonie - Version FINALE !');
     </script>
 </body>
 </html>
