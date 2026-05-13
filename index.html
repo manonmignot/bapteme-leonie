@@ -472,10 +472,10 @@
         .gallery-item:hover { transform: scale(1.02); box-shadow: 0 8px 28px rgba(126,103,85,0.16); }
         .gallery-item img {
             width: 100%; height: 100%; object-fit: cover;
-            filter: blur(6px) saturate(0.5);
-            transition: filter 0.7s ease, transform 0.35s ease;
+            opacity: 0;
+            transition: opacity 0.55s ease, transform 0.35s ease;
         }
-        .gallery-item.revealed img { filter: blur(0) saturate(1); }
+        .gallery-item.revealed img { opacity: 1; }
         .gallery-item:hover img { transform: scale(1.06); }
         .photo-author {
             position: absolute; bottom: 0; left: 0; right: 0;
@@ -731,10 +731,10 @@
         <section id="annee" class="section">
             <div class="container">
                 <div class="section-header reveal">
-                    <span class="section-eyebrow">Juin 2025 → Juin 2026</span>
+                    <span class="section-eyebrow">Mai 2025 → Mai 2026</span>
                     <h2 class="section-title">Ma première année en photos</h2>
                     <div class="section-rule"></div>
-                    <p class="section-subtitle">Douze mois de bonheur, de découvertes et de premières fois</p>
+                    <p class="section-subtitle">Douze mois de bonheur, de découvertes et de premières fois !</p>
                 </div>
 
                 <div class="timeline-scroll" id="timeline-scroll">
@@ -743,31 +743,31 @@
                         <!-- ↓ Remplacez mois-01.jpg à mois-13.jpg par vos vraies photos ↓ -->
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-01.jpg" alt="Juin 2025"
+                            <img class="timeline-photo" src="mois-01.jpeg" alt="Mai 2025"
+                                 onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                            <span class="timeline-month">Mai 2025</span>
+                            <p class="timeline-caption">Mon arrivée dans la famille</p>
+                        </div>
+
+                        <div class="timeline-item">
+                            <img class="timeline-photo" src="mois-02.jpeg" alt="Mai (2) 2025"
+                                 onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                            <span class="timeline-month">Mai 2025</span>
+                            <p class="timeline-caption">La rencontre avec ma grande soeur</p>
+                        </div>
+
+                        <div class="timeline-item">
+                            <img class="timeline-photo" src="mois-03.jpeg" alt="Juin 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Juin 2025</span>
-                            <p class="timeline-caption">Premiers jours à la maison</p>
+                            <p class="timeline-caption">1 mois de vie</p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-02.jpg" alt="Juillet 2025"
+                            <img class="timeline-photo" src="mois-04.jpeg" alt="Juillet 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Juillet 2025</span>
-                            <p class="timeline-caption">Premier été</p>
-                        </div>
-
-                        <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-03.jpg" alt="Août 2025"
-                                 onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
-                            <span class="timeline-month">Août 2025</span>
-                            <p class="timeline-caption">Vacances en famille</p>
-                        </div>
-
-                        <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-04.jpg" alt="Septembre 2025"
-                                 onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
-                            <span class="timeline-month">Septembre 2025</span>
-                            <p class="timeline-caption">Premiers sourires</p>
+                            <p class="timeline-caption">Premières vacances au camping ! </p>
                         </div>
 
                         <div class="timeline-item">
@@ -1117,16 +1117,24 @@
         }
         function saveMedia(url, thumb, isVideo) {
             db.collection('photos').add({
-                url, thumbnail: thumb || url,
+                url,
+                // Pour les photos : on stocke la secure_url (full res), pas la thumbnail Cloudinary
+                // qui est une vignette basse qualité. Pour les vidéos on garde la thumbnail (aperçu).
+                thumbnail: isVideo ? (thumb || url) : url,
                 author: userName, isVideo: !!isVideo,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => createConfetti()); // confettis pour photos ET vidéos
         }
 
-        /* ── Optimisation URL Cloudinary ── */
-        function optimizeUrl(url, w = 480) {
+        /* ── Optimisation URL Cloudinary ──
+           w_900 : taille suffisante pour affichage Retina 2× (cellule ~450 CSS px → 900 device px)
+           c_limit : réduit sans jamais recadrer ni agrandir
+           q_auto:good : qualité haute sans sur-compression            */
+        function optimizeUrl(url, w = 900) {
             if (!url || !url.includes('res.cloudinary.com')) return url;
-            try { return url.replace('/upload/', `/upload/w_${w},c_fill,q_auto:best,f_auto/`); }
+            // Évite de doubler la transformation si déjà présente
+            if (url.includes('/upload/w_')) return url;
+            try { return url.replace('/upload/', `/upload/w_${w},c_limit,q_auto:good,f_auto/`); }
             catch(e) { return url; }
         }
 
@@ -1146,7 +1154,10 @@
                     currentMedia.push(data);
                     const item = document.createElement('div');
                     item.className = 'gallery-item' + (index >= GALLERY_MAX ? ' gallery-item-hidden' : '');
-                    const thumbSrc = optimizeUrl(data.thumbnail || data.url);
+                    // Photos : full URL transformée à w_900 — Vidéos : thumbnail (frame) à w_480
+                    const thumbSrc = data.isVideo
+                        ? optimizeUrl(data.thumbnail || data.url, 480)
+                        : optimizeUrl(data.url, 900);
                     item.innerHTML = data.isVideo
                         ? `<img src="${thumbSrc}" alt="Vidéo de ${data.author}" loading="lazy"><div class="video-badge">▶</div><div class="photo-author">🎥 ${data.author}</div>`
                         : `<img src="${thumbSrc}" alt="Photo de ${data.author}" loading="lazy"><div class="photo-author">📸 ${data.author}</div>`;
@@ -1174,11 +1185,20 @@
         /* ── Blur reveal ── */
         function setupGalleryObserver() {
             const obs = new IntersectionObserver(entries => {
-                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('revealed'); });
-            }, { threshold: 0.1 });
-            setInterval(() => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('revealed');
+                        obs.unobserve(e.target); // stop observer une fois révélé
+                    }
+                });
+            }, { threshold: 0.05, rootMargin: '0px 0px 60px 0px' });
+
+            // Observer les items existants + les nouveaux ajoutés dynamiquement
+            function observeAll() {
                 document.querySelectorAll('.gallery-item:not(.revealed)').forEach(el => obs.observe(el));
-            }, 800);
+            }
+            observeAll();
+            setInterval(observeAll, 600); // rattrape les ajouts dynamiques Firebase
         }
 
         /* ── Scroll reveal sections ── */
