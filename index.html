@@ -59,7 +59,8 @@
             position: fixed; inset: 0;
             background: var(--ivory);
             display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            align-items: center; justify-content: flex-start;
+            padding-top: 40vh; /* instruction tombe au milieu de l'écran */
             z-index: 10000;
             transition: opacity 1s ease, visibility 1s ease;
         }
@@ -67,9 +68,11 @@
         .instruction {
             font-family: 'The Seasons', serif;
             font-size: 1.5rem; color: var(--taupe);
-            letter-spacing: 2px; margin-bottom: 3rem;
+            letter-spacing: 2px; margin-bottom: 2rem;
             animation: fadeSlideUp 1s ease 0.5s both, softPulse 3s ease-in-out 1.5s infinite;
+            transition: opacity 0.4s ease;
         }
+        .instruction.hidden { opacity: 0; pointer-events: none; }
         @keyframes fadeSlideUp {
             from { opacity: 0; transform: translateY(12px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -78,8 +81,8 @@
 
         .envelope-container {
             position: relative;
-            width: clamp(300px, 88vw, 600px);
-            height: min(72vh, 500px);
+            width: clamp(280px, 90vw, 640px);
+            height: min(52vh, 440px);
             cursor: pointer; transition: transform 0.4s ease;
         }
         .envelope-container:hover { transform: translateY(-10px) scale(1.01); }
@@ -225,7 +228,7 @@
             position: absolute; bottom: 0; left: 0; right: 0;
             padding: 3.5rem 2rem 4.5rem; text-align: center; color: white;
         }
-        .hero-eyebrow { font-size: 0.6875rem; letter-spacing: 4px; text-transform: uppercase; opacity: 0.7; margin-bottom: 1rem; }
+        .hero-eyebrow { font-family: 'Noah', sans-serif; font-size: 0.6875rem; letter-spacing: 4px; text-transform: uppercase; opacity: 0.7; margin-bottom: 1rem; }
         .hero-name {
             font-family: 'The Seasons', serif;
             font-size: clamp(3.5rem, 10vw, 7rem); font-weight: 400;
@@ -557,14 +560,35 @@
         }
         .poll-option:hover  { border-color: var(--rose); background: var(--ivory); }
         .poll-option.voted  { border-color: var(--rose); background: rgba(207,162,165,0.1); }
-        .poll-option img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; border: 2px solid var(--sand); }
+        .poll-option img {
+            width: 140px; height: 140px;
+            border-radius: 50%; object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--sand);
+            cursor: zoom-in;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .poll-option img:hover { transform: scale(1.06); box-shadow: 0 8px 24px rgba(126,103,85,0.18); }
         .poll-option p { font-family: 'The Seasons', serif; font-size: 1.0625rem; color: var(--taupe); }
         .single-poll-bar {
-            position: relative; height: 44px;
+            position: relative; height: 56px;
             background: linear-gradient(90deg, var(--cream) 0%, var(--rose) 100%);
-            border-radius: 22px; overflow: hidden;
+            border-radius: 28px; overflow: visible;
         }
-        .poll-divider { position: absolute; top: 0; height: 100%; width: 2px; background: white; transition: left 0.7s ease; z-index: 2; }
+        /* Curseur sondage = photo de Léonie */
+        .poll-divider {
+            position: absolute; top: 50%;
+            transform: translate(-50%, -50%);
+            width: 52px; height: 52px;
+            transition: left 0.7s ease; z-index: 4;
+        }
+        .poll-divider img {
+            width: 100%; height: 100%;
+            border-radius: 50%; object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            display: block;
+        }
         .poll-label-left, .poll-label-right { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.8125rem; font-weight: 600; color: var(--text-dark); z-index: 3; }
         .poll-label-left  { left: 1rem; }
         .poll-label-right { right: 1rem; }
@@ -624,6 +648,88 @@
         .footer-goose { width: 56px; margin: 0 auto 1.25rem; opacity: 0.5; filter: brightness(0) invert(1); }
         .footer-text { font-family: 'The Seasons', serif; font-size: 0.9375rem; color: rgba(255,255,255,0.85); letter-spacing: 1px; }
 
+        /* ─── Timeline lightbox ─── */
+        .tl-lightbox {
+            position: fixed; inset: 0;
+            background: rgba(10,6,4,0.96);
+            display: none; align-items: center; justify-content: center;
+            z-index: 9998; flex-direction: column;
+        }
+        .tl-lightbox.active { display: flex; }
+        .tl-lb-img {
+            max-width: 92vw; max-height: 72vh;
+            object-fit: contain; border-radius: 10px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+        }
+        .tl-lb-info {
+            text-align: center; margin-top: 1.25rem; color: white;
+        }
+        .tl-lb-month {
+            font-family: 'The Seasons', serif;
+            font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--rose); display: block; margin-bottom: 0.4rem;
+        }
+        .tl-lb-caption { font-size: 0.9375rem; opacity: 0.8; }
+        .tl-lb-close {
+            position: fixed; top: 1.25rem; right: 1.25rem;
+            background: rgba(255,255,255,0.12); border: none; color: white;
+            font-size: 1.5rem; cursor: pointer; width: 44px; height: 44px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
+        .tl-lb-prev, .tl-lb-next {
+            position: fixed; top: 50%; transform: translateY(-50%);
+            background: rgba(207,162,165,0.75); color: white; border: none;
+            width: 48px; height: 48px; border-radius: 50%; font-size: 1.5rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .tl-lb-prev { left: 1rem; }
+        .tl-lb-next { right: 1rem; }
+
+        /* ─── Popup succès upload ─── */
+        .upload-success {
+            position: fixed; inset: 0; z-index: 9999;
+            display: none; align-items: center; justify-content: center;
+            background: rgba(62,40,30,0.55); backdrop-filter: blur(4px);
+        }
+        .upload-success.active { display: flex; }
+        .upload-success-box {
+            background: var(--white); border-radius: 20px;
+            padding: 3rem 2.5rem; text-align: center;
+            max-width: 340px; width: 90%;
+            box-shadow: 0 12px 40px rgba(126,103,85,0.2);
+            animation: successPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes successPop {
+            from { transform: scale(0.75); opacity: 0; }
+            to   { transform: scale(1);    opacity: 1; }
+        }
+        .upload-success-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .upload-success-box h3 {
+            font-family: 'The Seasons', serif;
+            font-size: 1.75rem; color: var(--taupe); margin-bottom: 0.5rem;
+        }
+        .upload-success-box p { font-size: 0.9375rem; color: var(--text-light); margin-bottom: 1.75rem; }
+
+        /* ─── Zoom photo sondage ─── */
+        .poll-zoom {
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(10,6,4,0.96);
+            display: none; align-items: center; justify-content: center;
+        }
+        .poll-zoom.active { display: flex; }
+        .poll-zoom-img {
+            max-width: 88vw; max-height: 82vh;
+            border-radius: 50%; object-fit: cover;
+            border: 4px solid var(--rose);
+            box-shadow: 0 8px 40px rgba(207,162,165,0.3);
+        }
+        .poll-zoom-close {
+            position: fixed; top: 1.25rem; right: 1.25rem;
+            background: rgba(255,255,255,0.12); border: none; color: white;
+            font-size: 1.5rem; cursor: pointer; width: 44px; height: 44px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
+
         /* ─── Scroll reveal ─── */
         .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
         .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -658,6 +764,34 @@
             <input type="text" id="user-name" class="name-input" placeholder="Votre prénom" autocomplete="given-name">
             <button class="btn btn-primary" onclick="saveName()">Continuer</button>
         </div>
+    </div>
+
+    <!-- ══ TIMELINE LIGHTBOX ══ -->
+    <div class="tl-lightbox" id="tl-lightbox">
+        <img src="" id="tl-lb-img" class="tl-lb-img" alt="">
+        <div class="tl-lb-info">
+            <span class="tl-lb-month" id="tl-lb-month"></span>
+            <p class="tl-lb-caption" id="tl-lb-caption"></p>
+        </div>
+        <button class="tl-lb-prev" onclick="navigateTlLb(-1)">‹</button>
+        <button class="tl-lb-next" onclick="navigateTlLb(1)">›</button>
+        <button class="tl-lb-close" onclick="closeTlLb()">×</button>
+    </div>
+
+    <!-- ══ POPUP SUCCÈS UPLOAD ══ -->
+    <div class="upload-success" id="upload-success">
+        <div class="upload-success-box">
+            <div class="upload-success-icon">🎉</div>
+            <h3>Merci !</h3>
+            <p>Vos photos ont bien été déposées</p>
+            <button class="btn btn-primary" onclick="closeSuccessPopup()">Super !</button>
+        </div>
+    </div>
+
+    <!-- ══ ZOOM SONDAGE ══ -->
+    <div class="poll-zoom" id="poll-zoom" onclick="closePollZoom()">
+        <img src="" id="poll-zoom-img" class="poll-zoom-img" alt="">
+        <button class="poll-zoom-close" onclick="closePollZoom()">×</button>
     </div>
 
     <!-- ══ LIGHTBOX ══ -->
@@ -711,8 +845,8 @@
             <img src="leonie-hero.jpg" alt="Léonie" class="hero-image" id="hero-img">
             <div class="hero-gradient"></div>
             <div class="hero-content">
-                <p class="hero-eyebrow">Bienvenue à la célébration de</p>
-                <h1 class="hero-name">Léonie</h1>
+                <p class="hero-eyebrow">Bienvenue à l'anniversaire de</p>
+                <h1 class="hero-name">LÉONIE</h1>
                 <div class="hero-rule"></div>
                 <p class="hero-date">6 juin 2026</p>
                 <div id="hero-countdown" class="hero-countdown"></div>
@@ -901,17 +1035,23 @@
                     <div class="poll-options">
                         <div class="poll-option" id="option-papa" onclick="vote('papa')">
                             <img src="papa-bebe.jpg" alt="Papa bébé"
-                                 onerror="this.src='https://via.placeholder.com/110/CFA2A5/FFFFFF?text=Papa'">
+                                 onclick="event.stopPropagation(); openPollZoom(this.src, 'Papa')"
+                                 onerror="this.src='https://via.placeholder.com/140/CFA2A5/FFFFFF?text=Papa'">
                             <p>Papa</p>
                         </div>
                         <div class="poll-option" id="option-maman" onclick="vote('maman')">
                             <img src="maman-bebe.jpg" alt="Maman bébé"
-                                 onerror="this.src='https://via.placeholder.com/110/F9EFC9/7E6755?text=Maman'">
+                                 onclick="event.stopPropagation(); openPollZoom(this.src, 'Maman')"
+                                 onerror="this.src='https://via.placeholder.com/140/F9EFC9/7E6755?text=Maman'">
                             <p>Maman</p>
                         </div>
                     </div>
                     <div class="single-poll-bar">
-                        <div class="poll-divider" id="poll-divider" style="left:50%"></div>
+                        <!-- Curseur = tête de Léonie — ajoutez leonie-tete.png à la racine du repo -->
+                        <div class="poll-divider" id="poll-divider" style="left:50%">
+                            <img src="leonie-tete.png" alt="Léonie"
+                                 onerror="this.style.display='none'; this.parentNode.style.background='white'; this.parentNode.style.width='4px'">
+                        </div>
                         <span class="poll-label-left"  id="papa-label">Papa 50%</span>
                         <span class="poll-label-right" id="maman-label">Maman 50%</span>
                     </div>
@@ -1002,6 +1142,8 @@
 
         /* ── Enveloppe ── */
         function openEnvelope() {
+            // Cache "Ouvrez-moi" dès le clic
+            document.querySelector('.instruction').classList.add('hidden');
             document.getElementById('envelope-closed').classList.remove('active');
             const opened = document.getElementById('envelope-opened');
             opened.src = 'enveloppe-ouverte.gif'; // GIF démarre au clic
@@ -1118,12 +1260,20 @@
         function saveMedia(url, thumb, isVideo) {
             db.collection('photos').add({
                 url,
-                // Pour les photos : on stocke la secure_url (full res), pas la thumbnail Cloudinary
-                // qui est une vignette basse qualité. Pour les vidéos on garde la thumbnail (aperçu).
                 thumbnail: isVideo ? (thumb || url) : url,
                 author: userName, isVideo: !!isVideo,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => createConfetti()); // confettis pour photos ET vidéos
+            }).then(() => {
+                createConfetti(120); // plein écran — 120 pièces
+                showSuccessPopup();
+            });
+        }
+
+        function showSuccessPopup() {
+            document.getElementById('upload-success').classList.add('active');
+        }
+        function closeSuccessPopup() {
+            document.getElementById('upload-success').classList.remove('active');
         }
 
         /* ── Optimisation URL Cloudinary ──
@@ -1449,32 +1599,106 @@
             });
         }
 
-        /* ── Timeline — drag to scroll ── */
+        /* ── Timeline — drag to scroll + lightbox ── */
+        let tlData = []; // stocke les données de chaque mois
+        let tlIndex = 0;
+
         function initTimeline() {
             const el = document.getElementById('timeline-scroll');
             if (!el) return;
-            let isDown = false, startX = 0, scrollLeft = 0;
+
+            // Drag to scroll
+            let isDown = false, startX = 0, scrollLeft = 0, moved = false;
             el.addEventListener('mousedown', e => {
-                isDown = true; startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft;
+                isDown = true; moved = false;
+                startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft;
             });
             el.addEventListener('mouseleave', () => { isDown = false; });
             el.addEventListener('mouseup',    () => { isDown = false; });
             el.addEventListener('mousemove',  e => {
-                if (!isDown) return; e.preventDefault();
+                if (!isDown) return; e.preventDefault(); moved = true;
                 el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX) * 1.4;
             });
+
+            // Construire le tableau de données depuis le DOM
+            tlData = [];
+            document.querySelectorAll('.timeline-item').forEach((item, i) => {
+                const img     = item.querySelector('.timeline-photo');
+                const month   = item.querySelector('.timeline-month');
+                const caption = item.querySelector('.timeline-caption');
+                tlData.push({
+                    src:     img ? img.src     : '',
+                    month:   month   ? month.textContent   : '',
+                    caption: caption ? caption.textContent : ''
+                });
+                // Clic sur la photo ouvre le lightbox (pas sur un drag)
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', () => {
+                    if (!moved) openTlLb(i);
+                });
+            });
         }
+
+        function openTlLb(i) {
+            tlIndex = i;
+            renderTlLb();
+            document.getElementById('tl-lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function renderTlLb() {
+            const d = tlData[tlIndex]; if (!d) return;
+            document.getElementById('tl-lb-img').src     = d.src;
+            document.getElementById('tl-lb-month').textContent   = d.month;
+            document.getElementById('tl-lb-caption').textContent = d.caption;
+        }
+        function navigateTlLb(dir) {
+            tlIndex = (tlIndex + dir + tlData.length) % tlData.length;
+            renderTlLb();
+        }
+        function closeTlLb() {
+            document.getElementById('tl-lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        // Swipe tactile pour le timeline lightbox
+        (function() {
+            let sx = 0;
+            document.addEventListener('DOMContentLoaded', () => {
+                const lb = document.getElementById('tl-lightbox');
+                if (!lb) return;
+                lb.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+                lb.addEventListener('touchend',   e => {
+                    const d = sx - e.changedTouches[0].clientX;
+                    if (Math.abs(d) > 50) navigateTlLb(d > 0 ? 1 : -1);
+                });
+                lb.addEventListener('keydown', e => {
+                    if (e.key === 'Escape')      closeTlLb();
+                    if (e.key === 'ArrowLeft')   navigateTlLb(-1);
+                    if (e.key === 'ArrowRight')  navigateTlLb(1);
+                });
+            });
+        })();
         function scrollTimeline(dir) {
             const el = document.getElementById('timeline-scroll');
             if (!el) return;
             el.scrollBy({ left: dir * 650, behavior: 'smooth' });
         }
 
-        /* ── Confettis (photos ET vidéos) ── */
-        function createConfetti() {
-            const cols   = ['#CFA2A5','#F9EFC9','#C8BDAE','#DDB8BB','#EFE8E0','#7E6755'];
-            const shapes = ['circle','rect'];
-            for (let i = 0; i < 70; i++) {
+        /* ── Zoom sondage ── */
+        function openPollZoom(src, name) {
+            document.getElementById('poll-zoom-img').src = src;
+            document.getElementById('poll-zoom-img').alt = name;
+            document.getElementById('poll-zoom').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closePollZoom() {
+            document.getElementById('poll-zoom').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        /* ── Confettis plein écran (photos ET vidéos) ── */
+        function createConfetti(count = 70) {
+            const cols = ['#CFA2A5','#F9EFC9','#C8BDAE','#DDB8BB','#EFE8E0','#7E6755','#fff'];
+            for (let i = 0; i < count; i++) {
                 setTimeout(() => {
                     const c    = document.createElement('div');
                     const size = 6 + Math.random() * 8;
