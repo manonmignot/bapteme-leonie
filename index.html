@@ -82,12 +82,15 @@
         }
         #envelope-scene.hiding { opacity: 0; visibility: hidden; }
 
-        /* "Ouvrez-moi" positionné au-dessus de l'enveloppe de façon absolue */
+        /* Wrapper vertical : instruction + enveloppe centrés ensemble */
+        #envelope-wrapper {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 1.5rem; width: 100%;
+        }
+
         .instruction {
-            position: absolute;
-            top: 10%;
-            left: 50%; transform: translateX(-50%);
-            white-space: nowrap;
+            text-align: center;
             font-family: 'The Seasons', serif;
             font-size: 1.5rem; color: var(--taupe);
             letter-spacing: 2px;
@@ -96,7 +99,7 @@
         }
         .instruction.hidden { opacity: 0; pointer-events: none; }
         @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(12px); }
+            from { opacity: 0; transform: translateY(10px); }
             to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes softPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
@@ -246,20 +249,8 @@
                 rgba(0,0,0,0) 0%, rgba(0,0,0,0.04) 35%,
                 rgba(30,18,12,0.58) 70%, rgba(30,18,12,0.8) 100%);
         }
-        /* Couche parallaxe intermédiaire — petits points décoratifs */
-        .hero-parallax-mid {
-            position: absolute; inset: 0;
-            pointer-events: none; overflow: hidden;
-        }
-        .hpm-dot {
-            position: absolute; border-radius: 50%;
-            background: rgba(207,162,165,0.35);
-        }
-        .hpm-dot:nth-child(1) { width:120px;height:120px; top:12%; left:8%; }
-        .hpm-dot:nth-child(2) { width:60px; height:60px;  top:55%; right:10%; }
-        .hpm-dot:nth-child(3) { width:80px; height:80px;  top:30%; right:20%; }
-        .hpm-dot:nth-child(4) { width:40px; height:40px;  top:70%; left:15%; }
-        .hpm-dot:nth-child(5) { width:160px;height:160px; top:5%;  right:5%; opacity:.18; }
+        /* Couche parallaxe intermédiaire — plan vide pour le mouvement 3 couches */
+        .hero-parallax-mid { position: absolute; inset: 0; pointer-events: none; }
         .hero-content {
             position: absolute; bottom: 0; left: 0; right: 0;
             padding: 3.5rem 2rem 4.5rem; text-align: center; color: white;
@@ -609,16 +600,17 @@
         }
         .poll-option p { font-family: 'The Seasons', serif; font-size: 1.0625rem; color: var(--taupe); }
         .single-poll-bar {
-            position: relative; height: 56px;
+            position: relative; height: 68px;
             background: linear-gradient(90deg, var(--cream) 0%, var(--rose) 100%);
-            border-radius: 28px; overflow: visible;
+            border-radius: 34px; overflow: visible;
         }
-        /* Curseur sondage = photo de Léonie */
+        /* Curseur sondage = photo de Léonie — pleine hauteur de jauge */
         .poll-divider {
             position: absolute; top: 50%;
             transform: translate(-50%, -50%);
-            width: 52px; height: 52px;
+            width: 90px; height: 90px;
             transition: left 0.7s ease; z-index: 4;
+            filter: drop-shadow(0 3px 8px rgba(0,0,0,0.22));
         }
         /* Curseur : PNG brut, sans rognage ni bordure */
         .poll-divider img {
@@ -736,7 +728,7 @@
             position: absolute; inset: 0;
             background-image: url('leonie-merci.JPEG');
             background-size: cover; background-position: center top;
-            filter: blur(3px) brightness(0.35) saturate(0.7);
+            filter: blur(3px) brightness(0.55) saturate(0.8);
             transform: scale(1.05); /* évite halo flou aux bords */
         }
         .merci-card {
@@ -874,10 +866,12 @@
 
     <!-- ══ ENVELOPPE ══ -->
     <div id="envelope-scene">
-        <p class="instruction">Ouvrez-moi !</p>
-        <div class="envelope-container" onclick="openEnvelope()">
-            <img src="enveloppe-fermee.png" class="envelope-image active" id="envelope-closed" alt="">
-            <img src="" class="envelope-image" id="envelope-opened" alt="">
+        <div id="envelope-wrapper">
+            <p class="instruction">Ouvrez-moi !</p>
+            <div class="envelope-container" onclick="openEnvelope()">
+                <img src="enveloppe-fermee.png" class="envelope-image active" id="envelope-closed" alt="">
+                <img src="" class="envelope-image" id="envelope-opened" alt="">
+            </div>
         </div>
     </div>
 
@@ -969,12 +963,8 @@
         <section id="accueil" class="hero-section">
             <img src="leonie-hero.jpg" alt="Léonie" class="hero-image" id="hero-img">
             <div class="hero-gradient" id="hero-gradient"></div>
-            <!-- Couche parallaxe décorative — petits points flottants -->
-            <div class="hero-parallax-mid" id="hero-parallax-mid" aria-hidden="true">
-                <span class="hpm-dot"></span><span class="hpm-dot"></span>
-                <span class="hpm-dot"></span><span class="hpm-dot"></span>
-                <span class="hpm-dot"></span>
-            </div>
+            <!-- Couche parallaxe intermédiaire (plan vide pour effet 3D) -->
+            <div class="hero-parallax-mid" id="hero-parallax-mid" aria-hidden="true"></div>
             <div class="hero-content" id="hero-content">
                 <p class="hero-eyebrow">Bienvenue à l'anniversaire de</p>
                 <h1 class="hero-name">LÉONIE</h1>
@@ -1308,7 +1298,7 @@
         let currentMedia     = [];
         let lightboxIndex    = 0;
         let touchStartX      = 0;
-        const GALLERY_MAX    = 12;
+        const GALLERY_MAX    = 4;
 
         /* ── Enveloppe ── */
         function openEnvelope() {
@@ -1502,7 +1492,7 @@
                 if (snap.size > GALLERY_MAX) {
                     const more = document.createElement('div');
                     more.className = 'gallery-show-more';
-                    more.innerHTML = `<button class="btn btn-ghost" onclick="expandGallery()">▾ Voir les ${snap.size - GALLERY_MAX} autres souvenirs</button>`;
+                    more.innerHTML = `<button class="btn btn-ghost" onclick="expandGallery()">📷 Voir les ${snap.size} photos partagées</button>`;
                     grid.appendChild(more);
                 }
                 updateCount(snap.size);
@@ -1960,39 +1950,77 @@
             document.body.style.overflow = '';
         }
 
-        /* ── Son d'ouverture enveloppe (carillon Web Audio) ── */
+        /* ── Son d'ouverture enveloppe — froissement de papier (Web Audio) ── */
         function playEnvelopeSound() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                // Carillon doux en do majeur : C5 E5 G5 C6
-                [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.type = 'sine';
-                    osc.frequency.value = freq;
-                    const t = ctx.currentTime + i * 0.14;
-                    gain.gain.setValueAtTime(0, t);
-                    gain.gain.linearRampToValueAtTime(0.22, t + 0.03);
-                    gain.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
-                    osc.start(t); osc.stop(t + 1.2);
-                });
-            } catch(e) { /* navigateur sans WebAudio */ }
+                const sr = ctx.sampleRate;
+                const dur = 1.4;
+                // Bruit blanc filtré → texture papier
+                const buf = ctx.createBuffer(1, sr * dur, sr);
+                const d   = buf.getChannelData(0);
+                // Craquements irréguliers : bruit avec légères crêtes
+                for (let i = 0; i < d.length; i++) {
+                    d[i] = (Math.random() * 2 - 1) * (Math.random() > 0.96 ? 1.8 : 0.5);
+                }
+                const src = ctx.createBufferSource();
+                src.buffer = buf;
+
+                // Filtre haut-médium pour simuler le papier (pas de basse)
+                const hp = ctx.createBiquadFilter();
+                hp.type = 'highpass'; hp.frequency.value = 800;
+                const bp = ctx.createBiquadFilter();
+                bp.type = 'peaking'; bp.frequency.value = 3200; bp.gain.value = 8; bp.Q.value = 1;
+
+                const gain = ctx.createGain();
+                // Enveloppe : montée rapide, plateau, descente douce
+                gain.gain.setValueAtTime(0,    ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 0.06);
+                gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + 0.30);
+                gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.60);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+
+                src.connect(hp); hp.connect(bp); bp.connect(gain); gain.connect(ctx.destination);
+                src.start(ctx.currentTime); src.stop(ctx.currentTime + dur);
+            } catch(e) {}
         }
 
-        /* ── Son de canard (Web Audio) ── */
+        /* ── Coin-coin canard (Web Audio — double syllabe réaliste) ── */
         function playQuack() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc  = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain); gain.connect(ctx.destination);
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(460, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.18);
-                gain.gain.setValueAtTime(0.28, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
-                osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.2);
+
+                function quackSyllable(startT, freq1, freq2, vol) {
+                    const osc  = ctx.createOscillator();
+                    const osc2 = ctx.createOscillator();
+                    const mix  = ctx.createGain();
+                    const filt = ctx.createBiquadFilter();
+                    const env  = ctx.createGain();
+
+                    osc.type  = 'sawtooth'; osc2.type = 'square';
+                    osc2.frequency.value = freq1 * 1.5; // harmonique
+                    mix.gain.value = 0.3;
+                    filt.type = 'bandpass'; filt.frequency.value = 900; filt.Q.value = 2.5;
+
+                    osc.frequency.setValueAtTime(freq1, startT);
+                    osc.frequency.exponentialRampToValueAtTime(freq2, startT + 0.14);
+                    osc2.frequency.setValueAtTime(freq1 * 1.5, startT);
+                    osc2.frequency.exponentialRampToValueAtTime(freq2 * 1.5, startT + 0.14);
+
+                    env.gain.setValueAtTime(0, startT);
+                    env.gain.linearRampToValueAtTime(vol, startT + 0.015);
+                    env.gain.setValueAtTime(vol * 0.85, startT + 0.07);
+                    env.gain.exponentialRampToValueAtTime(0.001, startT + 0.18);
+
+                    osc.connect(filt); osc2.connect(mix); mix.connect(filt);
+                    filt.connect(env); env.connect(ctx.destination);
+                    osc.start(startT); osc.stop(startT + 0.2);
+                    osc2.start(startT); osc2.stop(startT + 0.2);
+                }
+
+                // "Coin" puis "coin" légèrement plus court
+                quackSyllable(ctx.currentTime,        580, 260, 0.42);
+                quackSyllable(ctx.currentTime + 0.24, 540, 240, 0.35);
             } catch(e) {}
         }
 
