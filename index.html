@@ -23,12 +23,16 @@
     <link href="https://api.fontshare.com/v2/css?f[]=the-seasons@400,700&display=swap" rel="stylesheet">
     <!-- Caveat (uniquement pour "C'est aujourd'hui !") -->
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+    <!-- AOS — Animate On Scroll -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <!-- AOS — animations au scroll -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
     <style>
         /* ─── Noah (self-hosted) — ajoutez noah-regular.woff2 et noah-bold.woff2 dans votre repo ─── */
@@ -242,6 +246,20 @@
                 rgba(0,0,0,0) 0%, rgba(0,0,0,0.04) 35%,
                 rgba(30,18,12,0.58) 70%, rgba(30,18,12,0.8) 100%);
         }
+        /* Couche parallaxe intermédiaire — petits points décoratifs */
+        .hero-parallax-mid {
+            position: absolute; inset: 0;
+            pointer-events: none; overflow: hidden;
+        }
+        .hpm-dot {
+            position: absolute; border-radius: 50%;
+            background: rgba(207,162,165,0.35);
+        }
+        .hpm-dot:nth-child(1) { width:120px;height:120px; top:12%; left:8%; }
+        .hpm-dot:nth-child(2) { width:60px; height:60px;  top:55%; right:10%; }
+        .hpm-dot:nth-child(3) { width:80px; height:80px;  top:30%; right:20%; }
+        .hpm-dot:nth-child(4) { width:40px; height:40px;  top:70%; left:15%; }
+        .hpm-dot:nth-child(5) { width:160px;height:160px; top:5%;  right:5%; opacity:.18; }
         .hero-content {
             position: absolute; bottom: 0; left: 0; right: 0;
             padding: 3.5rem 2rem 4.5rem; text-align: center; color: white;
@@ -478,21 +496,25 @@
         .stat-num { font-family: 'The Seasons', serif; font-size: 3rem; font-weight: 400; color: var(--rose); display: block; line-height: 1; }
         .stat-lbl { font-size: 0.8125rem; color: var(--text-light); letter-spacing: 1px; }
 
-        /* ─── Galerie ─── */
+        /* ─── Galerie Masonry ─── */
         .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.875rem;
+            columns: 2 160px;
+            column-gap: 0.75rem;
         }
-        @media (min-width: 600px) { .gallery-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 600px) { .gallery-grid { columns: 4 160px; } }
         .gallery-item {
-            aspect-ratio: 1; overflow: hidden; border-radius: 10px;
+            break-inside: avoid;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 0.75rem;
+            overflow: hidden; border-radius: 10px;
             background: var(--sand); position: relative;
             cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
         }
         .gallery-item:hover { transform: scale(1.02); box-shadow: 0 8px 28px rgba(126,103,85,0.16); }
         .gallery-item img {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 100%; height: auto; display: block;
+            object-fit: cover;
             opacity: 0;
             transition: opacity 0.55s ease, transform 0.35s ease;
         }
@@ -826,6 +848,17 @@
         .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
+        /* ─── Easter egg : les oies réagissent au clic ─── */
+        @keyframes oieQuack {
+            0%   { transform: scale(1) rotate(0deg); }
+            20%  { transform: scale(1.25) rotate(-12deg) translateY(-18px); }
+            50%  { transform: scale(0.9) rotate(6deg) translateY(0); }
+            75%  { transform: scale(1.1) rotate(-5deg) translateY(-9px); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .oie { pointer-events: auto; cursor: pointer; }
+        .oie.quacking { animation: oieQuack 0.65s ease forwards !important; }
+
         /* ─── Responsive ─── */
         @media (max-width: 600px) {
             .section { padding: 4rem 1.25rem; }
@@ -935,8 +968,14 @@
         <!-- ══ HERO ══ -->
         <section id="accueil" class="hero-section">
             <img src="leonie-hero.jpg" alt="Léonie" class="hero-image" id="hero-img">
-            <div class="hero-gradient"></div>
-            <div class="hero-content">
+            <div class="hero-gradient" id="hero-gradient"></div>
+            <!-- Couche parallaxe décorative — petits points flottants -->
+            <div class="hero-parallax-mid" id="hero-parallax-mid" aria-hidden="true">
+                <span class="hpm-dot"></span><span class="hpm-dot"></span>
+                <span class="hpm-dot"></span><span class="hpm-dot"></span>
+                <span class="hpm-dot"></span>
+            </div>
+            <div class="hero-content" id="hero-content">
                 <p class="hero-eyebrow">Bienvenue à l'anniversaire de</p>
                 <h1 class="hero-name">LÉONIE</h1>
                 <div class="hero-rule"></div>
@@ -990,100 +1029,93 @@
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-04.jpeg" alt="Juillet 2025"
+                            <img class="timeline-photo" src="mois-04.JPEG" alt="Juillet 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Juillet 2025</span>
                             <p class="timeline-caption">Premières vacances au camping ! </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-05.jpeg" alt="Aout 2025"
+                            <img class="timeline-photo" src="mois-05.JPEG" alt="Aout 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Août 2025</span>
                             <p class="timeline-caption">Ambiance Safari ! </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-06.jpeg" alt="Septembre 2025"
+                            <img class="timeline-photo" src="mois-06.JPEG" alt="Septembre 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Septembre 2025</span>
                             <p class="timeline-caption"> Ma rentrée à la MAM </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-07.jpeg" alt="Octobre 2025"
+                            <img class="timeline-photo" src="mois-07.JPEG" alt="Octobre 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Octobre 2025</span>
                             <p class="timeline-caption">Happy Halloween ! </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-08.jpeg" alt="Novembre 2026"
+                            <img class="timeline-photo" src="mois-08.JPEG" alt="Novembre 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
-                            <span class="timeline-month">Novembre 2026</span>
+                            <span class="timeline-month">Novembre 2025</span>
                             <p class="timeline-caption">Une demie année </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-09.jpeg" alt="Décembre 2025"
+                            <img class="timeline-photo" src="mois-09.JPEG" alt="Décembre 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
-                            <span class="timeline-month"Décembre 2025</span>
+                            <span class="timeline-month">Décembre 2025</span>
                             <p class="timeline-caption">Joyeux Noël</p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-10.jpeg" alt="Janvier 2026"
+                            <img class="timeline-photo" src="mois-10.JPEG" alt="Janvier 2026"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Janvier 2026</span>
                             <p class="timeline-caption">Un ours polaire en approche !</p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-11.jpeg" alt="Février 2026"
+                            <img class="timeline-photo" src="mois-11.JPEG" alt="Février 2026"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Février 2026</span>
                             <p class="timeline-caption">Team Léopard, comme Maman </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-12.jpeg" alt="Mars 2026"
+                            <img class="timeline-photo" src="mois-12.JPEG" alt="Mars 2026"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Mars 2026</span>
                             <p class="timeline-caption">Mon premier Carnaval</p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-13.jpeg" alt="Mars 2026"
+                            <img class="timeline-photo" src="mois-13.JPEG" alt="Mars 2026"
                                  onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Mars 2026 </span>
                             <p class="timeline-caption">Jolie fleur du printemps</p>
                         </div>
 
-<div class="timeline-item">
-                            <img class="timeline-photo" src="mois-13.jpeg" alt="Mars 2026"
-                                 onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
-                            <span class="timeline-month">Mars 2026 </span>
-                            <p class="timeline-caption">Jolie fleur du printemps</p>
-                        </div>
-
-<div class="timeline-item">
-                            <img class="timeline-photo" src="mois-14.jpeg" alt="Avril 2026"
+                        <div class="timeline-item">
+                            <img class="timeline-photo" src="mois-14.JPEG" alt="Avril 2026"
                                  onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Avril 2026 </span>
                             <p class="timeline-caption"> Mon premier Pâques </p>
                         </div>
 
-<div class="timeline-item">
-                            <img class="timeline-photo" src="mois-15.jpeg" alt="Avril (2) 2026"
+                        <div class="timeline-item">
+                            <img class="timeline-photo" src="mois-15.JPEG" alt="Avril (2) 2026"
                                  onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
-                            <span class="timeline-month">Avril 2026 </span>
-                            <p class="timeline-caption">Au Zoo avec Marceau </p>
+                            <span class="timeline-month">Avril 2026</span>
+                            <p class="timeline-caption">Au Zoo avec Marceau</p>
                         </div>
 
-<div class="timeline-item">
-                            <img class="timeline-photo" src="mois-16.jpeg" alt="Mai 2026"
+                        <div class="timeline-item">
+                            <img class="timeline-photo" src="mois-16.JPEG" alt="Mai 2026"
                                  onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
-                            <span class="timeline-month">Mai 2026 </span>
+                            <span class="timeline-month">Mai 2026</span>
                             <p class="timeline-caption">Mai 2026, un an plus tard !</p>
                         </div>
 
@@ -1102,7 +1134,7 @@
         </section>
 
         <!-- ══ OIES A ══ -->
-        <div class="oie-scene scene-a" aria-hidden="true">
+        <div class="oie-scene scene-a" aria-hidden="true" data-aos="fade-in">
             <img src="oie-2.png" class="oie oie-1" alt="" loading="eager">
         </div>
 
@@ -1116,12 +1148,12 @@
                     <p class="section-subtitle">Photos & vidéos de cette journée précieuse</p>
                 </div>
 
-                <div class="photo-stats reveal">
+                <div class="photo-stats reveal" data-aos="zoom-in" data-aos-delay="200">
                     <span class="stat-num" id="photo-count">0</span>
                     <span class="stat-lbl" id="photo-label">souvenir partagé</span>
                 </div>
 
-                <div class="upload-card reveal">
+                <div class="upload-card reveal" data-aos="fade-up" data-aos-delay="100">
                     <svg class="upload-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
@@ -1160,7 +1192,7 @@
                     <div class="section-rule"></div>
                     <p class="poll-intro">La question qui fait débat depuis 12 mois...<br>Vous avez la parole !</p>
                 </div>
-                <div class="poll-card reveal">
+                <div class="poll-card reveal" data-aos="zoom-in" data-aos-delay="150">
                     <div class="poll-options">
                         <div class="poll-option" id="option-papa" onclick="vote('papa')">
                             <img src="papa-bebe.jpg" alt="Papa bébé"
@@ -1225,7 +1257,7 @@
                     <h2 class="section-title">Merci</h2>
                     <div class="section-rule"></div>
                 </div>
-                <div class="merci-section-inner reveal">
+                <div class="merci-section-inner reveal" data-aos="fade-up" data-aos-delay="100">
                     <!-- Ajoutez leonie-merci.JPEG à la racine du repo — une belle photo de Léonie -->
                     <div class="merci-bg"></div>
                     <div class="merci-card">
@@ -1280,6 +1312,8 @@
 
         /* ── Enveloppe ── */
         function openEnvelope() {
+            // Son d'ouverture (carillon doux)
+            playEnvelopeSound();
             // Jet de confettis immédiat au clic
             createConfetti(90);
             // Cache "Ouvrez-moi"
@@ -1315,11 +1349,16 @@
             setupLightboxSwipe();
             initTimeline();
             restoreVoteState();
+            initOieEasterEgg();
+            // AOS — animations d'entrée au scroll
+            if (typeof AOS !== 'undefined') {
+                AOS.init({ duration: 750, once: true, offset: 70, easing: 'ease-out-cubic' });
+            }
             document.getElementById('user-name').addEventListener('keydown', e => { if (e.key === 'Enter') saveName(); });
         }
 
         /* ── Countdown — détection automatique du jour J ── */
-        const PREVIEW_TODAY = new Date() >= new Date('2026-06-06T00:00:00');
+        const PREVIEW_TODAY = true; // forcer l'affichage "C'est aujourd'hui !" pour prévisualisation
 
         function initCountdown() {
             if (PREVIEW_TODAY) {
@@ -1410,6 +1449,7 @@
 
         function showSuccessPopup() {
             document.getElementById('upload-success').classList.add('active');
+            navigator.vibrate && navigator.vibrate([60, 30, 60, 30, 100]); // Haptic feedback upload
         }
         function closeSuccessPopup() {
             document.getElementById('upload-success').classList.remove('active');
@@ -1487,7 +1527,21 @@
             const btn = document.querySelector('.gallery-show-more'); if (btn) btn.remove();
         }
         function updateCount(n) {
-            document.getElementById('photo-count').textContent = n;
+            const el = document.getElementById('photo-count');
+            const from = parseInt(el.textContent) || 0;
+            if (n === from) return;
+            const dur = 700, start = performance.now();
+            function tick(now) {
+                const t = Math.min((now - start) / dur, 1);
+                const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t; // easeInOut
+                el.textContent = Math.round(from + (n - from) * ease);
+                if (t < 1) requestAnimationFrame(tick);
+                else {
+                    el.textContent = n;
+                    document.getElementById('photo-label').textContent = n <= 1 ? 'souvenir partagé' : 'souvenirs partagés';
+                }
+            }
+            requestAnimationFrame(tick);
             document.getElementById('photo-label').textContent = n <= 1 ? 'souvenir partagé' : 'souvenirs partagés';
         }
 
@@ -1521,11 +1575,18 @@
         /* ── Parallaxe hero ── */
         function setupParallax() {
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-            const img = document.getElementById('hero-img');
+            const img     = document.getElementById('hero-img');
+            const mid     = document.getElementById('hero-parallax-mid');
+            const content = document.getElementById('hero-content');
             if (!img) return;
             window.addEventListener('scroll', () => {
                 const p = Math.min(window.scrollY / window.innerHeight, 1);
-                img.style.transform = `translateY(${p * 70}px)`;
+                // Couche 1 — photo fond : vitesse lente (profondeur)
+                img.style.transform = `translateY(${p * 80}px)`;
+                // Couche 2 — points décoratifs : vitesse intermédiaire
+                if (mid) mid.style.transform = `translateY(${p * 45}px)`;
+                // Couche 3 — contenu hero : légèrement vers le haut (effet 3D)
+                if (content) content.style.transform = `translateY(${p * -20}px)`;
             }, { passive: true });
         }
 
@@ -1606,6 +1667,7 @@
                 localStorage.setItem('voted', choice);
                 document.getElementById(`option-${choice}`).classList.add('voted');
                 showToast(`Vote enregistré pour ${choice==='papa'?'Papa':'Maman'} ! 🗳️`);
+                navigator.vibrate && navigator.vibrate([40, 20, 40]); // Haptic feedback mobile
             });
         }
         function showToast(msg) {
@@ -1896,6 +1958,56 @@
         function closePollZoom() {
             document.getElementById('poll-zoom').classList.remove('active');
             document.body.style.overflow = '';
+        }
+
+        /* ── Son d'ouverture enveloppe (carillon Web Audio) ── */
+        function playEnvelopeSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                // Carillon doux en do majeur : C5 E5 G5 C6
+                [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    const t = ctx.currentTime + i * 0.14;
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.22, t + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
+                    osc.start(t); osc.stop(t + 1.2);
+                });
+            } catch(e) { /* navigateur sans WebAudio */ }
+        }
+
+        /* ── Son de canard (Web Audio) ── */
+        function playQuack() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc  = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(460, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.18);
+                gain.gain.setValueAtTime(0.28, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+                osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.2);
+            } catch(e) {}
+        }
+
+        /* ── Easter egg : clic sur une oie → quack + saut ── */
+        function initOieEasterEgg() {
+            document.querySelectorAll('.oie').forEach(oie => {
+                oie.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (this.classList.contains('quacking')) return;
+                    this.classList.add('quacking');
+                    playQuack();
+                    navigator.vibrate && navigator.vibrate(30);
+                    setTimeout(() => this.classList.remove('quacking'), 700);
+                });
+            });
         }
 
         /* ── Confettis plein écran (photos ET vidéos) ── */
