@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Léonie · Baptême & 1er anniversaire · 6 juin 2026</title>
 
+    <!-- ── Favicon ── -->
+    <link rel="icon" href="oie-1.png" type="image/png">
+    <link rel="apple-touch-icon" href="oie-1.png">
+
+    <!-- ── Couleur navigateur Android/Chrome ── -->
+    <meta name="theme-color" content="#EFE8E0">
+
+    <!-- ── Open Graph — aperçu WhatsApp / iMessage / réseaux ── -->
+    <meta property="og:type"        content="website">
+    <meta property="og:title"       content="🎉 Baptême & 1er anniversaire de Léonie · 6 juin 2026">
+    <meta property="og:description" content="Partagez vos photos, laissez un message vocal et votez pour le grand débat !">
+    <meta property="og:image"       content="leonie-hero.jpg">
+    <meta property="og:locale"      content="fr_FR">
+
     <!-- The Seasons (Fontshare) -->
     <link href="https://api.fontshare.com/v2/css?f[]=the-seasons@400,700&display=swap" rel="stylesheet">
     <!-- Caveat (uniquement pour "C'est aujourd'hui !") -->
@@ -58,17 +72,21 @@
         #envelope-scene {
             position: fixed; inset: 0;
             background: var(--ivory);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: flex-start;
-            padding-top: 40vh; /* instruction tombe au milieu de l'écran */
+            display: flex; align-items: center; justify-content: center;
             z-index: 10000;
             transition: opacity 1s ease, visibility 1s ease;
         }
         #envelope-scene.hiding { opacity: 0; visibility: hidden; }
+
+        /* "Ouvrez-moi" positionné au-dessus de l'enveloppe de façon absolue */
         .instruction {
+            position: absolute;
+            top: 10%;
+            left: 50%; transform: translateX(-50%);
+            white-space: nowrap;
             font-family: 'The Seasons', serif;
             font-size: 1.5rem; color: var(--taupe);
-            letter-spacing: 2px; margin-bottom: 2rem;
+            letter-spacing: 2px;
             animation: fadeSlideUp 1s ease 0.5s both, softPulse 3s ease-in-out 1.5s infinite;
             transition: opacity 0.4s ease;
         }
@@ -81,11 +99,11 @@
 
         .envelope-container {
             position: relative;
-            width: clamp(280px, 90vw, 640px);
-            height: min(52vh, 440px);
-            cursor: pointer; transition: transform 0.4s ease;
+            width: clamp(300px, 92vw, 700px);
+            height: min(76vh, 620px);
+            cursor: pointer; transition: transform 0.3s ease;
         }
-        .envelope-container:hover { transform: translateY(-10px) scale(1.01); }
+        .envelope-container:hover { transform: scale(1.02); }
         .envelope-image {
             position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
@@ -565,10 +583,8 @@
             border-radius: 50%; object-fit: cover;
             margin: 0 auto 1rem;
             border: 3px solid var(--sand);
-            cursor: zoom-in;
-            transition: transform 0.25s, box-shadow 0.25s;
+            pointer-events: none; /* vote géré par le div parent uniquement */
         }
-        .poll-option img:hover { transform: scale(1.06); box-shadow: 0 8px 24px rgba(126,103,85,0.18); }
         .poll-option p { font-family: 'The Seasons', serif; font-size: 1.0625rem; color: var(--taupe); }
         .single-poll-bar {
             position: relative; height: 56px;
@@ -582,11 +598,10 @@
             width: 52px; height: 52px;
             transition: left 0.7s ease; z-index: 4;
         }
+        /* Curseur : PNG brut, sans rognage ni bordure */
         .poll-divider img {
             width: 100%; height: 100%;
-            border-radius: 50%; object-fit: cover;
-            border: 3px solid white;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            object-fit: contain;
             display: block;
         }
         .poll-label-left, .poll-label-right { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.8125rem; font-weight: 600; color: var(--text-dark); z-index: 3; }
@@ -634,19 +649,96 @@
         .record-timer { text-align: center; color: var(--rose); font-family: 'The Seasons', serif; font-size: 1.5rem; margin-bottom: 1rem; display: none; }
         .voice-empty { text-align: center; padding: 2rem 1rem; color: var(--text-light); font-style: italic; grid-column: 1 / -1; }
 
-        /* ─── Merci ─── */
-        .merci-card {
-            background: var(--white); border: 1px solid rgba(200,189,174,0.45);
-            border-radius: 16px; padding: 3.5rem 2.5rem;
-            text-align: center; box-shadow: 0 4px 20px rgba(126,103,85,0.06);
+        /* ─── Galerie — skeleton chargement ─── */
+        .gallery-skeleton {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.875rem;
         }
-        .merci-card p { font-family: 'The Seasons', serif; font-size: 1.1rem; line-height: 1.9; color: var(--text-mid); margin-bottom: 1.5rem; }
-        .merci-sig { font-style: italic; color: var(--rose); }
+        @media (min-width: 600px) { .gallery-skeleton { grid-template-columns: repeat(4, 1fr); } }
+        .skeleton-item {
+            aspect-ratio: 1; border-radius: 10px;
+            background: linear-gradient(90deg, var(--sand) 25%, var(--ivory) 50%, var(--sand) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ─── Toast vote ─── */
+        .vote-toast {
+            position: fixed; bottom: 2rem; left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--taupe); color: white;
+            padding: 0.875rem 1.75rem; border-radius: 50px;
+            font-family: 'Noah', sans-serif; font-size: 0.875rem;
+            letter-spacing: 1px; z-index: 9999; pointer-events: none;
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s;
+            opacity: 0; white-space: nowrap;
+        }
+        .vote-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* ─── Barre progression message vocal ─── */
+        .voice-progress-wrap {
+            width: 100%; height: 3px;
+            background: rgba(200,189,174,0.35);
+            border-radius: 2px; margin-top: 0.5rem; overflow: hidden;
+        }
+        .voice-progress-bar {
+            height: 100%; width: 0%;
+            background: var(--rose); border-radius: 2px;
+            transition: width 0.25s linear;
+        }
+        /* Bouton upload audio — état envoi en cours */
+        .record-button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* ─── Indicateur swipe timeline ─── */
+        .timeline-swipe-hint {
+            text-align: center; margin-top: 1rem;
+            font-size: 0.8125rem; color: var(--text-light);
+            letter-spacing: 1px; pointer-events: none;
+            animation: hintPulse 2s ease-in-out 1s 3;
+            transition: opacity 0.5s;
+        }
+        .timeline-swipe-hint.hidden { opacity: 0; }
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.5; } 50% { opacity: 1; }
+        }
+
+        /* ─── Merci ─── */
+        .merci-section-inner {
+            position: relative; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 8px 32px rgba(126,103,85,0.12);
+        }
+        .merci-bg {
+            position: absolute; inset: 0;
+            background-image: url('leonie-merci.JPEG');
+            background-size: cover; background-position: center top;
+            filter: blur(3px) brightness(0.35) saturate(0.7);
+            transform: scale(1.05); /* évite halo flou aux bords */
+        }
+        .merci-card {
+            position: relative; z-index: 1;
+            padding: 4rem 2.5rem; text-align: center;
+        }
+        .merci-card p {
+            font-family: 'The Seasons', serif; font-size: 1.15rem;
+            line-height: 2; color: rgba(255,255,255,0.92); margin-bottom: 1.5rem;
+        }
+        .merci-sig { font-style: italic; color: var(--cream); font-size: 1.1rem; }
+        .merci-date-badge {
+            display: inline-block; margin-bottom: 2rem;
+            font-size: 0.6875rem; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--rose); border: 1px solid rgba(207,162,165,0.5);
+            padding: 0.4rem 1.25rem; border-radius: 50px;
+        }
 
         /* ─── Footer ─── */
-        .footer { background: var(--rose); padding: 3rem 2rem; text-align: center; }
-        .footer-goose { width: 56px; margin: 0 auto 1.25rem; opacity: 0.5; filter: brightness(0) invert(1); }
-        .footer-text { font-family: 'The Seasons', serif; font-size: 0.9375rem; color: rgba(255,255,255,0.85); letter-spacing: 1px; }
+        .footer { background: var(--rose); padding: 3.5rem 2rem 2.5rem; text-align: center; }
+        .footer-goose { width: 64px; margin: 0 auto 1.25rem; opacity: 0.55; filter: brightness(0) invert(1); }
+        .footer-title { font-family: 'The Seasons', serif; font-size: 1.25rem; color: white; margin-bottom: 0.5rem; }
+        .footer-text { font-size: 0.8125rem; color: rgba(255,255,255,0.7); letter-spacing: 1px; margin-bottom: 0.35rem; }
+        .footer-credit { font-size: 0.6875rem; color: rgba(255,255,255,0.45); margin-top: 1.5rem; letter-spacing: 1px; }
 
         /* ─── Timeline lightbox ─── */
         .tl-lightbox {
@@ -898,98 +990,98 @@
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-04.JPEG" alt="Juillet 2025"
+                            <img class="timeline-photo" src="mois-04.jpeg" alt="Juillet 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Juillet 2025</span>
                             <p class="timeline-caption">Premières vacances au camping ! </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-05.JPEG" alt="Aout 2025"
+                            <img class="timeline-photo" src="mois-05.jpeg" alt="Aout 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Août 2025</span>
                             <p class="timeline-caption">Ambiance Safari ! </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-06.JPEG" alt="Septembre 2025"
+                            <img class="timeline-photo" src="mois-06.jpeg" alt="Septembre 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Septembre 2025</span>
                             <p class="timeline-caption"> Ma rentrée à la MAM </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-07.JPEG" alt="Octobre 2025"
+                            <img class="timeline-photo" src="mois-07.jpeg" alt="Octobre 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Octobre 2025</span>
                             <p class="timeline-caption">Happy Halloween ! </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-08.JPEG" alt="Novembre 2026"
+                            <img class="timeline-photo" src="mois-08.jpeg" alt="Novembre 2026"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Novembre 2026</span>
                             <p class="timeline-caption">Une demie année </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-09.JPEG" alt="Décembre 2025"
+                            <img class="timeline-photo" src="mois-09.jpeg" alt="Décembre 2025"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month"Décembre 2025</span>
                             <p class="timeline-caption">Joyeux Noël</p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-10.JPEG" alt="Janvier 2026"
+                            <img class="timeline-photo" src="mois-10.jpeg" alt="Janvier 2026"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Janvier 2026</span>
                             <p class="timeline-caption">Un ours polaire en approche !</p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-11.JPEG" alt="Février 2026"
+                            <img class="timeline-photo" src="mois-11.jpeg" alt="Février 2026"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Février 2026</span>
                             <p class="timeline-caption">Team Léopard, comme Maman </p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-12.JPEG" alt="Mars 2026"
+                            <img class="timeline-photo" src="mois-12.jpeg" alt="Mars 2026"
                                  onerror="this.style.background='#C8BDAE';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Mars 2026</span>
                             <p class="timeline-caption">Mon premier Carnaval</p>
                         </div>
 
                         <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-13.JPEG" alt="Mars 2026"
+                            <img class="timeline-photo" src="mois-13.jpeg" alt="Mars 2026"
                                  onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Mars 2026 </span>
                             <p class="timeline-caption">Jolie fleur du printemps</p>
                         </div>
 
 <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-13.JPEG" alt="Mars 2026"
+                            <img class="timeline-photo" src="mois-13.jpeg" alt="Mars 2026"
                                  onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Mars 2026 </span>
                             <p class="timeline-caption">Jolie fleur du printemps</p>
                         </div>
 
 <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-14.JPEG" alt="Avril 2026"
+                            <img class="timeline-photo" src="mois-14.jpeg" alt="Avril 2026"
                                  onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Avril 2026 </span>
                             <p class="timeline-caption"> Mon premier Pâques </p>
                         </div>
 
 <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-15.JPEG" alt="Avril (2) 2026"
+                            <img class="timeline-photo" src="mois-15.jpeg" alt="Avril (2) 2026"
                                  onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Avril 2026 </span>
                             <p class="timeline-caption">Au Zoo avec Marceau </p>
                         </div>
 
 <div class="timeline-item">
-                            <img class="timeline-photo" src="mois-16.JPEG" alt="Mai 2026"
+                            <img class="timeline-photo" src="mois-16.jpeg" alt="Mai 2026"
                                  onerror="this.style.background='#CFA2A5';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                             <span class="timeline-month">Mai 2026 </span>
                             <p class="timeline-caption">Mai 2026, un an plus tard !</p>
@@ -997,6 +1089,9 @@
 
                     </div>
                 </div>
+
+                <!-- Indicateur swipe — disparaît au premier scroll -->
+                <p class="timeline-swipe-hint" id="tl-swipe-hint">← Glissez pour explorer →</p>
 
                 <!-- Boutons navigation timeline -->
                 <div class="timeline-nav">
@@ -1008,7 +1103,7 @@
 
         <!-- ══ OIES A ══ -->
         <div class="oie-scene scene-a" aria-hidden="true">
-            <img src="oie-2.png" class="oie oie-1" alt="">
+            <img src="oie-2.png" class="oie oie-1" alt="" loading="eager">
         </div>
 
         <!-- ══ GALERIE ══ -->
@@ -1032,14 +1127,20 @@
                         <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
                     <h3 class="upload-heading">Ajoutez vos photos & vidéos</h3>
-                    <p class="upload-sub">JPG · PNG · MP4 · MOV · jusqu'à 100 Mo</p>
+                    <p class="upload-sub">JPG · PNG · MP4 · MOV · jusqu'à 50 Mo</p>
+                    <p class="upload-sub" style="margin-top:-0.75rem; font-size:0.75rem; color:var(--text-light);">Appuyez pour ouvrir votre galerie ou prendre une photo directement 📷</p>
                     <div class="upload-actions">
                         <button class="btn btn-primary" onclick="startUpload()">📷 Partager un souvenir</button>
                         <button class="btn btn-ghost" onclick="downloadAllPhotos()">📥 Tout télécharger</button>
                     </div>
                 </div>
 
-                <div class="gallery-grid" id="gallery-grid">
+                <!-- Skeleton affiché pendant le chargement Firebase -->
+                <div class="gallery-skeleton" id="gallery-skeleton">
+                    <div class="skeleton-item"></div><div class="skeleton-item"></div>
+                    <div class="skeleton-item"></div><div class="skeleton-item"></div>
+                </div>
+                <div class="gallery-grid" id="gallery-grid" style="display:none">
                     <p class="gallery-empty">Soyez le premier à partager un souvenir ✨</p>
                 </div>
             </div>
@@ -1047,7 +1148,7 @@
 
         <!-- ══ OIES B ══ -->
         <div class="oie-scene scene-b" aria-hidden="true">
-            <img src="oie-3.png" class="oie oie-1" alt="">
+            <img src="oie-3.png" class="oie oie-1" alt="" loading="eager">
         </div>
 
         <!-- ══ SONDAGE ══ -->
@@ -1063,13 +1164,11 @@
                     <div class="poll-options">
                         <div class="poll-option" id="option-papa" onclick="vote('papa')">
                             <img src="papa-bebe.jpg" alt="Papa bébé"
-                                 onclick="event.stopPropagation(); openPollZoom(this.src, 'Papa')"
                                  onerror="this.src='https://via.placeholder.com/140/CFA2A5/FFFFFF?text=Papa'">
                             <p>Papa</p>
                         </div>
                         <div class="poll-option" id="option-maman" onclick="vote('maman')">
                             <img src="maman-bebe.jpg" alt="Maman bébé"
-                                 onclick="event.stopPropagation(); openPollZoom(this.src, 'Maman')"
                                  onerror="this.src='https://via.placeholder.com/140/F9EFC9/7E6755?text=Maman'">
                             <p>Maman</p>
                         </div>
@@ -1090,8 +1189,8 @@
 
         <!-- ══ OIES C ══ -->
         <div class="oie-scene scene-c" aria-hidden="true">
-            <img src="oie-1.png" class="oie oie-1" alt="">
-            <img src="oie-4.png" class="oie oie-2" alt="">
+            <img src="oie-1.png" class="oie oie-1" alt="" loading="eager">
+            <img src="oie-4.png" class="oie oie-2" alt="" loading="eager">
         </div>
 
         <!-- ══ MESSAGES VOCAUX ══ -->
@@ -1115,7 +1214,7 @@
 
         <!-- ══ OIES D ══ -->
         <div class="oie-scene scene-d" aria-hidden="true">
-            <img src="oie-2.png" class="oie oie-1" alt="">
+            <img src="oie-2.png" class="oie oie-1" alt="" loading="eager">
         </div>
 
         <!-- ══ REMERCIEMENTS ══ -->
@@ -1126,17 +1225,28 @@
                     <h2 class="section-title">Merci</h2>
                     <div class="section-rule"></div>
                 </div>
-                <div class="merci-card reveal">
-                    <p>Votre présence illumine nos cœurs. Merci d'être là pour célébrer le baptême et le premier anniversaire de notre petite Léonie.</p>
-                    <p class="merci-sig">Avec toute notre affection ♡</p>
+                <div class="merci-section-inner reveal">
+                    <!-- Ajoutez leonie-merci.JPEG à la racine du repo — une belle photo de Léonie -->
+                    <div class="merci-bg"></div>
+                    <div class="merci-card">
+                        <span class="merci-date-badge">6 juin 2026</span>
+                        <p>Votre présence illumine nos cœurs.<br>Merci d'être là pour célébrer le baptême<br>et le premier anniversaire de notre petite Léonie.</p>
+                        <p class="merci-sig">Avec toute notre affection ♡</p>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- ══ TOAST VOTE ══ -->
+        <div class="vote-toast" id="vote-toast"></div>
+
         <!-- ══ FOOTER ══ -->
         <footer class="footer">
-            <img src="oie-3.png" class="footer-goose" alt="">
-            <p class="footer-text">Baptême & 1er anniversaire de Léonie · 6 juin 2026</p>
+            <img src="oie-3.png" class="footer-goose" alt="" loading="eager">
+            <p class="footer-title">Léonie · 6 juin 2026</p>
+            <p class="footer-text">Baptême & 1er anniversaire</p>
+            <p class="footer-text">Merci d'avoir partagé ce moment avec nous ♡</p>
+            <p class="footer-credit">Fait avec amour par Manon & Hugo ♥ </p>
         </footer>
 
     </div><!-- /#main-site -->
@@ -1166,15 +1276,18 @@
         let currentMedia     = [];
         let lightboxIndex    = 0;
         let touchStartX      = 0;
-        const GALLERY_MAX    = 4;
+        const GALLERY_MAX    = 12;
 
         /* ── Enveloppe ── */
         function openEnvelope() {
-            // Cache "Ouvrez-moi" dès le clic
+            // Jet de confettis immédiat au clic
+            createConfetti(90);
+            // Cache "Ouvrez-moi"
             document.querySelector('.instruction').classList.add('hidden');
             document.getElementById('envelope-closed').classList.remove('active');
             const opened = document.getElementById('envelope-opened');
             opened.src = 'enveloppe-ouverte.gif'; // GIF démarre au clic
+            opened.load && opened.load();          // fix iOS Safari GIF
             setTimeout(() => opened.classList.add('active'), 500);
             setTimeout(() => {
                 document.getElementById('envelope-scene').classList.add('hiding');
@@ -1205,10 +1318,8 @@
             document.getElementById('user-name').addEventListener('keydown', e => { if (e.key === 'Enter') saveName(); });
         }
 
-        /* ── Countdown ──
-           PREVIEW_TODAY = true  → affiche "C'est aujourd'hui !" (pour voir le design)
-           PREVIEW_TODAY = false → active le vrai décompte                              */
-        const PREVIEW_TODAY = true;
+        /* ── Countdown — détection automatique du jour J ── */
+        const PREVIEW_TODAY = new Date() >= new Date('2026-06-06T00:00:00');
 
         function initCountdown() {
             if (PREVIEW_TODAY) {
@@ -1267,7 +1378,7 @@
             cloudinaryWidget = cloudinary.createUploadWidget({
                 cloudName: CLOUDINARY.cloudName, uploadPreset: CLOUDINARY.uploadPreset,
                 folder: 'bapteme-leonie-2026', sources: ['local','camera'],
-                multiple: true, maxFiles: 20, maxFileSize: 100000000,
+                multiple: true, maxFiles: 20, maxFileSize: 50000000,
                 clientAllowedFormats: ['jpg','jpeg','png','heic','webp','mp4','mov','avi'],
                 theme: 'minimal', language: 'fr'
             }, (err, result) => {
@@ -1318,9 +1429,15 @@
 
         /* ── Galerie ── */
         function listenToMedia() {
+            const skeleton = document.getElementById('gallery-skeleton');
+            const grid     = document.getElementById('gallery-grid');
+
             db.collection('photos').orderBy('timestamp','desc').onSnapshot(snap => {
+                // Cache le skeleton, affiche la grille
+                if (skeleton) skeleton.style.display = 'none';
+                grid.style.display = '';
+
                 currentMedia = [];
-                const grid = document.getElementById('gallery-grid');
                 grid.innerHTML = '';
                 if (snap.empty) {
                     grid.innerHTML = '<p class="gallery-empty">Soyez le premier à partager un souvenir ✨</p>';
@@ -1349,6 +1466,20 @@
                     grid.appendChild(more);
                 }
                 updateCount(snap.size);
+            }, err => {
+                // Fallback Firebase — erreur réseau jour J
+                console.error('Firebase galerie:', err);
+                const skeleton = document.getElementById('gallery-skeleton');
+                const grid     = document.getElementById('gallery-grid');
+                if (skeleton) skeleton.style.display = 'none';
+                grid.style.display = '';
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:2.5rem 1rem; color:var(--text-light)">
+                        <p style="font-size:1.25rem; margin-bottom:0.75rem">📡</p>
+                        <p style="font-family:'The Seasons',serif; font-size:1.1rem; margin-bottom:0.5rem">Connexion en cours…</p>
+                        <p style="font-size:0.875rem">Rechargez la page si les photos n'apparaissent pas</p>
+                        <button class="btn btn-ghost" style="margin-top:1.25rem" onclick="location.reload()">Recharger</button>
+                    </div>`;
             });
         }
         function expandGallery() {
@@ -1466,9 +1597,21 @@
         }
         function vote(choice) {
             const v = localStorage.getItem('voted');
-            if (v) { alert('Vous avez déjà voté pour ' + (v==='papa'?'Papa':'Maman') + ' !'); return; }
+            if (v) {
+                showToast(`Vous avez déjà voté pour ${v==='papa'?'Papa':'Maman'} 😄`);
+                return;
+            }
             db.collection('poll').doc(choice).set({votes:firebase.firestore.FieldValue.increment(1)},{merge:true})
-              .then(() => { localStorage.setItem('voted',choice); document.getElementById(`option-${choice}`).classList.add('voted'); });
+              .then(() => {
+                localStorage.setItem('voted', choice);
+                document.getElementById(`option-${choice}`).classList.add('voted');
+                showToast(`Vote enregistré pour ${choice==='papa'?'Papa':'Maman'} ! 🗳️`);
+            });
+        }
+        function showToast(msg) {
+            const t = document.getElementById('vote-toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
         }
         function listenToPoll() {
             db.collection('poll').onSnapshot(snap => {
@@ -1515,8 +1658,10 @@
         function stopRecording() {
             if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
             clearInterval(recordInterval);
-            document.getElementById('record-btn').classList.remove('recording');
-            document.getElementById('record-btn').textContent = '🎤 Enregistrer un message (20s)';
+            const btn = document.getElementById('record-btn');
+            btn.classList.remove('recording');
+            btn.textContent = '⏳ Envoi en cours…';
+            btn.disabled = true; // évite double-clic pendant l'upload
             document.getElementById('record-timer').style.display = 'none';
         }
         async function uploadVoice(blob, duration) {
@@ -1543,9 +1688,15 @@
                     url: data.secure_url, author: userName, duration,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                showToast('Message vocal envoyé ! 🎙️');
             } catch(err) {
                 console.error('Upload vocal:', err);
                 alert('Erreur lors de l\'envoi. Réessayez.');
+            } finally {
+                // Réactive le bouton dans tous les cas
+                const btn = document.getElementById('record-btn');
+                btn.disabled = false;
+                btn.textContent = '🎤 Enregistrer un message (20s)';
             }
         }
         function listenToVoiceMessages() {
@@ -1613,14 +1764,32 @@
                           <text x="10" y="20" font-family="Georgia,serif" font-size="7"  fill="#CFA2A5" opacity="0.25" transform="rotate(-6 10 20)">♩</text>
                         </svg>
                         <p class="voice-author">🎤 ${data.author}</p>
-                        <p class="voice-duration">${data.duration}s</p>`;
-                    let audio = null;
+                        <p class="voice-duration">${data.duration}s</p>
+                        <div class="voice-progress-wrap">
+                            <div class="voice-progress-bar" id="vp-${doc.id}"></div>
+                        </div>`;
+                    let audio = null, progInterval = null;
                     item.onclick = () => {
-                        if (audio && !audio.paused) { audio.pause(); item.classList.remove('playing'); return; }
+                        if (audio && !audio.paused) {
+                            audio.pause(); clearInterval(progInterval);
+                            item.classList.remove('playing'); return;
+                        }
                         document.querySelectorAll('.voice-message.playing').forEach(el => el.classList.remove('playing'));
                         audio = new Audio(data.url); audio.play();
                         item.classList.add('playing');
-                        audio.onended = () => item.classList.remove('playing');
+                        const bar = document.getElementById(`vp-${doc.id}`);
+                        if (bar) {
+                            bar.style.width = '0%';
+                            progInterval = setInterval(() => {
+                                if (!audio.duration) return;
+                                bar.style.width = (audio.currentTime / audio.duration * 100) + '%';
+                            }, 200);
+                        }
+                        audio.onended = () => {
+                            clearInterval(progInterval);
+                            if (bar) bar.style.width = '100%';
+                            item.classList.remove('playing');
+                        };
                     };
                     c.appendChild(item);
                 });
@@ -1647,6 +1816,12 @@
                 if (!isDown) return; e.preventDefault(); moved = true;
                 el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX) * 1.4;
             });
+
+            // Swipe hint — disparaît au premier scroll ou touch
+            const hint = document.getElementById('tl-swipe-hint');
+            function hideHint() { if(hint) hint.classList.add('hidden'); }
+            el.addEventListener('scroll',     hideHint, { once: true });
+            el.addEventListener('touchstart', hideHint, { once: true, passive: true });
 
             // Construire le tableau de données depuis le DOM
             tlData = [];
