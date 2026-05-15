@@ -533,7 +533,7 @@
             color: var(--text-light); font-family: 'The Seasons', serif;
             font-size: 1.1rem; font-style: italic; grid-column: 1 / -1;
         }
-        .gallery-show-more { grid-column: 1 / -1; text-align: center; padding: 1.75rem 0 0.5rem; }
+        .gallery-show-more { text-align: center; padding: 1.75rem 0 0.5rem; width: 100%; }
 
         /* ─── Lightbox ─── */
         .lightbox {
@@ -1300,6 +1300,11 @@
         let touchStartX      = 0;
         const GALLERY_MAX    = 4;
 
+        /* ── Sons personnalisés — remplacez '' par le nom de votre fichier MP3 ──
+           Exemple : const SOUND_ENVELOPE = 'mon-son.mp3';                        */
+        const SOUND_ENVELOPE = ''; // son au clic sur l'enveloppe
+        const SOUND_QUACK    = ''; // son au clic sur les oies
+
         /* ── Enveloppe ── */
         function openEnvelope() {
             // Son d'ouverture (carillon doux)
@@ -1492,8 +1497,9 @@
                 if (snap.size > GALLERY_MAX) {
                     const more = document.createElement('div');
                     more.className = 'gallery-show-more';
-                    more.innerHTML = `<button class="btn btn-ghost" onclick="expandGallery()">📷 Voir les ${snap.size} photos partagées</button>`;
-                    grid.appendChild(more);
+                    more.id = 'gallery-more-btn';
+                    more.innerHTML = `<button class="btn btn-ghost" onclick="expandGallery()" style="width:100%;max-width:360px;display:block;margin:0 auto;">📷 Voir les ${snap.size} photos partagées</button>`;
+                    grid.insertAdjacentElement('afterend', more);
                 }
                 updateCount(snap.size);
             }, err => {
@@ -1514,7 +1520,7 @@
         }
         function expandGallery() {
             document.querySelectorAll('.gallery-item-hidden').forEach(el => el.classList.remove('gallery-item-hidden'));
-            const btn = document.querySelector('.gallery-show-more'); if (btn) btn.remove();
+            const btn = document.getElementById('gallery-more-btn'); if (btn) btn.remove();
         }
         function updateCount(n) {
             const el = document.getElementById('photo-count');
@@ -1952,6 +1958,7 @@
 
         /* ── Son d'ouverture enveloppe — froissement de papier (Web Audio) ── */
         function playEnvelopeSound() {
+            if (SOUND_ENVELOPE) { new Audio(SOUND_ENVELOPE).play().catch(() => {}); return; }
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const sr = ctx.sampleRate;
@@ -1987,6 +1994,7 @@
 
         /* ── Coin-coin canard (Web Audio — double syllabe réaliste) ── */
         function playQuack() {
+            if (SOUND_QUACK) { new Audio(SOUND_QUACK).play().catch(() => {}); return; }
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
 
