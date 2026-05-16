@@ -63,10 +63,17 @@
 
         /* ─── Reset ─── */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+
+        /* ─── Grain texture uniquement sur le fond — posé sur html, derrière tout le contenu ─── */
+        html {
+            scroll-behavior: smooth;
+            background-color: #EFE8E0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='0.07'/%3E%3C/svg%3E");
+            background-size: 180px 180px;
+        }
         body {
             font-family: 'Noah', 'Helvetica Neue', Arial, sans-serif;
-            background: var(--ivory);
+            background: transparent; /* grain géré par html */
             color: var(--text-dark);
             overflow-x: hidden;
         }
@@ -129,9 +136,14 @@
         }
         .name-modal.active { display: flex; }
         .name-modal-content {
-            background: var(--white); padding: 3rem 2.5rem;
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.6);
+            padding: 3rem 2.5rem;
             border-radius: 16px; max-width: 380px; width: 92%;
             text-align: center;
+            box-shadow: 0 8px 32px rgba(126,103,85,0.14), inset 0 1px 0 rgba(255,255,255,0.8);
         }
         .name-modal h3 {
             font-family: 'The Seasons', serif;
@@ -429,7 +441,11 @@
             border-radius: 10px; margin-bottom: 0.875rem;
             background: var(--sand);
             box-shadow: 0 4px 16px rgba(126,103,85,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, clip-path 0.85s cubic-bezier(0.22,1,0.36,1);
+            clip-path: inset(0 0 100% 0);
+        }
+        .timeline-photo.clip-revealed {
+            clip-path: inset(0 0 0% 0);
         }
         .timeline-item:hover .timeline-photo {
             transform: translateY(-4px);
@@ -455,10 +471,13 @@
 
         /* ─── Upload card ─── */
         .upload-card {
-            background: var(--white); border: 1px solid rgba(200,189,174,0.45);
+            background: rgba(255,255,255,0.62);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.55);
             border-radius: 16px; padding: 2.75rem 2rem;
             text-align: center; margin-bottom: 2.5rem;
-            box-shadow: 0 4px 20px rgba(126,103,85,0.06);
+            box-shadow: 0 8px 32px rgba(126,103,85,0.10), inset 0 1px 0 rgba(255,255,255,0.7);
         }
         .upload-icon { color: var(--rose); margin-bottom: 1.25rem; }
         .upload-heading { font-family: 'The Seasons', serif; font-size: 1.375rem; color: var(--taupe); margin-bottom: 0.5rem; }
@@ -487,51 +506,58 @@
         .stat-num { font-family: 'The Seasons', serif; font-size: 3rem; font-weight: 400; color: var(--rose); display: block; line-height: 1; }
         .stat-lbl { font-size: 0.8125rem; color: var(--text-light); letter-spacing: 1px; }
 
-        /* ─── Galerie Masonry ─── */
+        /* ─── Polaroïd Wall ─── */
         .gallery-grid {
-            columns: 2 160px;
-            column-gap: 0.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            justify-content: center;
+            padding: 0.75rem 0.25rem 1rem;
         }
-        @media (min-width: 600px) { .gallery-grid { columns: 4 160px; } }
         .gallery-item {
-            break-inside: avoid;
-            display: inline-block;
-            width: 100%;
-            margin-bottom: 0.75rem;
-            overflow: hidden; border-radius: 10px;
-            background: var(--sand); position: relative;
-            cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+            background: #fff;
+            padding: 9px 9px 34px 9px;
+            box-shadow: 0 4px 18px rgba(126,103,85,0.15), 0 1px 3px rgba(126,103,85,0.08);
+            border-radius: 2px;
+            width: calc(46% - 0.6rem);
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+            will-change: transform;
         }
-        .gallery-item:hover { transform: scale(1.02); box-shadow: 0 8px 28px rgba(126,103,85,0.16); }
+        @media (min-width: 600px) { .gallery-item { width: calc(22% - 0.95rem); } }
+        .gallery-item:hover, .gallery-item:active {
+            transform: scale(1.07) rotate(0deg) !important;
+            box-shadow: 0 18px 50px rgba(126,103,85,0.22);
+            z-index: 5;
+        }
         .gallery-item img {
             width: 100%; height: auto; display: block;
-            object-fit: cover;
+            object-fit: cover; border-radius: 1px;
             opacity: 0;
-            transition: opacity 0.55s ease, transform 0.35s ease;
+            transition: opacity 0.55s ease;
         }
         .gallery-item.revealed img { opacity: 1; }
-        .gallery-item:hover img { transform: scale(1.06); }
-        .photo-author {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            background: linear-gradient(transparent, rgba(30,18,12,0.65));
-            color: white; padding: 1.5rem 0.75rem 0.625rem;
-            font-size: 0.75rem; text-align: center;
-            opacity: 0; transition: opacity 0.3s;
+        .polaroid-author {
+            font-family: 'Caveat', cursive;
+            font-size: 0.9rem; color: var(--text-mid);
+            text-align: center; margin-top: 7px;
+            display: block; letter-spacing: 0.3px;
         }
-        .gallery-item:hover .photo-author, .gallery-item:active .photo-author { opacity: 1; }
+        .photo-author { display: none; } /* remplacé par .polaroid-author */
         .video-badge {
-            position: absolute; top: 50%; left: 50%;
+            position: absolute; top: 44%; left: 50%;
             transform: translate(-50%,-50%);
-            width: 44px; height: 44px;
+            width: 36px; height: 36px;
             background: rgba(255,255,255,0.88); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; pointer-events: none;
+            font-size: 0.875rem; pointer-events: none;
         }
         .gallery-item-hidden { display: none; }
         .gallery-empty {
             text-align: center; padding: 3.5rem 1rem;
             color: var(--text-light); font-family: 'The Seasons', serif;
-            font-size: 1.1rem; font-style: italic; grid-column: 1 / -1;
+            font-size: 1.1rem; font-style: italic; width: 100%;
         }
         .gallery-show-more { text-align: center; padding: 1.75rem 0 0.5rem; width: 100%; }
 
@@ -579,9 +605,12 @@
             color: var(--text-light); text-align: center; margin-bottom: 2.5rem; line-height: 1.85;
         }
         .poll-card {
-            background: var(--white); border: 1px solid rgba(200,189,174,0.45);
+            background: rgba(255,255,255,0.62);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.55);
             border-radius: 16px; padding: 2.75rem 2rem;
-            box-shadow: 0 4px 20px rgba(126,103,85,0.06);
+            box-shadow: 0 8px 32px rgba(126,103,85,0.10), inset 0 1px 0 rgba(255,255,255,0.7);
         }
         .poll-options { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
         .poll-option {
@@ -799,10 +828,14 @@
         }
         .upload-success.active { display: flex; }
         .upload-success-box {
-            background: var(--white); border-radius: 20px;
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 20px;
             padding: 3rem 2.5rem; text-align: center;
             max-width: 340px; width: 90%;
-            box-shadow: 0 12px 40px rgba(126,103,85,0.2);
+            box-shadow: 0 12px 40px rgba(126,103,85,0.18), inset 0 1px 0 rgba(255,255,255,0.8);
             animation: successPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
         }
         @keyframes successPop {
@@ -839,6 +872,17 @@
         /* ─── Scroll reveal ─── */
         .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
         .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ─── Typographie animée — révélation mot par mot au scroll ─── */
+        .section-title .word-wrap { overflow: hidden; display: inline-block; vertical-align: bottom; }
+        .section-title .word {
+            display: inline-block;
+            transform: translateY(110%);
+            opacity: 0;
+            transition: transform 0.65s cubic-bezier(0.22,1,0.36,1), opacity 0.5s ease;
+        }
+        .section-title .word + .word { margin-left: 0.28em; }
+        .section-title.words-in .word { transform: translateY(0); opacity: 1; }
 
         /* ─── Easter egg : les oies réagissent au clic ─── */
         @keyframes oieQuack {
@@ -1302,8 +1346,8 @@
 
         /* ── Sons personnalisés — remplacez '' par le nom de votre fichier MP3 ──
            Exemple : const SOUND_ENVELOPE = 'mon-son.mp3';                        */
-        const SOUND_ENVELOPE = ''; // son au clic sur l'enveloppe
-        const SOUND_QUACK    = ''; // son au clic sur les oies
+        const SOUND_ENVELOPE = 'mon-son-enveloppe.mp3'; // son au clic sur l'enveloppe
+        const SOUND_QUACK    = 'mon-son-oie.mp3';      // son au clic sur les oies
 
         /* ── Enveloppe ── */
         function openEnvelope() {
@@ -1339,6 +1383,7 @@
             listenToVoiceMessages();
             setupGalleryObserver();
             setupScrollReveal();
+            setupTitleAnimation();
             setupParallax();
             setupKeyboard();
             setupLightboxSwipe();
@@ -1488,13 +1533,18 @@
                     currentMedia.push(data);
                     const item = document.createElement('div');
                     item.className = 'gallery-item' + (index >= GALLERY_MAX ? ' gallery-item-hidden' : '');
+                    // Rotation aléatoire — effet polaroïd jeté à plat
+                    const ROTS = [-4.5, -3.2, -2, -1, 0, 1, 2.2, 3.5, 4.5];
+                    const rot  = ROTS[index % ROTS.length];
+                    item.style.transform = `rotate(${rot}deg)`;
                     // Photos : full URL transformée à w_900 — Vidéos : thumbnail (frame) à w_480
                     const thumbSrc = data.isVideo
                         ? optimizeUrl(data.thumbnail || data.url, 480)
                         : optimizeUrl(data.url, 900);
+                    const authorLabel = data.isVideo ? `🎥 ${data.author}` : `📸 ${data.author}`;
                     item.innerHTML = data.isVideo
-                        ? `<img src="${thumbSrc}" alt="Vidéo de ${data.author}" loading="lazy"><div class="video-badge">▶</div><div class="photo-author">🎥 ${data.author}</div>`
-                        : `<img src="${thumbSrc}" alt="Photo de ${data.author}" loading="lazy"><div class="photo-author">📸 ${data.author}</div>`;
+                        ? `<img src="${thumbSrc}" alt="Vidéo de ${data.author}" loading="lazy"><div class="video-badge">▶</div><span class="polaroid-author">${authorLabel}</span>`
+                        : `<img src="${thumbSrc}" alt="Photo de ${data.author}" loading="lazy"><span class="polaroid-author">${authorLabel}</span>`;
                     item.onclick = () => openLightbox(index);
                     grid.appendChild(item);
                 });
@@ -1570,6 +1620,23 @@
                 entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
             }, { threshold: 0.12 });
             document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        }
+
+        /* ── Typographie animée — révélation mot par mot au scroll ── */
+        function setupTitleAnimation() {
+            document.querySelectorAll('.section-title').forEach(el => {
+                const text = el.textContent.trim();
+                const words = text.split(/\s+/);
+                el.innerHTML = words.map((w, i) =>
+                    `<span class="word-wrap"><span class="word" style="transition-delay:${i * 90}ms">${w}</span></span>`
+                ).join(' ');
+                const obs = new IntersectionObserver(entries => {
+                    entries.forEach(e => {
+                        if (e.isIntersecting) { el.classList.add('words-in'); obs.unobserve(el); }
+                    });
+                }, { threshold: 0.35 });
+                obs.observe(el);
+            });
         }
 
         /* ── Parallaxe hero ── */
@@ -1902,6 +1969,17 @@
                     if (!moved) openTlLb(i);
                 });
             });
+
+            // Clip-path reveal — les photos de la timeline se révèlent du bas vers le haut au scroll
+            const clipObs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('clip-revealed');
+                        clipObs.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+            document.querySelectorAll('.timeline-photo').forEach(img => clipObs.observe(img));
         }
 
         function openTlLb(i) {
