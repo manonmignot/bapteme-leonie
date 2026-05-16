@@ -21,8 +21,7 @@
 
     <!-- The Seasons (Fontshare) -->
     <link href="https://api.fontshare.com/v2/css?f[]=the-seasons@400,700&display=swap" rel="stylesheet">
-    <!-- Caveat (uniquement pour "C'est aujourd'hui !") -->
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Typo : uniquement Noah (sans-serif) + The Seasons (serif) -->
     <!-- AOS — Animate On Scroll -->
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
@@ -45,6 +44,12 @@
             font-family: 'Noah';
             src: url('noah-bold.woff2') format('woff2');
             font-weight: 700; font-style: normal; font-display: swap;
+        }
+        /* ─── Bimbo Bold (DaFont, self-hosted) — placez bimbo.ttf dans le même dossier ─── */
+        @font-face {
+            font-family: 'Bimbo';
+            src: url('bimbo.ttf') format('truetype');
+            font-weight: normal; font-style: normal; font-display: swap;
         }
 
         /* ─── Variables ─── */
@@ -73,18 +78,9 @@
         }
         body {
             font-family: 'Noah', 'Helvetica Neue', Arial, sans-serif;
+            background: transparent; /* fond ivoire + grain géré par html */
             color: var(--text-dark);
             overflow-x: hidden;
-            /* ── Aurora glassmorphism — blobs colorés fixes derrière tout le contenu ──
-               background-attachment: fixed → les blobs restent ancrés au viewport pendant
-               le scroll, ils traversent les sections transparentes → frosted glass visible */
-            background:
-                radial-gradient(ellipse 60% 50% at 90% 8%,  rgba(207,162,165,0.72) 0%, transparent 52%),
-                radial-gradient(ellipse 55% 60% at 6%  92%,  rgba(249,239,201,0.80) 0%, transparent 48%),
-                radial-gradient(ellipse 42% 48% at 52% 52%,  rgba(184,137,140,0.38) 0%, transparent 62%),
-                radial-gradient(ellipse 38% 42% at 20% 20%,  rgba(249,239,201,0.50) 0%, transparent 56%),
-                transparent; /* laisse le grain ivory de html passer */
-            background-attachment: fixed; /* blobs fixes au viewport, pas au document */
         }
         img { display: block; }
 
@@ -145,9 +141,7 @@
         }
         .name-modal.active { display: flex; }
         .name-modal-content {
-            background: rgba(255,255,255,0.42);
-            backdrop-filter: blur(36px) saturate(200%);
-            -webkit-backdrop-filter: blur(36px) saturate(200%);
+            background: #FFFFFF;
             border: 1px solid rgba(255,255,255,0.6);
             padding: 3rem 2.5rem;
             border-radius: 16px; max-width: 380px; width: 92%;
@@ -195,7 +189,7 @@
         /* ─── Hamburger ─── */
         .menu-toggle {
             position: fixed; top: 1.5rem; right: 1.5rem; z-index: 1002;
-            background: rgba(239,232,224,0.94); backdrop-filter: blur(12px);
+            background: var(--ivory);
             border: 1px solid rgba(200,189,174,0.5); border-radius: 50px;
             padding: 0.75rem 1.125rem; cursor: pointer;
             display: flex; flex-direction: column; gap: 5px; transition: all 0.25s;
@@ -220,9 +214,7 @@
         .sidebar {
             position: fixed; top: 0; right: 0;
             width: min(320px, 84vw); height: 100vh;
-            background: rgba(239,232,224,0.85);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            background: var(--ivory);
             z-index: 1004;
             transform: translateX(100%);
             transition: transform 0.42s cubic-bezier(0.25,0.46,0.45,0.94);
@@ -296,19 +288,19 @@
         }
         .hero-cdi-lbl { font-size: 0.625rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-top: 0.4rem; }
 
-        /* "C'est aujourd'hui !" — Caveat uniquement ici */
+        /* "C'est aujourd'hui !" — Bimbo Bold */
         .today-overlay {
-            font-family: 'Caveat', cursive;
-            font-size: clamp(2.75rem, 8vw, 5rem); font-weight: 700;
+            font-family: 'Bimbo', 'The Seasons', serif;
+            font-size: clamp(3rem, 9vw, 6rem); font-weight: normal;
             color: white; margin: 1.5rem 0 0; display: none;
         }
         .today-text {
-            display: inline-block; transform: rotate(-3deg);
+            display: inline-block; transform: rotate(-2deg);
             text-shadow: 0 2px 20px rgba(0,0,0,0.35); position: relative;
         }
         .today-text::after {
             content: ''; position: absolute; bottom: -6px; left: 0; right: 0;
-            height: 2px; background: var(--rose); border-radius: 2px; transform: rotate(1.5deg);
+            height: 1.5px; background: var(--rose); border-radius: 2px;
         }
         .today-overlay.visible { display: block; animation: todayIn 0.65s ease-out; }
         @keyframes todayIn { from { transform: scale(0.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -324,12 +316,10 @@
         }
 
         /* ─── Sections ─── */
-        /* transparent → l'aurora du body passe à travers, les glass cards la floutent */
-        .section      { padding: 5.5rem 2rem; background: transparent; }
-        /* Section alternée : très léger voile blanc pour délimiter visuellement */
-        .section-alt  { background: rgba(255,255,255,0.18); }
-        /* Section glass : complètement transparent, aurora maximale */
-        .section-glass { background: transparent; }
+        .section       { padding: 5.5rem 2rem; background: var(--ivory); }
+        /* Légère alternance pour délimiter les blocs sans surcharger */
+        .section-alt   { background: #F5F0EB; }
+        .section-glass { background: var(--ivory); }
         .container { max-width: 820px; margin: 0 auto; }
         .section-header { text-align: center; margin-bottom: 4rem; }
         .section-eyebrow {
@@ -484,9 +474,7 @@
 
         /* ─── Upload card ─── */
         .upload-card {
-            background: rgba(255,255,255,0.38);
-            backdrop-filter: blur(32px) saturate(200%);
-            -webkit-backdrop-filter: blur(32px) saturate(200%);
+            background: #FFFFFF;
             border: 1px solid rgba(255,255,255,0.55);
             border-radius: 16px; padding: 2.75rem 2rem;
             text-align: center; margin-bottom: 2.5rem;
@@ -616,9 +604,7 @@
             color: var(--text-light); text-align: center; margin-bottom: 2.5rem; line-height: 1.85;
         }
         .poll-card {
-            background: rgba(255,255,255,0.38);
-            backdrop-filter: blur(32px) saturate(200%);
-            -webkit-backdrop-filter: blur(32px) saturate(200%);
+            background: #FFFFFF;
             border: 1px solid rgba(255,255,255,0.55);
             border-radius: 16px; padding: 2.75rem 2rem;
             box-shadow: 0 8px 32px rgba(126,103,85,0.10), inset 0 1px 0 rgba(255,255,255,0.7);
@@ -666,9 +652,7 @@
         /* ─── Messages vocaux — style bulles audio natif ─── */
         /* Carte d'enregistrement */
         .record-card {
-            background: rgba(255,255,255,0.38);
-            backdrop-filter: blur(32px) saturate(200%);
-            -webkit-backdrop-filter: blur(32px) saturate(200%);
+            background: #FFFFFF;
             border: 1px solid rgba(255,255,255,0.6);
             border-radius: 20px; padding: 1.75rem 1.5rem; margin-bottom: 2rem;
             box-shadow: 0 4px 24px rgba(126,103,85,0.09), inset 0 1px 0 rgba(255,255,255,0.8);
@@ -723,9 +707,7 @@
         }
         .voice-bubble {
             display: flex; align-items: center; gap: 1rem;
-            background: rgba(255,255,255,0.38);
-            backdrop-filter: blur(32px) saturate(200%);
-            -webkit-backdrop-filter: blur(32px) saturate(200%);
+            background: #FFFFFF;
             border: 1px solid rgba(255,255,255,0.6);
             border-radius: 20px; padding: 0.875rem 1.125rem;
             cursor: pointer; touch-action: manipulation;
@@ -847,13 +829,11 @@
         }
         .merci-sig { font-style: italic; color: var(--cream); font-size: 1.1rem; }
         .merci-signature {
-            font-family: 'Caveat', cursive;
-            font-size: clamp(2rem, 7vw, 3rem);
-            font-weight: 700; color: var(--cream);
-            display: inline-block; margin-top: 1.75rem;
-            transform: rotate(-2.5deg);
+            font-family: 'Bimbo', 'The Seasons', serif;
+            font-size: clamp(2rem, 6vw, 3.25rem);
+            font-weight: normal; color: var(--cream);
+            display: block; margin-top: 2rem;
             text-shadow: 0 2px 16px rgba(0,0,0,0.22);
-            letter-spacing: 1px;
         }
         .merci-date-badge {
             display: inline-block; margin-bottom: 2rem;
@@ -914,9 +894,7 @@
         }
         .upload-success.active { display: flex; }
         .upload-success-box {
-            background: rgba(255,255,255,0.42);
-            backdrop-filter: blur(36px) saturate(200%);
-            -webkit-backdrop-filter: blur(36px) saturate(200%);
+            background: #FFFFFF;
             border: 1px solid rgba(255,255,255,0.6);
             border-radius: 20px;
             padding: 3rem 2.5rem; text-align: center;
@@ -1018,8 +996,7 @@
             font-size: 1rem; padding: 1.125rem 3rem; margin-bottom: 2rem;
         }
         .memo-scoreboard-preview {
-            background: rgba(255,255,255,0.38);
-            backdrop-filter: blur(32px) saturate(200%); -webkit-backdrop-filter: blur(32px) saturate(200%);
+            background: #FFFFFF;
             border: 1px solid rgba(255,255,255,0.5);
             border-radius: 16px; padding: 1.5rem 1.25rem;
             max-width: 360px; margin: 0 auto;
@@ -1046,7 +1023,7 @@
         .memo-overlay.active { display: flex; }
         .memo-header {
             padding: 1rem 1.25rem 0.75rem;
-            background: rgba(239,232,224,0.95); backdrop-filter: blur(8px);
+            background: var(--ivory);
             border-bottom: 1px solid rgba(200,189,174,0.3);
             display: flex; flex-direction: column; gap: 0.625rem;
         }
@@ -1110,12 +1087,11 @@
         /* Résultat */
         .memo-result {
             position: absolute; inset: 0; z-index: 10;
-            background: rgba(239,232,224,0.96); backdrop-filter: blur(8px);
+            background: var(--ivory);
             display: flex; align-items: center; justify-content: center;
         }
         .memo-result-box {
-            background: rgba(255,255,255,0.42);
-            backdrop-filter: blur(36px) saturate(200%); -webkit-backdrop-filter: blur(36px) saturate(200%);
+            background: #FFFFFF;
             border: 1px solid rgba(255,255,255,0.6);
             border-radius: 20px; padding: 2.5rem 2rem;
             text-align: center; max-width: 340px; width: 90%;
@@ -2365,7 +2341,7 @@
         /* ══════════════════════════════════════════════
            ── MÉMO'LÉO ─────────────────────────────────
            ══════════════════════════════════════════ */
-        const MEMO_IMAGES = ['memo-01.jpg','memo-02.jpg','memo-03.jpg','memo-04.jpg','memo-05.jpg','memo-06.jpg'];
+        const MEMO_IMAGES = ['memo-1.jpg','memo-2.jpg','memo-3.jpg','memo-4.jpg','memo-5.jpg','memo-6.jpg'];
         let memoCards = [], memoFlipped = [], memoMatched = 0, memoScore = 0;
         let memoTimer = null, memoTimeLeft = 60, memoLocked = false, memoFinalScore = 0;
 
