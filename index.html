@@ -73,9 +73,18 @@
         }
         body {
             font-family: 'Noah', 'Helvetica Neue', Arial, sans-serif;
-            background: transparent; /* grain géré par html */
             color: var(--text-dark);
             overflow-x: hidden;
+            /* ── Aurora glassmorphism — blobs colorés fixes derrière tout le contenu ──
+               background-attachment: fixed → les blobs restent ancrés au viewport pendant
+               le scroll, ils traversent les sections transparentes → frosted glass visible */
+            background:
+                radial-gradient(ellipse 60% 50% at 90% 8%,  rgba(207,162,165,0.72) 0%, transparent 52%),
+                radial-gradient(ellipse 55% 60% at 6%  92%,  rgba(249,239,201,0.80) 0%, transparent 48%),
+                radial-gradient(ellipse 42% 48% at 52% 52%,  rgba(184,137,140,0.38) 0%, transparent 62%),
+                radial-gradient(ellipse 38% 42% at 20% 20%,  rgba(249,239,201,0.50) 0%, transparent 56%),
+                transparent; /* laisse le grain ivory de html passer */
+            background-attachment: fixed; /* blobs fixes au viewport, pas au document */
         }
         img { display: block; }
 
@@ -136,9 +145,9 @@
         }
         .name-modal.active { display: flex; }
         .name-modal-content {
-            background: rgba(255,255,255,0.72);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(255,255,255,0.42);
+            backdrop-filter: blur(36px) saturate(200%);
+            -webkit-backdrop-filter: blur(36px) saturate(200%);
             border: 1px solid rgba(255,255,255,0.6);
             padding: 3rem 2.5rem;
             border-radius: 16px; max-width: 380px; width: 92%;
@@ -211,7 +220,10 @@
         .sidebar {
             position: fixed; top: 0; right: 0;
             width: min(320px, 84vw); height: 100vh;
-            background: var(--ivory); z-index: 1004;
+            background: rgba(239,232,224,0.85);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            z-index: 1004;
             transform: translateX(100%);
             transition: transform 0.42s cubic-bezier(0.25,0.46,0.45,0.94);
             display: flex; flex-direction: column;
@@ -312,18 +324,12 @@
         }
 
         /* ─── Sections ─── */
-        .section { padding: 5.5rem 2rem; background: var(--ivory); }
-        /* Sections alternées — fond légèrement différent pour délimiter les blocs */
-        .section-alt {
-            background: linear-gradient(145deg, #F6EFE9 0%, #EEE6DC 60%, #E8E0D6 100%);
-        }
-        /* Glassmorphism visible : gradient coloré derrière les cards glass */
-        .section-glass {
-            background:
-                radial-gradient(ellipse at 75% 25%, rgba(207,162,165,0.13) 0%, transparent 55%),
-                radial-gradient(ellipse at 20% 80%, rgba(249,239,201,0.16) 0%, transparent 50%),
-                #F4EDE6;
-        }
+        /* transparent → l'aurora du body passe à travers, les glass cards la floutent */
+        .section      { padding: 5.5rem 2rem; background: transparent; }
+        /* Section alternée : très léger voile blanc pour délimiter visuellement */
+        .section-alt  { background: rgba(255,255,255,0.18); }
+        /* Section glass : complètement transparent, aurora maximale */
+        .section-glass { background: transparent; }
         .container { max-width: 820px; margin: 0 auto; }
         .section-header { text-align: center; margin-bottom: 4rem; }
         .section-eyebrow {
@@ -391,15 +397,8 @@
             animation: oieFloat 3s ease-in-out 0.6s infinite;
         }
 
-        /* ─── Vintage core — texture papier & ornements ─── */
-        body::after {
-            content: '';
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
-            background:
-                radial-gradient(ellipse at 15% 25%, rgba(249,239,201,0.18) 0%, transparent 55%),
-                radial-gradient(ellipse at 85% 75%, rgba(207,162,165,0.10) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(200,189,174,0.06) 0%, transparent 70%);
-        }
+        /* ─── Vintage core — ornements ─── */
+        /* body::after supprimé — l'aurora est désormais sur body { background } */
 
         /* Ornement sur les eyebrows */
         .section-eyebrow::before { content: '✦  '; letter-spacing: 0; }
@@ -485,9 +484,9 @@
 
         /* ─── Upload card ─── */
         .upload-card {
-            background: rgba(255,255,255,0.62);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(255,255,255,0.38);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
             border: 1px solid rgba(255,255,255,0.55);
             border-radius: 16px; padding: 2.75rem 2rem;
             text-align: center; margin-bottom: 2.5rem;
@@ -617,9 +616,9 @@
             color: var(--text-light); text-align: center; margin-bottom: 2.5rem; line-height: 1.85;
         }
         .poll-card {
-            background: rgba(255,255,255,0.62);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(255,255,255,0.38);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
             border: 1px solid rgba(255,255,255,0.55);
             border-radius: 16px; padding: 2.75rem 2rem;
             box-shadow: 0 8px 32px rgba(126,103,85,0.10), inset 0 1px 0 rgba(255,255,255,0.7);
@@ -667,9 +666,9 @@
         /* ─── Messages vocaux — style bulles audio natif ─── */
         /* Carte d'enregistrement */
         .record-card {
-            background: rgba(255,255,255,0.65);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(255,255,255,0.38);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
             border: 1px solid rgba(255,255,255,0.6);
             border-radius: 20px; padding: 1.75rem 1.5rem; margin-bottom: 2rem;
             box-shadow: 0 4px 24px rgba(126,103,85,0.09), inset 0 1px 0 rgba(255,255,255,0.8);
@@ -724,9 +723,9 @@
         }
         .voice-bubble {
             display: flex; align-items: center; gap: 1rem;
-            background: rgba(255,255,255,0.65);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(255,255,255,0.38);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
             border: 1px solid rgba(255,255,255,0.6);
             border-radius: 20px; padding: 0.875rem 1.125rem;
             cursor: pointer; touch-action: manipulation;
@@ -915,9 +914,9 @@
         }
         .upload-success.active { display: flex; }
         .upload-success-box {
-            background: rgba(255,255,255,0.72);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(255,255,255,0.42);
+            backdrop-filter: blur(36px) saturate(200%);
+            -webkit-backdrop-filter: blur(36px) saturate(200%);
             border: 1px solid rgba(255,255,255,0.6);
             border-radius: 20px;
             padding: 3rem 2.5rem; text-align: center;
@@ -1019,8 +1018,8 @@
             font-size: 1rem; padding: 1.125rem 3rem; margin-bottom: 2rem;
         }
         .memo-scoreboard-preview {
-            background: rgba(255,255,255,0.55);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            background: rgba(255,255,255,0.38);
+            backdrop-filter: blur(32px) saturate(200%); -webkit-backdrop-filter: blur(32px) saturate(200%);
             border: 1px solid rgba(255,255,255,0.5);
             border-radius: 16px; padding: 1.5rem 1.25rem;
             max-width: 360px; margin: 0 auto;
@@ -1115,8 +1114,8 @@
             display: flex; align-items: center; justify-content: center;
         }
         .memo-result-box {
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.42);
+            backdrop-filter: blur(36px) saturate(200%); -webkit-backdrop-filter: blur(36px) saturate(200%);
             border: 1px solid rgba(255,255,255,0.6);
             border-radius: 20px; padding: 2.5rem 2rem;
             text-align: center; max-width: 340px; width: 90%;
