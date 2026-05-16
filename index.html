@@ -312,14 +312,28 @@
         }
 
         /* ─── Sections ─── */
-        .section { padding: 5rem 2rem; background: var(--ivory); }
+        .section { padding: 5.5rem 2rem; background: var(--ivory); }
+        /* Sections alternées — fond légèrement différent pour délimiter les blocs */
+        .section-alt {
+            background: linear-gradient(145deg, #F6EFE9 0%, #EEE6DC 60%, #E8E0D6 100%);
+        }
+        /* Glassmorphism visible : gradient coloré derrière les cards glass */
+        .section-glass {
+            background:
+                radial-gradient(ellipse at 75% 25%, rgba(207,162,165,0.13) 0%, transparent 55%),
+                radial-gradient(ellipse at 20% 80%, rgba(249,239,201,0.16) 0%, transparent 50%),
+                #F4EDE6;
+        }
         .container { max-width: 820px; margin: 0 auto; }
-        .section-header { text-align: center; margin-bottom: 3.5rem; }
-        .section-eyebrow { font-size: 0.625rem; letter-spacing: 4px; text-transform: uppercase; color: var(--rose); margin-bottom: 1rem; display: block; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-eyebrow {
+            font-size: 0.6875rem; letter-spacing: 5px; text-transform: uppercase;
+            color: var(--rose); margin-bottom: 1.125rem; display: block;
+        }
         .section-title {
             font-family: 'The Seasons', serif;
-            font-size: clamp(2rem, 4.5vw, 2.75rem); font-weight: 400;
-            color: var(--taupe); line-height: 1.2; margin-bottom: 1rem;
+            font-size: clamp(2.25rem, 5.5vw, 3.5rem); font-weight: 400;
+            color: var(--taupe); line-height: 1.15; margin-bottom: 1rem;
         }
         /* section-rule redéfinie plus bas dans le bloc vintage */
         .section-subtitle { font-size: 0.9375rem; color: var(--text-light); line-height: 1.75; }
@@ -506,60 +520,62 @@
         .stat-num { font-family: 'The Seasons', serif; font-size: 3rem; font-weight: 400; color: var(--rose); display: block; line-height: 1; }
         .stat-lbl { font-size: 0.8125rem; color: var(--text-light); letter-spacing: 1px; }
 
-        /* ─── Polaroïd Wall ─── */
+        /* ─── Pinterest Feed ─── */
         .gallery-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.25rem;
-            justify-content: center;
-            padding: 0.75rem 0.25rem 1rem;
+            columns: 2;
+            column-gap: 0.75rem;
+            padding: 0;
         }
+        @media (min-width: 600px) { .gallery-grid { columns: 3; } }
         .gallery-item {
-            background: #fff;
-            padding: 9px 9px 34px 9px;
-            box-shadow: 0 4px 18px rgba(126,103,85,0.15), 0 1px 3px rgba(126,103,85,0.08);
-            border-radius: 2px;
-            width: calc(46% - 0.6rem);
+            break-inside: avoid;
+            margin-bottom: 0.75rem;
+            border-radius: 14px;
+            overflow: hidden;
             cursor: pointer;
             position: relative;
-            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
-            will-change: transform;
+            background: var(--sand);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 12px rgba(126,103,85,0.10);
         }
-        @media (min-width: 600px) { .gallery-item { width: calc(22% - 0.95rem); } }
-        .gallery-item:hover, .gallery-item:active {
-            transform: scale(1.07) rotate(0deg) !important;
-            box-shadow: 0 18px 50px rgba(126,103,85,0.22);
+        .gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 36px rgba(126,103,85,0.20);
             z-index: 5;
         }
         .gallery-item img {
             width: 100%; height: auto; display: block;
-            object-fit: cover; border-radius: 1px;
-            opacity: 0;
-            transition: opacity 0.55s ease;
+            opacity: 0; transition: opacity 0.55s ease;
         }
         .gallery-item.revealed img { opacity: 1; }
-        .polaroid-author {
-            font-family: 'Caveat', cursive;
-            font-size: 0.9rem; color: var(--text-mid);
-            text-align: center; margin-top: 7px;
-            display: block; letter-spacing: 0.3px;
+        .gallery-item-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(30,18,12,0.58));
+            padding: 1.75rem 0.75rem 0.625rem;
+            opacity: 0; transition: opacity 0.22s;
         }
-        .photo-author { display: none; } /* remplacé par .polaroid-author */
+        .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+        .gallery-item-author {
+            color: rgba(255,255,255,0.92);
+            font-size: 0.7rem; letter-spacing: 0.5px;
+        }
         .video-badge {
-            position: absolute; top: 44%; left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%,-50%);
-            width: 36px; height: 36px;
+            width: 40px; height: 40px;
             background: rgba(255,255,255,0.88); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 0.875rem; pointer-events: none;
+            backdrop-filter: blur(4px);
         }
         .gallery-item-hidden { display: none; }
         .gallery-empty {
+            column-span: all;
             text-align: center; padding: 3.5rem 1rem;
             color: var(--text-light); font-family: 'The Seasons', serif;
-            font-size: 1.1rem; font-style: italic; width: 100%;
+            font-size: 1.1rem; font-style: italic;
         }
-        .gallery-show-more { text-align: center; padding: 1.75rem 0 0.5rem; width: 100%; }
+        .gallery-show-more { text-align: center; padding: 1.75rem 0 0.5rem; }
 
         /* ─── Lightbox ─── */
         .lightbox {
@@ -589,14 +605,10 @@
         }
         .lightbox-close:hover { background: rgba(255,255,255,0.22); }
 
-        /* ─── Confettis ─── */
+        /* ─── Confettis — disques dorés/irisés, jaillissent du point de clic ─── */
         .confetti-piece {
             position: fixed; pointer-events: none; z-index: 9999;
-            border-radius: 2px; animation: confettiFall linear forwards;
-        }
-        @keyframes confettiFall {
-            0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+            transform: translate(-50%, -50%);
         }
 
         /* ─── Sondage ─── */
@@ -652,45 +664,124 @@
         .poll-label-right { right: 1rem; }
         .poll-total { text-align: center; margin-top: 1rem; font-size: 0.8125rem; color: var(--text-light); letter-spacing: 1px; }
 
-        /* ─── Messages vocaux ─── */
-        .voice-messages { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1.25rem; margin-top: 2.5rem; }
-        .voice-message {
-            text-align: center; cursor: pointer; padding: 1.25rem 0.75rem;
-            border: 1px solid transparent; border-radius: 12px; transition: all 0.2s; touch-action: manipulation;
+        /* ─── Messages vocaux — style bulles audio natif ─── */
+        /* Carte d'enregistrement */
+        .record-card {
+            background: rgba(255,255,255,0.65);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 20px; padding: 1.75rem 1.5rem; margin-bottom: 2rem;
+            box-shadow: 0 4px 24px rgba(126,103,85,0.09), inset 0 1px 0 rgba(255,255,255,0.8);
+            text-align: center;
         }
-        .voice-message:hover, .voice-message:active { background: var(--white); border-color: rgba(200,189,174,0.5); }
-        .voice-message.playing { background: rgba(207,162,165,0.15); border-color: var(--rose); }
-        /* Gramophone vintage */
-        .gramophone {
-            width: 80px; height: auto;
-            margin: 0 auto 0.75rem;
-            transition: transform 0.3s ease, filter 0.3s ease;
-        }
-        .voice-message:hover .gramophone {
-            transform: scale(1.1) rotate(4deg);
-            filter: drop-shadow(0 6px 16px rgba(207,162,165,0.5));
-        }
-        @keyframes gramoPulse {
-            0%, 100% { transform: scale(1) rotate(0deg);  filter: drop-shadow(0 4px 8px  rgba(207,162,165,0.35)); }
-            30%      { transform: scale(1.06) rotate(2deg); filter: drop-shadow(0 6px 14px rgba(207,162,165,0.65)); }
-            70%      { transform: scale(1.06) rotate(-1.5deg); }
-        }
-        .voice-message.playing .gramophone {
-            animation: gramoPulse 1.1s ease-in-out infinite;
-        }
-        .voice-author { font-size: 0.8125rem; color: var(--text-dark); font-weight: 500; }
-        .voice-duration { font-size: 0.6875rem; color: var(--text-light); margin-top: 0.2rem; }
         .record-button {
             background: var(--rose); color: white; border: none;
-            padding: 1.125rem 2rem; border-radius: 50px; cursor: pointer;
+            padding: 1rem 2rem; border-radius: 50px; cursor: pointer;
             font-size: 0.875rem; letter-spacing: 1.5px; text-transform: uppercase;
             font-family: 'Noah', sans-serif;
-            margin: 0 auto 0.75rem; display: block; width: 100%; max-width: 320px;
-            box-shadow: 0 4px 16px rgba(207,162,165,0.35); touch-action: manipulation; transition: background 0.2s;
+            margin: 0 auto 0; display: inline-flex; align-items: center; gap: 0.5rem;
+            box-shadow: 0 4px 16px rgba(207,162,165,0.35); touch-action: manipulation; transition: background 0.2s, transform 0.2s;
         }
+        .record-button:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(207,162,165,0.45); }
         .record-button.recording { background: #b03030; animation: softPulse 0.9s ease-in-out infinite; }
-        .record-timer { text-align: center; color: var(--rose); font-family: 'The Seasons', serif; font-size: 1.5rem; margin-bottom: 1rem; display: none; }
-        .voice-empty { text-align: center; padding: 2rem 1rem; color: var(--text-light); font-style: italic; grid-column: 1 / -1; }
+        .record-button:disabled { opacity: 0.6; cursor: not-allowed; }
+        /* Waveform animée pendant l'enregistrement */
+        .record-waveform {
+            display: none; align-items: flex-end; justify-content: center;
+            gap: 3px; height: 40px; margin: 1rem auto 0.5rem;
+        }
+        .record-waveform.active { display: flex; }
+        .record-waveform-bar {
+            width: 4px; border-radius: 3px;
+            background: var(--rose);
+            animation: recWave 0.8s ease-in-out infinite;
+        }
+        .record-waveform-bar:nth-child(1)  { height:14px; animation-delay:0.0s;  animation-duration:0.72s; }
+        .record-waveform-bar:nth-child(2)  { height:22px; animation-delay:0.1s;  animation-duration:0.88s; }
+        .record-waveform-bar:nth-child(3)  { height:18px; animation-delay:0.22s; animation-duration:0.76s; }
+        .record-waveform-bar:nth-child(4)  { height:30px; animation-delay:0.0s;  animation-duration:0.95s; }
+        .record-waveform-bar:nth-child(5)  { height:12px; animation-delay:0.33s; animation-duration:0.68s; }
+        .record-waveform-bar:nth-child(6)  { height:26px; animation-delay:0.15s; animation-duration:0.84s; }
+        .record-waveform-bar:nth-child(7)  { height:20px; animation-delay:0.05s; animation-duration:0.78s; }
+        .record-waveform-bar:nth-child(8)  { height:34px; animation-delay:0.28s; animation-duration:0.92s; }
+        .record-waveform-bar:nth-child(9)  { height:16px; animation-delay:0.12s; animation-duration:0.70s; }
+        .record-waveform-bar:nth-child(10) { height:24px; animation-delay:0.38s; animation-duration:0.86s; }
+        .record-waveform-bar:nth-child(11) { height:20px; animation-delay:0.06s; animation-duration:0.80s; }
+        .record-waveform-bar:nth-child(12) { height:28px; animation-delay:0.20s; animation-duration:0.90s; }
+        @keyframes recWave {
+            0%, 100% { transform: scaleY(0.35); }
+            50%       { transform: scaleY(1); }
+        }
+        .record-timer {
+            text-align: center; color: var(--rose); font-family: 'The Seasons', serif;
+            font-size: 1.25rem; margin-top: 0.5rem; display: none;
+            letter-spacing: 2px;
+        }
+        /* Liste des bulles */
+        .voice-messages-list {
+            display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0;
+        }
+        .voice-bubble {
+            display: flex; align-items: center; gap: 1rem;
+            background: rgba(255,255,255,0.65);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 20px; padding: 0.875rem 1.125rem;
+            cursor: pointer; touch-action: manipulation;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 12px rgba(126,103,85,0.07), inset 0 1px 0 rgba(255,255,255,0.7);
+        }
+        .voice-bubble:hover { border-color: rgba(207,162,165,0.6); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(126,103,85,0.12); }
+        .voice-bubble.playing { background: rgba(207,162,165,0.18); border-color: var(--rose); }
+        .voice-bubble-icon {
+            width: 46px; height: 46px; flex-shrink: 0;
+            background: var(--rose); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.05rem; color: white;
+        }
+        .voice-bubble.playing .voice-bubble-icon {
+            animation: voiceIconPulse 1s ease-in-out infinite;
+        }
+        @keyframes voiceIconPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(207,162,165,0.6); }
+            50%       { transform: scale(1.06); box-shadow: 0 0 0 8px rgba(207,162,165,0); }
+        }
+        .voice-bubble-body { flex: 1; min-width: 0; }
+        .voice-bubble-name {
+            font-size: 0.875rem; font-weight: 600; color: var(--text-dark);
+            margin-bottom: 0.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .voice-waveform {
+            display: flex; align-items: center; gap: 2.5px; height: 26px; margin-bottom: 0.3rem;
+        }
+        .voice-waveform-bar {
+            flex-shrink: 0; width: 3px; border-radius: 2px;
+            background: var(--sand); transition: background 0.25s;
+        }
+        .voice-bubble.playing .voice-waveform-bar {
+            background: var(--rose);
+            animation: waveformBar 0.7s ease-in-out infinite;
+        }
+        .voice-bubble.playing .voice-waveform-bar:nth-child(2n)   { animation-delay: -0.35s; }
+        .voice-bubble.playing .voice-waveform-bar:nth-child(3n)   { animation-delay: -0.15s; }
+        .voice-bubble.playing .voice-waveform-bar:nth-child(5n)   { animation-delay: -0.55s; }
+        @keyframes waveformBar {
+            0%, 100% { transform: scaleY(0.45); }
+            50%       { transform: scaleY(1); }
+        }
+        .voice-bubble-dur { font-size: 0.75rem; color: var(--text-light); }
+        .voice-progress-wrap {
+            height: 2px; background: rgba(200,189,174,0.35);
+            border-radius: 1px; margin-top: 0.375rem; overflow: hidden;
+        }
+        .voice-progress-bar {
+            height: 100%; width: 0%; background: var(--rose);
+            border-radius: 1px; transition: width 0.25s linear;
+        }
+        .voice-empty { text-align: center; padding: 2rem 1rem; color: var(--text-light); font-style: italic; }
+        .voice-show-more { text-align: center; padding: 1.25rem 0 0; }
 
         /* ─── Galerie — skeleton chargement ─── */
         .gallery-skeleton {
@@ -721,19 +812,6 @@
         }
         .vote-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* ─── Barre progression message vocal ─── */
-        .voice-progress-wrap {
-            width: 100%; height: 3px;
-            background: rgba(200,189,174,0.35);
-            border-radius: 2px; margin-top: 0.5rem; overflow: hidden;
-        }
-        .voice-progress-bar {
-            height: 100%; width: 0%;
-            background: var(--rose); border-radius: 2px;
-            transition: width 0.25s linear;
-        }
-        /* Bouton upload audio — état envoi en cours */
-        .record-button:disabled { opacity: 0.6; cursor: not-allowed; }
 
         /* ─── Indicateur swipe timeline ─── */
         .timeline-swipe-hint {
@@ -769,6 +847,15 @@
             line-height: 2; color: rgba(255,255,255,0.92); margin-bottom: 1.5rem;
         }
         .merci-sig { font-style: italic; color: var(--cream); font-size: 1.1rem; }
+        .merci-signature {
+            font-family: 'Caveat', cursive;
+            font-size: clamp(2rem, 7vw, 3rem);
+            font-weight: 700; color: var(--cream);
+            display: inline-block; margin-top: 1.75rem;
+            transform: rotate(-2.5deg);
+            text-shadow: 0 2px 16px rgba(0,0,0,0.22);
+            letter-spacing: 1px;
+        }
         .merci-date-badge {
             display: inline-block; margin-bottom: 2rem;
             font-size: 0.6875rem; letter-spacing: 3px; text-transform: uppercase;
@@ -903,6 +990,7 @@
             .upload-card, .poll-card, .merci-card { padding: 2rem 1.25rem; }
             .timeline-item { width: 165px; }
             .timeline-photo { width: 165px; height: 210px; }
+            .gallery-grid { columns: 2; }
         }
 
         /* ─── Sidebar — groupes de navigation ─── */
@@ -1053,7 +1141,7 @@
     <div id="envelope-scene">
         <div id="envelope-wrapper">
             <p class="instruction">Ouvrez-moi !</p>
-            <div class="envelope-container" onclick="openEnvelope()">
+            <div class="envelope-container" onclick="openEnvelope(event)">
                 <img src="enveloppe-fermee.png" class="envelope-image active" id="envelope-closed" alt="">
                 <img src="" class="envelope-image" id="envelope-opened" alt="">
             </div>
@@ -1356,7 +1444,7 @@
         </div>
 
         <!-- ══ GALERIE ══ -->
-        <section id="photos" class="section">
+        <section id="photos" class="section section-glass">
             <div class="container">
                 <div class="section-header reveal">
                     <span class="section-eyebrow">Partagez vos moments</span>
@@ -1401,7 +1489,7 @@
         </div>
 
         <!-- ══ SONDAGE — Le Du-du-duel ══ -->
-        <section id="sondage" class="section">
+        <section id="sondage" class="section section-alt">
             <div class="container">
                 <div class="section-header reveal">
                     <span class="section-eyebrow">Le Du-du-duel ⚔️</span>
@@ -1462,7 +1550,7 @@
         </div>
 
         <!-- ══ MESSAGES VOCAUX ══ -->
-        <section id="messages" class="section">
+        <section id="messages" class="section section-glass">
             <div class="container">
                 <div class="section-header reveal">
                     <span class="section-eyebrow">Pour Léonie</span>
@@ -1470,13 +1558,24 @@
                     <div class="section-rule"></div>
                     <p class="section-subtitle">Laissez-lui un message vocal qu'elle pourra réécouter plus tard</p>
                 </div>
-                <button class="record-button" id="record-btn" onclick="toggleRecording()">
-                    🎤 Enregistrer un message (20s)
-                </button>
-                <div class="record-timer" id="record-timer"></div>
-                <div class="voice-messages" id="voice-messages">
+                <div class="record-card">
+                    <button class="record-button" id="record-btn" onclick="toggleRecording()">
+                        🎤 Enregistrer un message
+                    </button>
+                    <div class="record-waveform" id="record-waveform">
+                        <div class="record-waveform-bar"></div><div class="record-waveform-bar"></div>
+                        <div class="record-waveform-bar"></div><div class="record-waveform-bar"></div>
+                        <div class="record-waveform-bar"></div><div class="record-waveform-bar"></div>
+                        <div class="record-waveform-bar"></div><div class="record-waveform-bar"></div>
+                        <div class="record-waveform-bar"></div><div class="record-waveform-bar"></div>
+                        <div class="record-waveform-bar"></div><div class="record-waveform-bar"></div>
+                    </div>
+                    <div class="record-timer" id="record-timer"></div>
+                </div>
+                <div class="voice-messages-list" id="voice-messages">
                     <p class="voice-empty">Aucun message pour l'instant</p>
                 </div>
+                <div class="voice-show-more" id="voice-more-btn" style="display:none"></div>
             </div>
         </section>
 
@@ -1500,6 +1599,7 @@
                         <span class="merci-date-badge">6 juin 2026</span>
                         <p>Votre présence illumine nos cœurs.<br>Merci d'être là pour célébrer le baptême<br>et le premier anniversaire de notre petite Léonie.</p>
                         <p class="merci-sig">Avec toute notre affection ♡</p>
+                        <p class="merci-signature">Manon & Hugo</p>
                     </div>
                 </div>
             </div>
@@ -1552,11 +1652,13 @@
         const SOUND_QUACK    = 'mon-son-oie.mp3';      // son au clic sur les oies
 
         /* ── Enveloppe ── */
-        function openEnvelope() {
-            // Son d'ouverture (carillon doux)
+        function openEnvelope(evt) {
+            // Son d'ouverture
             playEnvelopeSound();
-            // Jet de confettis immédiat au clic
-            createConfetti(90);
+            // Confettis depuis le point de clic exact
+            const ox = evt ? evt.clientX : window.innerWidth  / 2;
+            const oy = evt ? evt.clientY : window.innerHeight / 2;
+            createConfetti(90, ox, oy);
             // Cache "Ouvrez-moi"
             document.querySelector('.instruction').classList.add('hidden');
             document.getElementById('envelope-closed').classList.remove('active');
@@ -1685,7 +1787,7 @@
                 author: userName, isVideo: !!isVideo,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                createConfetti(120); // plein écran — 120 pièces
+                createConfetti(120, window.innerWidth / 2, window.innerHeight / 2);
                 showSuccessPopup();
             });
         }
@@ -1736,18 +1838,14 @@
                     currentMedia.push(data);
                     const item = document.createElement('div');
                     item.className = 'gallery-item' + (index >= GALLERY_MAX ? ' gallery-item-hidden' : '');
-                    // Rotation aléatoire — effet polaroïd jeté à plat
-                    const ROTS = [-4.5, -3.2, -2, -1, 0, 1, 2.2, 3.5, 4.5];
-                    const rot  = ROTS[index % ROTS.length];
-                    item.style.transform = `rotate(${rot}deg)`;
-                    // Photos : full URL transformée à w_900 — Vidéos : thumbnail (frame) à w_480
+                    // Photos : w_900 — Vidéos : thumbnail w_480
                     const thumbSrc = data.isVideo
                         ? optimizeUrl(data.thumbnail || data.url, 480)
                         : optimizeUrl(data.url, 900);
                     const authorLabel = data.isVideo ? `🎥 ${data.author}` : `📸 ${data.author}`;
                     item.innerHTML = data.isVideo
-                        ? `<img src="${thumbSrc}" alt="Vidéo de ${data.author}" loading="lazy"><div class="video-badge">▶</div><span class="polaroid-author">${authorLabel}</span>`
-                        : `<img src="${thumbSrc}" alt="Photo de ${data.author}" loading="lazy"><span class="polaroid-author">${authorLabel}</span>`;
+                        ? `<img src="${thumbSrc}" alt="Vidéo" loading="lazy"><div class="video-badge">▶</div><div class="gallery-item-overlay"><span class="gallery-item-author">${authorLabel}</span></div>`
+                        : `<img src="${thumbSrc}" alt="Photo" loading="lazy"><div class="gallery-item-overlay"><span class="gallery-item-author">${authorLabel}</span></div>`;
                     item.onclick = () => openLightbox(index);
                     grid.appendChild(item);
                 });
@@ -1981,9 +2079,15 @@
                         stream.getTracks().forEach(t => t.stop());
                     };
                     mediaRecorder.start();
-                    btn.classList.add('recording'); btn.textContent = '⏹ Arrêter';
-                    let s = 0; tim.style.display = 'block'; tim.textContent = '0s / 20s';
-                    recordInterval = setInterval(() => { s++; tim.textContent=`${s}s / 20s`; if(s>=20) stopRecording(); }, 1000);
+                    btn.classList.add('recording'); btn.textContent = '⏹ Arrêter l\'enregistrement';
+                    document.getElementById('record-waveform').classList.add('active');
+                    let s = 0; tim.style.display = 'block'; tim.textContent = '0:00 / 0:20';
+                    recordInterval = setInterval(() => {
+                        s++;
+                        const ss = String(s % 60).padStart(2,'0');
+                        tim.textContent = `0:${ss} / 0:20`;
+                        if (s >= 20) stopRecording();
+                    }, 1000);
                 } catch(e) { alert('Impossible d\'accéder au microphone. Vérifiez les autorisations.'); }
             } else stopRecording();
         }
@@ -1993,8 +2097,9 @@
             const btn = document.getElementById('record-btn');
             btn.classList.remove('recording');
             btn.textContent = '⏳ Envoi en cours…';
-            btn.disabled = true; // évite double-clic pendant l'upload
+            btn.disabled = true;
             document.getElementById('record-timer').style.display = 'none';
+            document.getElementById('record-waveform').classList.remove('active');
         }
         async function uploadVoice(blob, duration) {
             if (!userName) {
@@ -2028,86 +2133,63 @@
                 // Réactive le bouton dans tous les cas
                 const btn = document.getElementById('record-btn');
                 btn.disabled = false;
-                btn.textContent = '🎤 Enregistrer un message (20s)';
+                btn.textContent = '🎤 Enregistrer un message';
             }
         }
+        const VOICE_MAX = 4;
         function listenToVoiceMessages() {
             db.collection('voice-messages').orderBy('timestamp','desc').onSnapshot(snap => {
-                const c = document.getElementById('voice-messages'); c.innerHTML = '';
-                if (snap.empty) { c.innerHTML = '<p class="voice-empty">Aucun message pour l\'instant</p>'; return; }
-                snap.forEach(doc => {
+                const c       = document.getElementById('voice-messages');
+                const moreWrap = document.getElementById('voice-more-btn');
+                c.innerHTML = '';
+                if (moreWrap) moreWrap.style.display = 'none';
+
+                if (snap.empty) {
+                    c.innerHTML = '<p class="voice-empty">Aucun message pour l\'instant — soyez le premier !</p>';
+                    return;
+                }
+
+                const docs = [];
+                snap.forEach(doc => docs.push(doc));
+
+                docs.forEach((doc, index) => {
                     const data = doc.data();
-                    const item = document.createElement('div'); item.className = 'voice-message';
+                    const item = document.createElement('div');
+                    item.className = 'voice-bubble';
+                    if (index >= VOICE_MAX) item.style.display = 'none';
+
+                    // Waveform : 24 barres à hauteurs aléatoires (déterministes via index pour cohérence)
+                    const bars = Array.from({ length: 24 }, (_, b) => {
+                        const h = 5 + Math.round(Math.abs(Math.sin((b + index) * 1.3) * 20));
+                        return `<div class="voice-waveform-bar" style="height:${h}px"></div>`;
+                    }).join('');
+
+                    // Durée formatée mm:ss
+                    const dur = data.duration || 0;
+                    const durStr = dur >= 60
+                        ? `${Math.floor(dur/60)}:${String(dur % 60).padStart(2,'0')}`
+                        : `0:${String(dur).padStart(2,'0')}`;
+
                     item.innerHTML = `
-                        <svg class="gramophone" viewBox="0 0 140 105" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <!-- Ombre sol -->
-                          <ellipse cx="52" cy="101" rx="32" ry="4" fill="#7E6755" opacity="0.10"/>
-                          <!-- Pieds -->
-                          <rect x="25" y="89" width="8" height="11" rx="4" fill="#9E8E84"/>
-                          <rect x="71" y="89" width="8" height="11" rx="4" fill="#9E8E84"/>
-                          <!-- Barre de pied -->
-                          <rect x="19" y="97" width="66" height="5" rx="2.5" fill="#7E6755" opacity="0.65"/>
-                          <!-- Cabinet corps -->
-                          <rect x="19" y="67" width="66" height="26" rx="10" fill="#CFA2A5"/>
-                          <!-- Cabinet reflet haut -->
-                          <rect x="19" y="67" width="66" height="12" rx="10" fill="rgba(255,255,255,0.18)"/>
-                          <!-- Panneau déco -->
-                          <rect x="26" y="75" width="52" height="12" rx="4" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="0.9"/>
-                          <!-- Petits rivets déco -->
-                          <circle cx="30" cy="81" r="2"  fill="rgba(255,255,255,0.22)"/>
-                          <circle cx="74" cy="81" r="2"  fill="rgba(255,255,255,0.22)"/>
-                          <!-- Plateau tourne-disque -->
-                          <ellipse cx="52" cy="66" rx="27" ry="9" fill="#4A3830"/>
-                          <!-- Vinyle -->
-                          <ellipse cx="52" cy="62" rx="24" ry="8"   fill="#1A0C0C"/>
-                          <ellipse cx="52" cy="62" rx="17" ry="5.6" fill="#2A1414"/>
-                          <ellipse cx="52" cy="62" rx="11" ry="3.6" fill="none" stroke="#3A2020" stroke-width="0.8" opacity="0.8"/>
-                          <ellipse cx="52" cy="62" rx="7"  ry="2.3" fill="none" stroke="#3A2020" stroke-width="0.6" opacity="0.55"/>
-                          <!-- Étiquette centrale -->
-                          <ellipse cx="52" cy="62" rx="4.5" ry="1.5" fill="#CFA2A5"/>
-                          <ellipse cx="52" cy="62" rx="1.8" ry="0.6" fill="#7E6755"/>
-                          <!-- Pivot bras de lecture -->
-                          <circle cx="74" cy="57" r="5" fill="#C8BDAE" stroke="#7E6755" stroke-width="1.5"/>
-                          <!-- Bras de lecture -->
-                          <path d="M74 54 Q80 43 86 31" stroke="#7E6755" stroke-width="2.8" stroke-linecap="round" fill="none"/>
-                          <!-- Tête de lecture -->
-                          <circle cx="86" cy="31" r="4" fill="#C8BDAE" stroke="#7E6755" stroke-width="1.3"/>
-                          <!-- Tube pavillon -->
-                          <path d="M86 31 Q94 21 100 11" stroke="#7E6755" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-                          <!-- Pavillon — grande cloche, tout dans le viewBox -->
-                          <path d="M100 11
-                                   Q114 -1 128 2
-                                   Q136 4 137 10
-                                   Q130 8 118 14
-                                   Q106 20 100 31
-                                   Q95 38 90 40
-                                   L86 31
-                                   Z"
-                                fill="#F9EFC9" stroke="#C8BDAE" stroke-width="1.2"/>
-                          <!-- Reflets / nervures du pavillon -->
-                          <path d="M102 15 Q114 5  126 8"  stroke="#D4C8B8" stroke-width="0.8" fill="none" opacity="0.65"/>
-                          <path d="M104 20 Q116 10 128 14" stroke="#D4C8B8" stroke-width="0.6" fill="none" opacity="0.45"/>
-                          <path d="M105 25 Q118 16 130 19" stroke="#D4C8B8" stroke-width="0.5" fill="none" opacity="0.30"/>
-                          <!-- Ouverture pavillon (bord) -->
-                          <path d="M128 2 Q136 4 137 10" stroke="#CFA2A5" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-                          <!-- Notes de musique -->
-                          <text x="6"  y="48" font-family="Georgia,serif" font-size="13" fill="#CFA2A5" opacity="0.55" transform="rotate(-18 6 48)">♪</text>
-                          <text x="2"  y="33" font-family="Georgia,serif" font-size="10" fill="#CFA2A5" opacity="0.38" transform="rotate(-12 2 33)">♫</text>
-                          <text x="10" y="20" font-family="Georgia,serif" font-size="7"  fill="#CFA2A5" opacity="0.25" transform="rotate(-6 10 20)">♩</text>
-                        </svg>
-                        <p class="voice-author">🎤 ${data.author}</p>
-                        <p class="voice-duration">${data.duration}s</p>
-                        <div class="voice-progress-wrap">
-                            <div class="voice-progress-bar" id="vp-${doc.id}"></div>
+                        <div class="voice-bubble-icon">🎤</div>
+                        <div class="voice-bubble-body">
+                            <div class="voice-bubble-name">${data.author}</div>
+                            <div class="voice-waveform">${bars}</div>
+                            <div class="voice-bubble-dur">${durStr}</div>
+                            <div class="voice-progress-wrap">
+                                <div class="voice-progress-bar" id="vp-${doc.id}"></div>
+                            </div>
                         </div>`;
+
                     let audio = null, progInterval = null;
                     item.onclick = () => {
                         if (audio && !audio.paused) {
                             audio.pause(); clearInterval(progInterval);
                             item.classList.remove('playing'); return;
                         }
-                        document.querySelectorAll('.voice-message.playing').forEach(el => el.classList.remove('playing'));
-                        audio = new Audio(data.url); audio.play();
+                        // Stoppe tout autre audio
+                        document.querySelectorAll('.voice-bubble.playing').forEach(el => el.classList.remove('playing'));
+                        audio = new Audio(data.url); audio.play().catch(() => {});
                         item.classList.add('playing');
                         const bar = document.getElementById(`vp-${doc.id}`);
                         if (bar) {
@@ -2115,17 +2197,28 @@
                             progInterval = setInterval(() => {
                                 if (!audio.duration) return;
                                 bar.style.width = (audio.currentTime / audio.duration * 100) + '%';
-                            }, 200);
+                            }, 150);
                         }
                         audio.onended = () => {
                             clearInterval(progInterval);
-                            if (bar) bar.style.width = '100%';
+                            if (bar) bar.style.width = '0%';
                             item.classList.remove('playing');
                         };
                     };
                     c.appendChild(item);
                 });
+
+                // Bouton "voir les X messages" si plus de VOICE_MAX
+                if (docs.length > VOICE_MAX && moreWrap) {
+                    moreWrap.style.display = 'block';
+                    moreWrap.innerHTML = `<button class="btn btn-ghost" onclick="expandVoiceMessages()" style="width:100%;max-width:360px">🎙️ Voir les ${docs.length} messages vocaux</button>`;
+                }
             });
+        }
+        function expandVoiceMessages() {
+            document.querySelectorAll('.voice-bubble').forEach(el => el.style.display = '');
+            const btn = document.getElementById('voice-more-btn');
+            if (btn) btn.style.display = 'none';
         }
 
         /* ── Timeline — drag to scroll + lightbox ── */
@@ -2255,7 +2348,7 @@
             a.play().catch(e => console.warn('Son oie (' + SOUND_QUACK + ') :', e.message));
         }
 
-        /* ── Easter egg : clic sur une oie → quack + saut ── */
+        /* ── Easter egg : clic sur une oie → quack + saut + confettis ── */
         function initOieEasterEgg() {
             document.querySelectorAll('.oie').forEach(oie => {
                 oie.addEventListener('click', function(e) {
@@ -2263,6 +2356,7 @@
                     if (this.classList.contains('quacking')) return;
                     this.classList.add('quacking');
                     playQuack();
+                    createConfetti(28, e.clientX, e.clientY);
                     navigator.vibrate && navigator.vibrate(30);
                     setTimeout(() => this.classList.remove('quacking'), 700);
                 });
@@ -2272,7 +2366,7 @@
         /* ══════════════════════════════════════════════
            ── MÉMO'LÉO ─────────────────────────────────
            ══════════════════════════════════════════ */
-        const MEMO_IMAGES = ['memo-01.jpg','memo-02.jpg','memo-03.jpg','memo-04.jpg','memo-05.jpg','memo-06.jpg'];
+        const MEMO_IMAGES = ['memo-1.jpg','memo-2.jpg','memo-3.jpg','memo-4.jpg','memo-5.jpg','memo-6.jpg'];
         let memoCards = [], memoFlipped = [], memoMatched = 0, memoScore = 0;
         let memoTimer = null, memoTimeLeft = 60, memoLocked = false, memoFinalScore = 0;
 
@@ -2431,31 +2525,62 @@
                 snap.forEach(doc => scores.push(doc.data()));
                 renderMemoScores(scores);
             }, err => {
-                // Firebase indisponible → localStorage déjà affiché, rien à faire
-                console.warn('Memo scores Firebase:', err.code || err.message);
+                // Erreur de LECTURE Firebase — visible dans l'alerte + console
+                alert('⚠️ Firebase LECTURE erreur : ' + (err.code || err.message));
+                console.warn('Memo scores Firebase read:', err.code || err.message);
             });
         }
 
-        /* ── Confettis plein écran (photos ET vidéos) ── */
-        function createConfetti(count = 70) {
-            const cols = ['#CFA2A5','#F9EFC9','#C8BDAE','#DDB8BB','#EFE8E0','#7E6755','#fff'];
+        /* ── Confettis dorés/irisés — jaillissent depuis le point de clic ── */
+        function createConfetti(count = 70, originX, originY) {
+            // Palette or / champagne / or rosé / irisé
+            const PALETTE = [
+                ['#FFD700','#FFED80'],  // or brillant
+                ['#FFC200','#FFE55A'],  // or chaud
+                ['#F7C948','#FFE88A'],  // or doux
+                ['#E8C97A','#F7E4A0'],  // or ambré
+                ['#F5D5B0','#FFF0DC'],  // or rosé clair
+                ['#FCDEC5','#FFF5EC'],  // champagne rosé
+                ['#D4AF37','#F0D060'],  // or profond
+                ['#FFFFFF','#FFF9D6'],  // blanc nacré
+                ['#E8D5B7','#FFF0D8'],  // perle
+            ];
+            const cx = (originX !== undefined) ? originX : window.innerWidth  / 2;
+            const cy = (originY !== undefined) ? originY : window.innerHeight * 0.35;
+
             for (let i = 0; i < count; i++) {
-                setTimeout(() => {
-                    const c    = document.createElement('div');
-                    const size = 6 + Math.random() * 8;
-                    const dur  = 2.2 + Math.random() * 2;
-                    c.className = 'confetti-piece';
-                    c.style.cssText = `
-                        left: ${Math.random() * 100}vw;
-                        width: ${size}px; height: ${size}px;
-                        background: ${cols[Math.floor(Math.random() * cols.length)]};
-                        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
-                        animation-duration: ${dur}s;
-                        animation-delay: ${Math.random() * 0.8}s;
-                    `;
-                    document.body.appendChild(c);
-                    setTimeout(() => c.remove(), (dur + 1) * 1000);
-                }, i * 20);
+                const el = document.createElement('div');
+                el.className = 'confetti-piece';
+
+                const pair    = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+                const size    = 6 + Math.random() * 12;
+                const isDisc  = Math.random() > 0.28;          // 72 % ronds, 28 % ovales/ruban
+                const angle   = Math.random() * Math.PI * 2;
+                const speed   = 90 + Math.random() * 280;
+                const vx      = Math.cos(angle) * speed;
+                const vy      = Math.sin(angle) * speed - (60 + Math.random() * 140); // légère éjection vers le haut
+                const rot     = (Math.random() - 0.5) * 900;
+                const dur     = 750 + Math.random() * 900;
+                const delay   = Math.random() * 130;
+                const gravity = 320 + Math.random() * 200;
+
+                el.style.cssText = `
+                    left:${cx}px; top:${cy}px;
+                    width:${size}px;
+                    height:${isDisc ? size : Math.max(2, Math.round(size * 0.35))}px;
+                    background: radial-gradient(circle at 35% 35%, ${pair[1]}, ${pair[0]});
+                    border-radius:${isDisc ? '50%' : '2px'};
+                    box-shadow: 0 0 ${Math.round(size/2)}px ${pair[0]}88;
+                `;
+                document.body.appendChild(el);
+
+                const anim = el.animate([
+                    { transform: `translate(-50%,-50%) translate(0px,0px) rotate(0deg)`,                      opacity: 1 },
+                    { transform: `translate(-50%,-50%) translate(${vx*0.55}px,${vy*0.55}px) rotate(${rot*0.4}deg)`, opacity: 1,   offset: 0.38 },
+                    { transform: `translate(-50%,-50%) translate(${vx}px,${vy + gravity}px) rotate(${rot}deg)`, opacity: 0 }
+                ], { duration: dur, delay, easing: 'cubic-bezier(0.25,0.46,0.45,0.94)', fill: 'forwards' });
+
+                anim.onfinish = () => el.remove();
             }
         }
     </script>
