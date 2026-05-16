@@ -1302,8 +1302,8 @@
 
         /* ── Sons personnalisés — remplacez '' par le nom de votre fichier MP3 ──
            Exemple : const SOUND_ENVELOPE = 'mon-son.mp3';                        */
-        const SOUND_ENVELOPE = 'mon-son-enveloppe.mp3'; // son au clic sur l'enveloppe
-        const SOUND_QUACK    = 'mon-son-oie.mp3'; // son au clic sur les oies
+        const SOUND_ENVELOPE = ''; // son au clic sur l'enveloppe
+        const SOUND_QUACK    = ''; // son au clic sur les oies
 
         /* ── Enveloppe ── */
         function openEnvelope() {
@@ -1471,6 +1471,10 @@
                 // Cache le skeleton, affiche la grille
                 if (skeleton) skeleton.style.display = 'none';
                 grid.style.display = '';
+
+                // Supprime le bouton "Voir plus" précédent s'il existe (hors grille)
+                const oldMore = document.getElementById('gallery-more-btn');
+                if (oldMore) oldMore.remove();
 
                 currentMedia = [];
                 grid.innerHTML = '';
@@ -1956,80 +1960,18 @@
             document.body.style.overflow = '';
         }
 
-        /* ── Son d'ouverture enveloppe — froissement de papier (Web Audio) ── */
+        /* ── Son enveloppe ── */
         function playEnvelopeSound() {
-            if (SOUND_ENVELOPE) { new Audio(SOUND_ENVELOPE).play().catch(() => {}); return; }
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const sr = ctx.sampleRate;
-                const dur = 1.4;
-                // Bruit blanc filtré → texture papier
-                const buf = ctx.createBuffer(1, sr * dur, sr);
-                const d   = buf.getChannelData(0);
-                // Craquements irréguliers : bruit avec légères crêtes
-                for (let i = 0; i < d.length; i++) {
-                    d[i] = (Math.random() * 2 - 1) * (Math.random() > 0.96 ? 1.8 : 0.5);
-                }
-                const src = ctx.createBufferSource();
-                src.buffer = buf;
-
-                // Filtre haut-médium pour simuler le papier (pas de basse)
-                const hp = ctx.createBiquadFilter();
-                hp.type = 'highpass'; hp.frequency.value = 800;
-                const bp = ctx.createBiquadFilter();
-                bp.type = 'peaking'; bp.frequency.value = 3200; bp.gain.value = 8; bp.Q.value = 1;
-
-                const gain = ctx.createGain();
-                // Enveloppe : montée rapide, plateau, descente douce
-                gain.gain.setValueAtTime(0,    ctx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 0.06);
-                gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + 0.30);
-                gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.60);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-
-                src.connect(hp); hp.connect(bp); bp.connect(gain); gain.connect(ctx.destination);
-                src.start(ctx.currentTime); src.stop(ctx.currentTime + dur);
-            } catch(e) {}
+            if (!SOUND_ENVELOPE) return;
+            const a = new Audio(SOUND_ENVELOPE);
+            a.play().catch(e => console.warn('Son enveloppe (' + SOUND_ENVELOPE + ') :', e.message));
         }
 
-        /* ── Coin-coin canard (Web Audio — double syllabe réaliste) ── */
+        /* ── Son oie ── */
         function playQuack() {
-            if (SOUND_QUACK) { new Audio(SOUND_QUACK).play().catch(() => {}); return; }
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-                function quackSyllable(startT, freq1, freq2, vol) {
-                    const osc  = ctx.createOscillator();
-                    const osc2 = ctx.createOscillator();
-                    const mix  = ctx.createGain();
-                    const filt = ctx.createBiquadFilter();
-                    const env  = ctx.createGain();
-
-                    osc.type  = 'sawtooth'; osc2.type = 'square';
-                    osc2.frequency.value = freq1 * 1.5; // harmonique
-                    mix.gain.value = 0.3;
-                    filt.type = 'bandpass'; filt.frequency.value = 900; filt.Q.value = 2.5;
-
-                    osc.frequency.setValueAtTime(freq1, startT);
-                    osc.frequency.exponentialRampToValueAtTime(freq2, startT + 0.14);
-                    osc2.frequency.setValueAtTime(freq1 * 1.5, startT);
-                    osc2.frequency.exponentialRampToValueAtTime(freq2 * 1.5, startT + 0.14);
-
-                    env.gain.setValueAtTime(0, startT);
-                    env.gain.linearRampToValueAtTime(vol, startT + 0.015);
-                    env.gain.setValueAtTime(vol * 0.85, startT + 0.07);
-                    env.gain.exponentialRampToValueAtTime(0.001, startT + 0.18);
-
-                    osc.connect(filt); osc2.connect(mix); mix.connect(filt);
-                    filt.connect(env); env.connect(ctx.destination);
-                    osc.start(startT); osc.stop(startT + 0.2);
-                    osc2.start(startT); osc2.stop(startT + 0.2);
-                }
-
-                // "Coin" puis "coin" légèrement plus court
-                quackSyllable(ctx.currentTime,        580, 260, 0.42);
-                quackSyllable(ctx.currentTime + 0.24, 540, 240, 0.35);
-            } catch(e) {}
+            if (!SOUND_QUACK) return;
+            const a = new Audio(SOUND_QUACK);
+            a.play().catch(e => console.warn('Son oie (' + SOUND_QUACK + ') :', e.message));
         }
 
         /* ── Easter egg : clic sur une oie → quack + saut ── */
