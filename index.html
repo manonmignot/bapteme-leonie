@@ -288,7 +288,7 @@
         }
         .hero-cdi-lbl { font-size: 0.625rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-top: 0.4rem; }
 
-        /* "C'est aujourd'hui " — Bimbo Bold */
+        /* "C'est aujourd'hui !" — Bimbo Bold */
         .today-overlay {
             font-family: 'Bimbo', 'The Seasons', serif;
             font-size: clamp(3rem, 9vw, 6rem); font-weight: normal;
@@ -303,6 +303,7 @@
             height: 1.5px; background: var(--rose); border-radius: 2px;
         }
         .today-overlay.visible { display: block; animation: todayIn 0.65s ease-out; }
+        .today-excl { font-family: 'The Seasons', serif; }
         @keyframes todayIn { from { transform: scale(0.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .scroll-hint {
@@ -622,7 +623,7 @@
         .poll-option:hover  { border-color: var(--rose); background: var(--ivory); }
         .poll-option.voted  { border-color: var(--rose); background: rgba(207,162,165,0.1); }
         .poll-option img {
-            width: 180px; height: 180px;
+            width: 220px; height: 220px;
             border-radius: 50%; object-fit: cover;
             margin: 0 auto 0.875rem;
             border: 3px solid var(--sand);
@@ -1270,7 +1271,7 @@
                 <p class="hero-date">6 juin 2026</p>
                 <div id="hero-countdown" class="hero-countdown"></div>
                 <div class="today-overlay" id="today-overlay">
-                    <span class="today-text">C'est aujourd'hui !</span>
+                    <span class="today-text">C'est aujourd'hui<span class="today-excl"> !</span></span>
                 </div>
             </div>
             <div class="scroll-hint">
