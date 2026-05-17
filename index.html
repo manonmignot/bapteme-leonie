@@ -602,78 +602,11 @@
             transform: translate(-50%, -50%);
         }
 
-        /* ─── Sondage avant/après ─── */
+        /* ─── Sondage ─── */
         .poll-intro {
             font-family: 'The Seasons', serif; font-size: 1.0625rem; font-style: italic;
             color: var(--text-light); text-align: center; margin-bottom: 2.5rem; line-height: 1.85;
         }
-        /* Grille 2 comparateurs côte à côte */
-        .poll-compare-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
-            margin-bottom: 2rem;
-        }
-        /* always 2 columns, including mobile */
-        .poll-compare-item { display: flex; flex-direction: column; align-items: center; gap: 0.875rem; }
-        .compare-label {
-            font-family: 'The Seasons', serif; font-size: 0.9375rem;
-            color: var(--taupe); text-align: center; letter-spacing: 1px;
-        }
-        /* Conteneur avant/après */
-        .compare-container {
-            position: relative; width: 100%; aspect-ratio: 4/5;
-            border-radius: 14px; overflow: hidden;
-            cursor: ew-resize; user-select: none; touch-action: pan-y;
-            box-shadow: 0 4px 20px rgba(126,103,85,0.15);
-        }
-        .compare-img {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%; object-fit: cover;
-        }
-        .compare-img-before { z-index: 1; }
-        .compare-img-after  { z-index: 2; clip-path: inset(0 50% 0 0); }
-        /* Ligne + poignée */
-        .compare-handle {
-            position: absolute; top: 0; bottom: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 44px; z-index: 20; cursor: ew-resize;
-            display: flex; align-items: center; justify-content: center;
-            pointer-events: none;
-        }
-        .compare-handle::before {
-            content: ''; position: absolute;
-            top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 2px; background: white;
-            box-shadow: 0 0 6px rgba(0,0,0,0.25);
-        }
-        .compare-handle::after {
-            content: '⟺';
-            position: relative; z-index: 1;
-            width: 36px; height: 36px; border-radius: 50%;
-            background: white;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.875rem; color: var(--taupe);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.18);
-            font-family: sans-serif;
-        }
-        /* Étiquettes coin */
-        .compare-badge {
-            position: absolute; z-index: 15; bottom: 0.75rem;
-            font-family: 'Noah', sans-serif; font-size: 0.625rem;
-            letter-spacing: 2px; text-transform: uppercase;
-            color: white; background: rgba(62,40,30,0.55);
-            padding: 0.3rem 0.625rem; border-radius: 50px;
-            pointer-events: none;
-        }
-        .compare-badge-left  { left:  0.75rem; }
-        .compare-badge-right { right: 0.75rem; }
-        /* Bouton vote */
-        .poll-vote-btn {
-            width: 100%; font-size: 0.75rem; letter-spacing: 1.5px;
-            padding: 0.875rem 1rem;
-        }
-        .poll-vote-btn.voted { background: var(--taupe); pointer-events: none; }
         .poll-card {
             background: #FFFFFF;
             border: 1px solid rgba(255,255,255,0.55);
@@ -689,13 +622,17 @@
         .poll-option:hover  { border-color: var(--rose); background: var(--ivory); }
         .poll-option.voted  { border-color: var(--rose); background: rgba(207,162,165,0.1); }
         .poll-option img {
-            width: 140px; height: 140px;
+            width: 180px; height: 180px;
             border-radius: 50%; object-fit: cover;
-            margin: 0 auto 1rem;
+            margin: 0 auto 0.875rem;
             border: 3px solid var(--sand);
-            pointer-events: none; /* vote géré par le div parent uniquement */
+            pointer-events: none;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
         }
-        .poll-option p { font-family: 'The Seasons', serif; font-size: 1.0625rem; color: var(--taupe); }
+        .poll-option:hover img  { transform: scale(1.05); box-shadow: 0 10px 30px rgba(207,162,165,0.4); }
+        .poll-option.voted img  { border-color: var(--rose); box-shadow: 0 0 0 5px rgba(207,162,165,0.25); }
+        .poll-option p { font-family: 'The Seasons', serif; font-size: 1.0625rem; color: var(--taupe); transition: color 0.2s; }
+        .poll-option.voted p    { color: var(--rose-dark); font-style: italic; }
         .single-poll-bar {
             position: relative; height: 68px;
             background: linear-gradient(90deg, var(--cream) 0%, var(--rose) 100%);
@@ -1543,47 +1480,18 @@
                     <div class="section-rule"></div>
                     <p class="poll-intro">La question qui fait débat depuis 12 mois...<br>Vous avez la parole !</p>
                 </div>
-                <!-- Comparateurs avant/après -->
-                <div class="poll-compare-grid reveal">
-
-                    <!-- Papa -->
-                    <div class="poll-compare-item">
-                        <p class="compare-label">Papa bébé</p>
-                        <div class="compare-container" id="compare-papa">
-                            <img class="compare-img compare-img-before"
-                                 src="leonie-sondage.jpg" alt="Léonie"
-                                 onerror="this.style.background='#CFA2A5'">
-                            <img class="compare-img compare-img-after"
-                                 src="papa-bebe.jpg" alt="Papa bébé"
-                                 onerror="this.style.background='#C8BDAE'">
-                            <div class="compare-handle" id="handle-papa"></div>
-                            <span class="compare-badge compare-badge-left">Papa</span>
-                            <span class="compare-badge compare-badge-right">Léonie</span>
-                        </div>
-                        <button class="btn btn-ghost poll-vote-btn" id="vote-papa-btn" onclick="vote('papa')">
-                            Je vote pour Papa 👨
-                        </button>
+                <!-- Sondage — rondes cliquables -->
+                <div class="poll-options reveal">
+                    <div class="poll-option" id="vote-papa-btn" onclick="vote('papa')">
+                        <img src="papa-bebe.jpg" alt="Papa bébé"
+                             onerror="this.style.background='#C8BDAE'">
+                        <p class="poll-name">Papa</p>
                     </div>
-
-                    <!-- Maman -->
-                    <div class="poll-compare-item">
-                        <p class="compare-label">Maman bébé</p>
-                        <div class="compare-container" id="compare-maman">
-                            <img class="compare-img compare-img-before"
-                                 src="leonie-sondage.jpg" alt="Léonie"
-                                 onerror="this.style.background='#CFA2A5'">
-                            <img class="compare-img compare-img-after"
-                                 src="maman-bebe.jpg" alt="Maman bébé"
-                                 onerror="this.style.background='#C8BDAE'">
-                            <div class="compare-handle" id="handle-maman"></div>
-                            <span class="compare-badge compare-badge-left">Maman</span>
-                            <span class="compare-badge compare-badge-right">Léonie</span>
-                        </div>
-                        <button class="btn btn-ghost poll-vote-btn" id="vote-maman-btn" onclick="vote('maman')">
-                            Je vote pour Maman 👩
-                        </button>
+                    <div class="poll-option" id="vote-maman-btn" onclick="vote('maman')">
+                        <img src="maman-bebe.jpg" alt="Maman bébé"
+                             onerror="this.style.background='#C8BDAE'">
+                        <p class="poll-name">Maman</p>
                     </div>
-
                 </div>
 
                 <!-- Barre résultats -->
@@ -1770,7 +1678,6 @@
             setupKeyboard();
             setupLightboxSwipe();
             initTimeline();
-            initComparisons();
             restoreVoteState();
             initOieEasterEgg();
             // AOS — animations d'entrée au scroll
@@ -2097,49 +2004,22 @@
             zip.generateAsync({type:'blob'}).then(c => { saveAs(c,'bapteme-leonie.zip'); showOverlay(false); });
         }
 
-        /* ── Comparateur avant/après ── */
-        function initComparisons() {
-            document.querySelectorAll('.compare-container').forEach(container => {
-                const after  = container.querySelector('.compare-img-after');
-                const handle = container.querySelector('.compare-handle');
-                let active   = false;
-
-                function setPos(clientX) {
-                    const r   = container.getBoundingClientRect();
-                    const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
-                    const p   = pct * 100;
-                    after.style.clipPath      = `inset(0 ${100 - p}% 0 0)`;
-                    handle.style.left         = p + '%';
-                    handle.style.transform    = 'translateX(-50%)';
+        /* ── Sondage ── */
+        function applyVoteUI(choice) {
+            ['papa','maman'].forEach(c => {
+                const el = document.getElementById(`vote-${c}-btn`);
+                if (!el) return;
+                el.style.pointerEvents = 'none';
+                if (c === choice) {
+                    el.classList.add('voted');
+                    const lbl = el.querySelector('.poll-name');
+                    if (lbl) lbl.textContent = '✓ Voté !';
                 }
-
-                // Mouse
-                container.addEventListener('mousedown', e => { active = true; setPos(e.clientX); });
-                window.addEventListener('mouseup',   () => active = false);
-                window.addEventListener('mousemove', e => { if (active) setPos(e.clientX); });
-
-                // Touch
-                container.addEventListener('touchstart', e => {
-                    active = true; setPos(e.touches[0].clientX); e.preventDefault();
-                }, { passive: false });
-                window.addEventListener('touchend', () => active = false);
-                window.addEventListener('touchmove', e => {
-                    if (active) { setPos(e.touches[0].clientX); e.preventDefault(); }
-                }, { passive: false });
             });
         }
-
-        /* ── Sondage ── */
         function restoreVoteState() {
             const v = localStorage.getItem('voted');
-            if (!v) return;
-            const btn = document.getElementById(`vote-${v}-btn`);
-            if (btn) { btn.classList.add('voted'); btn.textContent = `✓ Voté pour ${v==='papa'?'Papa 👨':'Maman 👩'}`; }
-            // Désactive les deux boutons
-            ['papa','maman'].forEach(c => {
-                const b = document.getElementById(`vote-${c}-btn`);
-                if (b) b.style.pointerEvents = 'none';
-            });
+            if (v) applyVoteUI(v);
         }
         function vote(choice) {
             const v = localStorage.getItem('voted');
@@ -2150,13 +2030,7 @@
             db.collection('poll').doc(choice).set({votes:firebase.firestore.FieldValue.increment(1)},{merge:true})
               .then(() => {
                 localStorage.setItem('voted', choice);
-                // Mise à jour boutons
-                const btn = document.getElementById(`vote-${choice}-btn`);
-                if (btn) { btn.classList.add('voted'); btn.textContent = `✓ Voté pour ${choice==='papa'?'Papa 👨':'Maman 👩'}`; }
-                ['papa','maman'].forEach(c => {
-                    const b = document.getElementById(`vote-${c}-btn`);
-                    if (b) b.style.pointerEvents = 'none';
-                });
+                applyVoteUI(choice);
                 showToast(`Vote enregistré pour ${choice==='papa'?'Papa':'Maman'} ! 🗳️`);
                 navigator.vibrate && navigator.vibrate([40, 20, 40]);
             });
