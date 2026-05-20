@@ -291,12 +291,13 @@
         /* "C'est aujourd'hui !" — Bimbo Bold */
         .today-overlay {
             font-family: 'Bimbo', 'The Seasons', serif;
-            font-size: clamp(3rem, 9vw, 6rem); font-weight: normal;
+            font-size: clamp(1.6rem, 5vw, 4rem); font-weight: normal;
             color: white; margin: 1.5rem 0 0; display: none;
         }
         .today-text {
             display: inline-block; transform: rotate(-2deg);
             text-shadow: 0 2px 20px rgba(0,0,0,0.35); position: relative;
+            white-space: nowrap;
         }
         .today-text::after {
             content: ''; position: absolute; bottom: -6px; left: 0; right: 0;
@@ -1117,6 +1118,60 @@
         }
         .memo-result-name-label { font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.75rem; }
         .memo-result-name-input { margin-bottom: 1.25rem; }
+
+        /* ─── Tic-Tac-Toe ─── */
+        .ttt-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            max-width: 300px;
+            margin: 0 auto 1.75rem;
+        }
+        .ttt-cell {
+            aspect-ratio: 1;
+            background: #FFFFFF;
+            border: 1.5px solid rgba(200,189,174,0.5);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.15s, border-color 0.2s;
+            box-shadow: 0 2px 10px rgba(126,103,85,0.07);
+        }
+        .ttt-cell:hover { background: var(--ivory); border-color: var(--rose); transform: scale(1.04); }
+        .ttt-cell img {
+            width: 65%; height: 65%;
+            object-fit: contain; pointer-events: none;
+            animation: tttPop 0.25s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes tttPop {
+            from { transform: scale(0.3); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+        .ttt-cell.ttt-win {
+            background: rgba(207,162,165,0.18);
+            border-color: var(--rose);
+            box-shadow: 0 0 0 3px rgba(207,162,165,0.28);
+        }
+        .ttt-message {
+            font-family: 'The Seasons', serif;
+            font-size: 1.2rem; color: var(--taupe);
+            margin-bottom: 1.5rem; display: none; text-align: center;
+        }
+        .ttt-status {
+            text-align: center; font-size: 0.875rem;
+            color: var(--text-light); margin-bottom: 1.25rem;
+            letter-spacing: 0.5px; min-height: 1.5rem;
+        }
+        .ttt-legend {
+            display: flex; justify-content: center;
+            gap: 2.5rem; margin-bottom: 1.25rem;
+            font-size: 0.875rem; color: var(--text-mid);
+        }
+        .ttt-legend-item { display: flex; align-items: center; gap: 0.5rem; }
+        .ttt-legend-img { width: 30px; height: 30px; object-fit: contain; }
+        .ttt-legend-fallback { font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -1252,6 +1307,7 @@
                 <span class="sidebar-group-label">Mini-jeux</span>
                 <a href="#sondage" class="sidebar-sublink" onclick="closeSidebar()">⚔️ Le Du-du-duel</a>
                 <a href="#memo"    class="sidebar-sublink" onclick="closeSidebar()">🃏 Mémo'Léo</a>
+                <a href="#tictactoe" class="sidebar-sublink" onclick="closeSidebar()">⭕ Morpion</a>
 
                 <a href="#merci" class="sidebar-link" onclick="closeSidebar()">Remerciements</a>
             </nav>
@@ -1525,6 +1581,48 @@
                         <p class="memo-score-title">🏆 Classement</p>
                         <div id="memo-top-scores"><p style="font-size:0.875rem;color:var(--text-light);font-style:italic">Soyez le premier à jouer !</p></div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ TIC-TAC-TOE ══ -->
+        <section id="tictactoe" class="section" style="padding-top:2.5rem;padding-bottom:2.5rem">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-eyebrow">Mini-jeu</span>
+                    <h2 class="section-title">Morpion</h2>
+                    <div class="section-rule"></div>
+                    <p class="section-subtitle">Arriverez-vous à battre l'ordinateur ?</p>
+                </div>
+                <div class="reveal" data-aos="zoom-in" data-aos-delay="100" style="text-align:center">
+                    <div class="ttt-legend">
+                        <div class="ttt-legend-item">
+                            <img src="ttt-joueur.png" alt="" class="ttt-legend-img" id="ttt-leg-joueur"
+                                 onerror="this.style.display='none';document.getElementById('ttt-leg-joueur-fb').style.display='inline'">
+                            <span class="ttt-legend-fallback" id="ttt-leg-joueur-fb" style="display:none">❌</span>
+                            <span>Vous</span>
+                        </div>
+                        <div class="ttt-legend-item">
+                            <img src="ttt-ordi.png" alt="" class="ttt-legend-img" id="ttt-leg-ordi"
+                                 onerror="this.style.display='none';document.getElementById('ttt-leg-ordi-fb').style.display='inline'">
+                            <span class="ttt-legend-fallback" id="ttt-leg-ordi-fb" style="display:none">⭕</span>
+                            <span>Ordinateur</span>
+                        </div>
+                    </div>
+                    <p class="ttt-status" id="ttt-status">À vous de jouer !</p>
+                    <div class="ttt-grid">
+                        <div class="ttt-cell" id="ttt-0" onclick="tttClick(0)"></div>
+                        <div class="ttt-cell" id="ttt-1" onclick="tttClick(1)"></div>
+                        <div class="ttt-cell" id="ttt-2" onclick="tttClick(2)"></div>
+                        <div class="ttt-cell" id="ttt-3" onclick="tttClick(3)"></div>
+                        <div class="ttt-cell" id="ttt-4" onclick="tttClick(4)"></div>
+                        <div class="ttt-cell" id="ttt-5" onclick="tttClick(5)"></div>
+                        <div class="ttt-cell" id="ttt-6" onclick="tttClick(6)"></div>
+                        <div class="ttt-cell" id="ttt-7" onclick="tttClick(7)"></div>
+                        <div class="ttt-cell" id="ttt-8" onclick="tttClick(8)"></div>
+                    </div>
+                    <p class="ttt-message" id="ttt-message"></p>
+                    <button class="btn btn-primary" onclick="tttRestart()" style="display:block;margin:0 auto">🔄 Rejouer</button>
                 </div>
             </div>
         </section>
@@ -2046,7 +2144,7 @@
                 let papa=0, maman=0;
                 snap.forEach(d => { if(d.id==='papa') papa=d.data().votes||0; if(d.id==='maman') maman=d.data().votes||0; });
                 const total=papa+maman, pp=total>0?Math.round(papa/total*100):50;
-                document.getElementById('poll-divider').style.left = pp+'%';
+                document.getElementById('poll-divider').style.left = (100-pp)+'%';
                 document.getElementById('papa-label').textContent  = `Papa ${pp}%`;
                 document.getElementById('maman-label').textContent = `Maman ${100-pp}%`;
                 document.getElementById('poll-total').textContent  = `${total} vote${total>1?'s':''}`;
@@ -2527,6 +2625,116 @@
                 alert('⚠️ Firebase LECTURE erreur : ' + (err.code || err.message));
                 console.warn('Memo scores Firebase read:', err.code || err.message);
             });
+        }
+
+        /* ── Tic-Tac-Toe ── */
+        const TTT_P = 'X', TTT_C = 'O';
+        const TTT_LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        let tttBoard = Array(9).fill(null);
+        let tttOver = false, tttTurn = TTT_P;
+
+        function tttRender() {
+            for (let i = 0; i < 9; i++) {
+                const cell = document.getElementById('ttt-'+i);
+                if (!cell) continue;
+                cell.innerHTML = '';
+                if (tttBoard[i]) {
+                    const img = document.createElement('img');
+                    img.src = tttBoard[i] === TTT_P ? 'ttt-joueur.png' : 'ttt-ordi.png';
+                    img.alt = tttBoard[i];
+                    img.onerror = function() {
+                        this.replaceWith(Object.assign(document.createElement('span'), {
+                            textContent: tttBoard[i] === TTT_P ? '❌' : '⭕',
+                            style: 'font-size:2rem'
+                        }));
+                    };
+                    cell.appendChild(img);
+                }
+            }
+        }
+
+        function tttWinner(b) {
+            for (const [a,x,c] of TTT_LINES)
+                if (b[a] && b[a]===b[x] && b[a]===b[c]) return b[a];
+            return null;
+        }
+
+        function tttMinimax(b, isMax) {
+            const w = tttWinner(b);
+            if (w === TTT_C) return  10;
+            if (w === TTT_P) return -10;
+            if (b.every(c => c)) return 0;
+            let best = isMax ? -Infinity : Infinity;
+            b.forEach((v, i) => {
+                if (v) return;
+                b[i] = isMax ? TTT_C : TTT_P;
+                const s = tttMinimax(b, !isMax);
+                b[i] = null;
+                best = isMax ? Math.max(best, s) : Math.min(best, s);
+            });
+            return best;
+        }
+
+        function tttBestMove() {
+            let best = -Infinity, move = -1;
+            tttBoard.forEach((v, i) => {
+                if (v) return;
+                tttBoard[i] = TTT_C;
+                const s = tttMinimax(tttBoard, false);
+                tttBoard[i] = null;
+                if (s > best) { best = s; move = i; }
+            });
+            return move;
+        }
+
+        function tttEndGame(winner) {
+            tttOver = true;
+            const msg = document.getElementById('ttt-message');
+            const st  = document.getElementById('ttt-status');
+            if (winner === TTT_P) {
+                msg.textContent = '🎉 Bravo, vous avez gagné !';
+                createConfetti(60, window.innerWidth/2, window.innerHeight/2);
+            } else if (winner === TTT_C) {
+                msg.textContent = '🤖 L\'ordinateur gagne cette fois !';
+            } else {
+                msg.textContent = '🤝 Match nul !';
+            }
+            msg.style.display = 'block';
+            st.textContent = '';
+            if (winner) {
+                for (const [a,x,c] of TTT_LINES) {
+                    if (tttBoard[a]===winner && tttBoard[x]===winner && tttBoard[c]===winner) {
+                        [a,x,c].forEach(i => document.getElementById('ttt-'+i).classList.add('ttt-win'));
+                    }
+                }
+            }
+        }
+
+        function tttClick(i) {
+            if (tttOver || tttBoard[i] || tttTurn !== TTT_P) return;
+            tttBoard[i] = TTT_P;
+            tttRender();
+            const w = tttWinner(tttBoard);
+            if (w || tttBoard.every(c => c)) { tttEndGame(w); return; }
+            tttTurn = TTT_C;
+            document.getElementById('ttt-status').textContent = 'L\'ordinateur réfléchit…';
+            setTimeout(() => {
+                const m = tttBestMove();
+                if (m !== -1) { tttBoard[m] = TTT_C; tttRender(); }
+                const w2 = tttWinner(tttBoard);
+                if (w2 || tttBoard.every(c => c)) { tttEndGame(w2); return; }
+                tttTurn = TTT_P;
+                document.getElementById('ttt-status').textContent = 'À vous de jouer !';
+            }, 450);
+        }
+
+        function tttRestart() {
+            tttBoard = Array(9).fill(null);
+            tttOver = false; tttTurn = TTT_P;
+            document.querySelectorAll('.ttt-cell').forEach(c => c.classList.remove('ttt-win'));
+            document.getElementById('ttt-message').style.display = 'none';
+            document.getElementById('ttt-status').textContent = 'À vous de jouer !';
+            tttRender();
         }
 
         /* ── Confettis dorés/irisés — jaillissent depuis le point de clic ── */
