@@ -973,7 +973,7 @@
         @media (max-width: 600px) {
             .section { padding: 4rem 1.25rem; }
             .hero-content { padding: 2.5rem 1.5rem 5rem; }
-            .poll-option img { width: 80px; height: 80px; }
+            .poll-option img { width: 130px; height: 130px; }
             .upload-card, .poll-card, .merci-card { padding: 2rem 1.25rem; }
             .timeline-item { width: 165px; }
             .timeline-photo { width: 165px; height: 210px; }
@@ -1307,7 +1307,7 @@
                 <span class="sidebar-group-label">Mini-jeux</span>
                 <a href="#sondage" class="sidebar-sublink" onclick="closeSidebar()">⚔️ Le Du-du-duel</a>
                 <a href="#memo"    class="sidebar-sublink" onclick="closeSidebar()">🃏 Mémo'Léo</a>
-                <a href="#tictactoe" class="sidebar-sublink" onclick="closeSidebar()">⭕ Morpion</a>
+                <a href="#tictactoe" class="sidebar-sublink" onclick="closeSidebar()">⭕ La Morpionne</a>
 
                 <a href="#merci" class="sidebar-link" onclick="closeSidebar()">Remerciements</a>
             </nav>
@@ -1590,7 +1590,7 @@
             <div class="container">
                 <div class="section-header reveal">
                     <span class="section-eyebrow">Mini-jeu</span>
-                    <h2 class="section-title">Morpion</h2>
+                    <h2 class="section-title">La Morpionne</h2>
                     <div class="section-rule"></div>
                     <p class="section-subtitle">Arriverez-vous à battre l'ordinateur ?</p>
                 </div>
@@ -1787,7 +1787,7 @@
         }
 
         /* ── Countdown — détection automatique du jour J ── */
-        const PREVIEW_TODAY = true; // forcer l'affichage "C'est aujourd'hui !" pour prévisualisation
+        const PREVIEW_TODAY = false; // true uniquement pour prévisualisation locale
 
         function initCountdown() {
             if (PREVIEW_TODAY) {
@@ -2579,8 +2579,7 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch(e) {
-                // Affiche l'erreur exacte Firebase pour diagnostic
-                alert('⚠️ Firebase erreur : ' + (e.code || e.message || JSON.stringify(e)));
+                console.warn('Firebase memo-scores write:', e.code || e.message);
             }
             showToast('Score enregistré ! 🏆');
             closeMemo();
@@ -2621,8 +2620,6 @@
                 snap.forEach(doc => scores.push(doc.data()));
                 renderMemoScores(scores);
             }, err => {
-                // Erreur de LECTURE Firebase — visible dans l'alerte + console
-                alert('⚠️ Firebase LECTURE erreur : ' + (err.code || err.message));
                 console.warn('Memo scores Firebase read:', err.code || err.message);
             });
         }
@@ -2676,6 +2673,10 @@
         }
 
         function tttBestMove() {
+            const empty = tttBoard.map((v,i) => v ? null : i).filter(i => i !== null);
+            // 30 % de coups aléatoires → l'ordinateur perd ~1 partie sur 5
+            if (Math.random() < 0.30)
+                return empty[Math.floor(Math.random() * empty.length)];
             let best = -Infinity, move = -1;
             tttBoard.forEach((v, i) => {
                 if (v) return;
