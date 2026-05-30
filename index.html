@@ -34,15 +34,15 @@
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
     <style>
-        /* ─── Noah (self-hosted) — ajoutez noah-regular.woff2 et noah-bold.woff2 dans votre repo ─── */
+        /* ─── Noah (self-hosted) ─── */
         @font-face {
             font-family: 'Noah';
-            src: url('noah-regular.woff2') format('woff2');
+            src: url('noah-regular.otf') format('opentype');
             font-weight: 400; font-style: normal; font-display: swap;
         }
         @font-face {
             font-family: 'Noah';
-            src: url('noah-bold.woff2') format('woff2');
+            src: url('noah-bold.otf') format('opentype');
             font-weight: 700; font-style: normal; font-display: swap;
         }
         /* ─── Bimbo Bold (DaFont, self-hosted) — placez bimbo.ttf dans le même dossier ─── */
@@ -237,7 +237,7 @@
         .sidebar-date { font-size: 0.875rem; color: var(--text-light); }
         .sidebar-nav { display: flex; flex-direction: column; gap: 0.125rem; flex: 1; }
         .sidebar-link {
-            font-family: 'The Seasons', serif; font-size: 1rem;
+            font-family: 'Noah', sans-serif; font-size: 1rem;
             color: var(--text-mid); text-decoration: none;
             padding: 0.875rem 0; border-bottom: 1px solid rgba(200,189,174,0.35);
             display: flex; align-items: center; gap: 0;
@@ -565,8 +565,8 @@
         .gallery-empty {
             grid-column: 1 / -1;
             text-align: center; padding: 3.5rem 1rem;
-            color: var(--text-light); font-family: 'The Seasons', serif;
-            font-size: 1.1rem; font-style: italic;
+            color: var(--text-light); font-family: 'Noah', sans-serif;
+            font-size: 1.1rem;
         }
         .gallery-show-more { text-align: center; padding: 1.75rem 0 0.5rem; }
 
@@ -606,7 +606,7 @@
 
         /* ─── Sondage ─── */
         .poll-intro {
-            font-family: 'The Seasons', serif; font-size: 1.0625rem; font-style: italic;
+            font-family: 'Noah', sans-serif; font-size: 1.0625rem;
             color: var(--text-light); text-align: center; margin-bottom: 2.5rem; line-height: 1.85;
         }
         .poll-card {
@@ -633,8 +633,8 @@
         }
         .poll-option:hover img  { transform: scale(1.05); box-shadow: 0 10px 30px rgba(207,162,165,0.4); }
         .poll-option.voted img  { border-color: var(--rose); box-shadow: 0 0 0 5px rgba(207,162,165,0.25); }
-        .poll-option p { font-family: 'The Seasons', serif; font-size: 1.0625rem; color: var(--taupe); transition: color 0.2s; }
-        .poll-option.voted p    { color: var(--rose-dark); font-style: italic; }
+        .poll-option p { font-family: 'Noah', sans-serif; font-size: 1.0625rem; color: var(--taupe); transition: color 0.2s; }
+        .poll-option.voted p    { color: var(--rose-dark); }
         .single-poll-bar {
             position: relative; height: 68px;
             background: linear-gradient(90deg, var(--cream) 0%, var(--rose) 100%);
@@ -707,7 +707,7 @@
             50%       { transform: scaleY(1); }
         }
         .record-timer {
-            text-align: center; color: var(--rose); font-family: 'The Seasons', serif;
+            text-align: center; color: var(--rose); font-family: 'Noah', sans-serif;
             font-size: 1.25rem; margin-top: 0.5rem; display: none;
             letter-spacing: 2px;
         }
@@ -771,7 +771,7 @@
             height: 100%; width: 0%; background: var(--rose);
             border-radius: 1px; transition: width 0.25s linear;
         }
-        .voice-empty { text-align: center; padding: 2rem 1rem; color: var(--text-light); font-style: italic; }
+        .voice-empty { text-align: center; padding: 2rem 1rem; color: var(--text-light); }
         .voice-show-more { text-align: center; padding: 1.25rem 0 0; }
 
         /* ─── Galerie — skeleton chargement ─── */
@@ -834,10 +834,10 @@
             padding: 4rem 2.5rem; text-align: center;
         }
         .merci-card p {
-            font-family: 'The Seasons', serif; font-size: 1.15rem;
+            font-family: 'Noah', sans-serif; font-size: 1.15rem;
             line-height: 2; color: rgba(255,255,255,0.92); margin-bottom: 1.5rem;
         }
-        .merci-sig { font-style: italic; color: var(--cream); font-size: 1.1rem; }
+        .merci-sig { color: var(--cream); font-size: 1.1rem; }
         .merci-signature {
             font-family: 'Bimbo', 'The Seasons', serif;
             font-size: clamp(2rem, 6vw, 3.25rem);
@@ -988,7 +988,7 @@
             border-top: 1px solid rgba(200,189,174,0.35);
         }
         .sidebar-sublink {
-            font-family: 'The Seasons', serif; font-size: 0.875rem;
+            font-family: 'Noah', sans-serif; font-size: 0.875rem;
             color: var(--text-light); text-decoration: none;
             padding: 0.6rem 0 0.6rem 0.875rem;
             border-bottom: 1px solid rgba(200,189,174,0.2);
@@ -1155,7 +1155,7 @@
             box-shadow: 0 0 0 3px rgba(207,162,165,0.28);
         }
         .ttt-message {
-            font-family: 'The Seasons', serif;
+            font-family: 'Noah', sans-serif;
             font-size: 1.2rem; color: var(--taupe);
             margin-bottom: 1.5rem; display: none; text-align: center;
         }
@@ -1579,7 +1579,7 @@
                     <button class="btn btn-primary memo-open-btn" onclick="openMemo()">🃏 Jouer au Mémo'Léo</button>
                     <div class="memo-scoreboard-preview">
                         <p class="memo-score-title">🏆 Classement</p>
-                        <div id="memo-top-scores"><p style="font-size:0.875rem;color:var(--text-light);font-style:italic">Soyez le premier à jouer !</p></div>
+                        <div id="memo-top-scores"><p style="font-size:0.875rem;color:var(--text-light);font-style:normal">Soyez le premier à jouer !</p></div>
                     </div>
                 </div>
             </div>
@@ -1609,7 +1609,7 @@
                             <span>Ordinateur</span>
                         </div>
                     </div>
-                    <p class="ttt-status" id="ttt-status">À vous de jouer !</p>
+                    <p class="ttt-status" id="ttt-status">Tentez votre chance !</p>
                     <div class="ttt-grid">
                         <div class="ttt-cell" id="ttt-0" onclick="tttClick(0)"></div>
                         <div class="ttt-cell" id="ttt-1" onclick="tttClick(1)"></div>
@@ -1672,7 +1672,6 @@
         <section id="merci" class="section">
             <div class="container">
                 <div class="section-header reveal">
-                    <span class="section-eyebrow">Avec gratitude</span>
                     <h2 class="section-title">Merci</h2>
                     <div class="section-rule"></div>
                 </div>
@@ -1681,8 +1680,7 @@
                     <div class="merci-bg"></div>
                     <div class="merci-card">
                         <span class="merci-date-badge">6 juin 2026</span>
-                        <p>Votre présence illumine nos cœurs.<br>Merci d'être là pour célébrer le baptême<br>et le premier anniversaire de notre petite Léonie.</p>
-                        <p class="merci-sig">Avec toute notre affection ♡</p>
+                        <p>Merci à tous d'être là pour célébrer le baptême et le premier anniversaire de notre petite Léonie.</p>
                         <p class="merci-signature">Manon & Hugo</p>
                     </div>
                 </div>
@@ -2594,7 +2592,7 @@
             const el = document.getElementById('memo-top-scores');
             if (!el) return;
             if (!scores || scores.length === 0) {
-                el.innerHTML = '<p style="font-size:0.875rem;color:var(--text-light);font-style:italic">Soyez le premier à jouer !</p>';
+                el.innerHTML = '<p style="font-size:0.875rem;color:var(--text-light);font-style:normal">Soyez le premier à jouer !</p>';
                 return;
             }
             const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
@@ -2725,7 +2723,7 @@
                 const w2 = tttWinner(tttBoard);
                 if (w2 || tttBoard.every(c => c)) { tttEndGame(w2); return; }
                 tttTurn = TTT_P;
-                document.getElementById('ttt-status').textContent = 'À vous de jouer !';
+                document.getElementById('ttt-status').textContent = 'Tentez votre chance !';
             }, 450);
         }
 
@@ -2734,7 +2732,7 @@
             tttOver = false; tttTurn = TTT_P;
             document.querySelectorAll('.ttt-cell').forEach(c => c.classList.remove('ttt-win'));
             document.getElementById('ttt-message').style.display = 'none';
-            document.getElementById('ttt-status').textContent = 'À vous de jouer !';
+            document.getElementById('ttt-status').textContent = 'Tentez votre chance !';
             tttRender();
         }
 
